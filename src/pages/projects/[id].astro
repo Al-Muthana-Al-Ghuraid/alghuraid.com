@@ -31,7 +31,7 @@ let n = 0; const num = () => String(++n).padStart(2, '0');
         <div class="impact"><Icon name="trend" /><T v={d.impact} /></div>
         <div class="p-actions">
           {d.github && <a href={d.github} target="_blank" rel="noopener" class="btn btn-primary btn-sm"><Icon name="github" />GitHub</a>}
-          {d.github === '' && <span class="btn btn-ghost btn-sm" aria-disabled="true">GitHub <T k="btn.soon" class="soon" /></span>}
+          {!d.github && d.githubSoon && <span class="btn btn-ghost btn-sm" aria-disabled="true">GitHub <T k="btn.soon" class="soon" /></span>}
           {d.live && <a href={d.live} target="_blank" rel="noopener" class="btn btn-ghost btn-sm"><Icon name="external" /><T k="btn.live" /></a>}
         </div>
       </header>
@@ -47,14 +47,10 @@ let n = 0; const num = () => String(++n).padStart(2, '0');
         </section>
       )}
 
-      {cs && (
-        <>
-          <section class="cs-sec reveal"><div class="cs-h"><span class="mono">{num()}</span> <T k="cs.problem" /></div><T as="p" class="cs-text" v={cs.problem} /></section>
-          <section class="cs-sec reveal"><div class="cs-h"><span class="mono">{num()}</span> <T k="cs.built" /></div><ul class="qv-list cs-list">{cs.built.map((b) => <T as="li" v={b} />)}</ul></section>
-          {cs.challenges.length > 0 && <section class="cs-sec reveal"><div class="cs-h"><span class="mono">{num()}</span> <T k="cs.challenges" /></div><ul class="qv-list cs-list">{cs.challenges.map((b) => <T as="li" v={b} />)}</ul></section>}
-          <section class="cs-sec reveal"><div class="cs-h"><span class="mono">{num()}</span> <T k="cs.results" /></div><ul class="qv-list cs-list">{cs.results.map((b) => <T as="li" v={b} />)}</ul></section>
-        </>
-      )}
+      {cs?.problem && <section class="cs-sec reveal"><div class="cs-h"><span class="mono">{num()}</span> <T k="cs.problem" /></div><T as="p" class="cs-text" v={cs.problem} /></section>}
+      {cs && cs.built.length > 0 && <section class="cs-sec reveal"><div class="cs-h"><span class="mono">{num()}</span> <T k="cs.built" /></div><ul class="qv-list cs-list">{cs.built.map((b) => <T as="li" v={b} />)}</ul></section>}
+      {cs && cs.challenges.length > 0 && <section class="cs-sec reveal"><div class="cs-h"><span class="mono">{num()}</span> <T k="cs.challenges" /></div><ul class="qv-list cs-list">{cs.challenges.map((b) => <T as="li" v={b} />)}</ul></section>}
+      {cs && cs.results.length > 0 && <section class="cs-sec reveal"><div class="cs-h"><span class="mono">{num()}</span> <T k="cs.results" /></div><ul class="qv-list cs-list">{cs.results.map((b) => <T as="li" v={b} />)}</ul></section>}
 
       <section class="cs-sec reveal"><div class="cs-h"><span class="mono">{num()}</span> <T k="cs.stack" /></div><div class="chips">{d.tags.map((t) => <span class="chip">{t}</span>)}</div></section>
 

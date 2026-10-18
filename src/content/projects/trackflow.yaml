@@ -4,7 +4,7 @@ org: Saudi Digital Academy
 categories: [web]
 tags: [React 18, FastAPI, SQLAlchemy, JWT, Bootstrap 5]
 cover: /media/projects/trackflow.png
-github: ""
+githubSoon: true
 title:
   en: "TrackFlow: bootcamp management platform"
   ar: "TrackFlow: منصة لإدارة المعسكرات التدريبية"

@@ -25,7 +25,7 @@ const href = `/projects/${p.id}/`;
       <a href={href} class="btn btn-primary btn-sm"><T k="btn.case" /></a>
       {d.github
         ? <a href={d.github} target="_blank" rel="noopener" class="btn btn-ghost btn-sm"><Icon name="github" />GitHub</a>
-        : d.github === '' && <span class="btn btn-ghost btn-sm" aria-disabled="true">GitHub <T k="btn.soon" class="soon" /></span>}
+        : d.githubSoon && <span class="btn btn-ghost btn-sm" aria-disabled="true">GitHub <T k="btn.soon" class="soon" /></span>}
       {d.live && <a href={d.live} target="_blank" rel="noopener" class="btn btn-ghost btn-sm"><Icon name="external" /><T k="btn.live" /></a>}
     </div>
   </div>

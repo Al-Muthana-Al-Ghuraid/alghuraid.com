@@ -1,0 +1,213 @@
+# Pages CMS (https://app.pagescms.org): the browser admin panel for this site.
+# Each "content" entry becomes a section in the panel. Saving commits to GitHub, and Cloudflare redeploys in about a minute.
+
+media:
+  input: public/media
+  output: /media
+
+content:
+  # ------------------------------------------------------------------ projects
+  - name: projects
+    label: Projects
+    type: collection
+    path: src/content/projects
+    format: yaml
+    filename:
+      template: "project-{year}{month}{day}.yaml"  # rename on create: the name becomes the page URL
+      field: create
+    view:
+      primary: order
+      sort: order
+      order: asc
+      fields: [order, year, featured, hidden]
+    fields:
+      - { name: title, label: Title, type: object, required: true, fields: [
+          { name: en, label: English, type: string, required: true },
+          { name: ar, label: العربية, type: string, required: true } ] }
+      - { name: summary, label: Short description (card), type: object, required: true, fields: [
+          { name: en, label: English, type: text, required: true },
+          { name: ar, label: العربية, type: text, required: true } ] }
+      - { name: impact, label: "Impact line (numbers!)", type: object, required: true, fields: [
+          { name: en, label: English, type: string, required: true },
+          { name: ar, label: العربية, type: string, required: true } ] }
+      - { name: categories, label: Categories (filters), type: select, required: true, options: { multiple: true, values: [
+          { name: cloud, label: Cloud & DevOps }, { name: web, label: Full-stack }, { name: ai, label: AI & Automation } ] } }
+      - { name: tags, label: Tech tags, type: string, list: true }
+      - { name: org, label: "Organisation (optional, e.g. Saudi Digital Academy)", type: string }
+      - { name: year, label: Year, type: number, required: true }
+      - { name: order, label: "Order (1 = first)", type: number }
+      - { name: featured, label: "Featured (big card, only one)", type: boolean }
+      - { name: hidden, label: Hide from site, type: boolean }
+      - { name: cover, label: Cover image, type: image, options: { path: public/media/projects } }
+      - { name: codeCover, label: "Code cover (used when there is no image)", type: object, fields: [
+          { name: file, label: File name, type: string },
+          { name: code, label: Code (3-4 short lines), type: text } ] }
+      - { name: github, label: GitHub link, type: string }
+      - { name: githubSoon, label: "No link yet: show 'GitHub · soon'", type: boolean }
+      - { name: live, label: Live demo link, type: string }
+      - name: caseStudy
+        label: Case study page
+        type: object
+        fields:
+          - { name: intro, label: Intro, type: object, fields: [
+              { name: en, label: English, type: text }, { name: ar, label: العربية, type: text } ] }
+          - { name: problem, label: The problem, type: object, fields: [
+              { name: en, label: English, type: text }, { name: ar, label: العربية, type: text } ] }
+          - { name: built, label: What I built (one point each), type: object, list: true, fields: [
+              { name: en, label: English, type: text }, { name: ar, label: العربية, type: text } ] }
+          - { name: challenges, label: Challenges, type: object, list: true, fields: [
+              { name: en, label: English, type: text }, { name: ar, label: العربية, type: text } ] }
+          - { name: results, label: Results, type: object, list: true, fields: [
+              { name: en, label: English, type: text }, { name: ar, label: العربية, type: text } ] }
+          - { name: stats, label: "Big numbers (e.g. ~80 / shortlisted per day)", type: object, list: true, fields: [
+              { name: value, label: Number, type: string },
+              { name: label, label: Label, type: object, fields: [
+                  { name: en, label: English, type: string }, { name: ar, label: العربية, type: string } ] } ] }
+          - { name: diagram, label: "Animated diagram (ask Claude to build new ones)", type: select, options: { values: [none, n8n] } }
+          - { name: screenshots, label: Screenshots, type: object, list: true, fields: [
+              { name: src, label: Image, type: image, options: { path: public/media/projects } },
+              { name: caption, label: Caption, type: object, fields: [
+                  { name: en, label: English, type: string }, { name: ar, label: العربية, type: string } ] } ] }
+
+  # ------------------------------------------------------------ certifications
+  - name: certifications
+    label: Certifications
+    type: collection
+    path: src/content/certifications
+    format: yaml
+    filename:
+      template: "{primary}.yaml"
+      field: create
+    view:
+      primary: name
+      sort: order
+      order: asc
+      fields: [name, status, order]
+    fields:
+      - { name: name, label: Certification name, type: string, required: true }
+      - { name: issuer, label: Issuer, type: string, required: true }
+      - { name: badge, label: "Badge text (max 5 letters, e.g. PMP)", type: string, required: true }
+      - { name: short, label: "Short name for lists (optional, e.g. PMI-RMP)", type: string }
+      - { name: status, label: Status, type: select, required: true, options: { values: [
+          { name: active, label: Active }, { name: in-progress, label: In progress }, { name: expired, label: Expired } ] } }
+      - { name: issued, label: "Issued (YYYY-MM)", type: string }
+      - { name: expires, label: "Expires (YYYY-MM)", type: string }
+      - { name: verifyUrl, label: Verify link, type: string }
+      - { name: certificate, label: Certificate image (popup), type: image, options: { path: public/media/certificates } }
+      - { name: color, label: Badge colour, type: select, options: { values: [brand, cyan, slate] } }
+      - { name: order, label: "Order (1 = first)", type: number }
+      - { name: hidden, label: Hide from site, type: boolean }
+
+  # ----------------------------------------------------------------- bootcamps
+  - name: bootcamps
+    label: Bootcamps & training
+    type: collection
+    path: src/content/bootcamps
+    format: yaml
+    filename:
+      template: "{primary}.yaml"
+      field: create
+    view:
+      primary: name
+      sort: order
+      order: asc
+      fields: [name, provider, hours, order]
+    fields:
+      - { name: name, label: Program name, type: string, required: true }
+      - { name: provider, label: Provider, type: string, required: true }
+      - { name: start, label: "Start (YYYY-MM)", type: string }
+      - { name: end, label: "End (YYYY-MM)", type: string }
+      - { name: hours, label: Hours, type: number }
+      - { name: mode, label: Mode, type: select, options: { values: [
+          { name: online, label: Online }, { name: in-person, label: In person }, { name: hybrid, label: Hybrid } ] } }
+      - { name: summary, label: Description, type: object, required: true, fields: [
+          { name: en, label: English, type: text, required: true },
+          { name: ar, label: العربية, type: text, required: true } ] }
+      - { name: skills, label: Skills, type: string, list: true }
+      - { name: selective, label: "Highlight badge (optional, e.g. Selective admission)", type: object, fields: [
+          { name: en, label: English, type: string }, { name: ar, label: العربية, type: string } ] }
+      - { name: capstone, label: Capstone project, type: reference, options: { collection: projects, value: "{path}", label: "{title.en}" } }
+      - { name: order, label: "Order (1 = first)", type: number }
+      - { name: hidden, label: Hide from site, type: boolean }
+
+  # ---------------------------------------------------------------- experience
+  - name: experience
+    label: Experience (jobs)
+    type: collection
+    path: src/content/experience
+    format: yaml
+    exclude: [.gitkeep]
+    filename:
+      template: "{primary}.yaml"
+      field: create
+    view:
+      primary: company
+      sort: order
+      order: asc
+    fields:
+      - { name: role, label: Job title, type: object, required: true, fields: [
+          { name: en, label: English, type: string, required: true },
+          { name: ar, label: العربية, type: string, required: true } ] }
+      - { name: company, label: Company, type: string, required: true }
+      - { name: location, label: Location, type: object, fields: [
+          { name: en, label: English, type: string }, { name: ar, label: العربية, type: string } ] }
+      - { name: start, label: "Start (YYYY-MM)", type: string, required: true }
+      - { name: end, label: "End (YYYY-MM, empty = present)", type: string }
+      - { name: summary, label: Summary, type: object, required: true, fields: [
+          { name: en, label: English, type: text, required: true },
+          { name: ar, label: العربية, type: text, required: true } ] }
+      - { name: highlights, label: Highlights, type: object, list: true, fields: [
+          { name: en, label: English, type: text }, { name: ar, label: العربية, type: text } ] }
+      - { name: skills, label: Skills, type: string, list: true }
+      - { name: order, label: "Order (1 = first)", type: number }
+      - { name: hidden, label: Hide from site, type: boolean }
+
+  # ------------------------------------------------------------- site settings
+  - name: settings
+    label: Site settings (about, skills, links)
+    type: file
+    path: src/content/settings.json
+    format: json
+    fields:
+      - { name: name, label: Name, type: object, fields: [ { name: en, type: string }, { name: ar, type: string } ] }
+      - { name: role, label: Headline role, type: object, fields: [ { name: en, type: string }, { name: ar, type: string } ] }
+      - { name: roleBadge, label: Headline badge, type: object, fields: [ { name: en, type: string }, { name: ar, type: string } ] }
+      - { name: location, label: Location, type: object, fields: [ { name: en, type: string }, { name: ar, type: string } ] }
+      - { name: relocate, label: Relocation line, type: object, fields: [ { name: en, type: string }, { name: ar, type: string } ] }
+      - { name: availability, label: Availability, type: object, fields: [ { name: en, type: string }, { name: ar, type: string } ] }
+      - { name: lead, label: Hero sentence, type: object, fields: [ { name: en, type: text }, { name: ar, type: text } ] }
+      - { name: about, label: "About paragraphs (<strong>bold</strong> allowed)", type: object, list: true, fields: [
+          { name: en, label: English, type: text }, { name: ar, label: العربية, type: text } ] }
+      - name: education
+        label: Education
+        type: object
+        fields:
+          - { name: degree, type: object, fields: [ { name: en, type: string }, { name: ar, type: string } ] }
+          - { name: school, type: object, fields: [ { name: en, type: string }, { name: ar, type: string } ] }
+          - { name: years, type: string }
+      - { name: languages, label: Languages, type: object, fields: [ { name: en, type: string }, { name: ar, type: string } ] }
+      - { name: skills, label: Skill groups, type: object, list: true, fields: [
+          { name: icon, type: select, options: { values: [cloud, code, check, db] } },
+          { name: title, type: object, fields: [ { name: en, type: string }, { name: ar, type: string } ] },
+          { name: items, type: string, list: true } ] }
+      - { name: topSkills, label: Top skills (quick-view), type: string, list: true }
+      - { name: highlights, label: "Highlights (quick-view; {hours} = total training hours)", type: object, list: true, fields: [
+          { name: en, label: English, type: text }, { name: ar, label: العربية, type: text } ] }
+      - name: terminal
+        label: Hero terminal
+        type: object
+        fields:
+          - { name: cloud, type: string, list: true }
+          - { name: iac, type: string }
+          - { name: ships, type: string }
+          - { name: based, type: string }
+      - name: links
+        label: Contact links
+        type: object
+        fields:
+          - { name: email, type: string }
+          - { name: github, type: string }
+          - { name: linkedin, type: string }
+          - { name: whatsapp, label: "WhatsApp number (digits only, with 966)", type: string }
+          - { name: cv, label: CV file path, type: string }
+      - { name: contactFormEndpoint, label: Contact form endpoint, type: string }
