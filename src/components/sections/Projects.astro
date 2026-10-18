@@ -1,0 +1,27 @@
+---
+import T from '../T.astro';
+import ProjectCard from '../ProjectCard.astro';
+import type { Site } from '../../lib/data';
+
+const { site } = Astro.props as { site: Site };
+const c = site.categoryCounts;
+const filters = [
+  { f: 'all', k: 'fl.all', n: c.all },
+  { f: 'cloud', k: 'fl.cloud', n: c.cloud },
+  { f: 'web', k: 'fl.web', n: c.web },
+  { f: 'ai', k: 'fl.ai', n: c.ai },
+] as const;
+---
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head reveal"><div class="sec-label">03 // projects</div><T as="h2" k="pr.h" /><T as="p" k="pr.sub" /></div>
+    <div class="filters reveal" role="group">
+      {filters.filter((x) => x.n > 0).map((x, i) => (
+        <button class:list={['filter', { on: i === 0 }]} data-f={x.f}><T k={x.k} /> <i>{x.n}</i></button>
+      ))}
+    </div>
+    <div class="projects-grid">
+      {site.projects.map((p) => <ProjectCard p={p} />)}
+    </div>
+  </div>
+</section>

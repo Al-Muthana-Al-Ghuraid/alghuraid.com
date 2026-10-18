@@ -1,0 +1,12 @@
+order: 1
+name: Software Development Using Python
+provider: Saudi Digital Academy × WeCloudData
+start: 2026-05
+end: 2026-06
+hours: 280
+mode: online
+capstone: trackflow
+skills: [React, FastAPI, JWT, SQLAlchemy, OpenAI API, Git]
+summary:
+  en: "Full-stack engineering: React front ends, FastAPI back ends with JWT auth, SQL/ORM data layers, and applied AI/LLM integration with RAG and vector databases."
+  ar: "هندسة برمجيات متكاملة: واجهات React، وخوادم FastAPI مع مصادقة JWT، وطبقات بيانات SQL/ORM، ودمج تطبيقي للذكاء الاصطناعي والنماذج اللغوية مع تقنية RAG وقواعد البيانات المتجهية."

@@ -1,0 +1,14 @@
+---
+// Fallback project cover: a small code snippet with light syntax colouring.
+const { file, code } = Astro.props as { file: string; code: string };
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// one pass, so colouring never touches the HTML it already inserted
+const TOKEN = /("[^"]*")|\b(\d+(?:\.\d+)?)\b|\b(resource|class|def|import|from|return|const|let|function|True|False|true|false|None|null)\b/g;
+const html = code.trimEnd().split('\n').map((line) => {
+  const indent = line.match(/^ */)![0].length;
+  const body = esc(line.slice(indent)).replace(TOKEN, (m, s, n, k) =>
+    `<span class="${s ? 't-str' : n ? 't-num' : 't-key'}">${m}</span>`);
+  return '&nbsp;'.repeat(indent * 2) + body;
+}).join('<br>');
+---
+<div class="cover gen"><div class="gen-code"><span class="t-com"># {file}</span><br><Fragment set:html={html} /></div></div>

@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/sections/Hero.astro';
+import About from '../components/sections/About.astro';
+import Skills from '../components/sections/Skills.astro';
+import Projects from '../components/sections/Projects.astro';
+import Certifications from '../components/sections/Certifications.astro';
+import Bootcamps from '../components/sections/Bootcamps.astro';
+import Experience from '../components/sections/Experience.astro';
+import Contact from '../components/sections/Contact.astro';
+import QuickView from '../components/sections/QuickView.astro';
+import { loadSite } from '../lib/data';
+
+const site = await loadSite();
+---
+<Base home>
+  <Hero site={site} />
+  <About site={site} />
+  <Skills site={site} />
+  <Experience site={site} />
+  <Projects site={site} />
+  <Certifications site={site} />
+  <Bootcamps site={site} />
+  <Contact site={site} />
+  <QuickView site={site} />
+</Base>

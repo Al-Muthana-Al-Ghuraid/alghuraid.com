@@ -1,0 +1,12 @@
+order: 3
+name: Advanced Bioinformatics Training Program
+provider: KAUST Academy
+hours: 120
+mode: in-person
+skills: [Python, pandas, Data normalization, Correlation analysis, Genomic data]
+selective:
+  en: "Selective admission: entry exam"
+  ar: قبول تنافسي عبر اختبار قبول
+summary:
+  en: A completely new field for me. I analyzed DNA sequences, gene-expression and protein data from public and Saudi-specific genomic datasets, cleaning and normalizing them with Python and pandas, then comparing organisms through correlation analysis.
+  ar: "مجال جديد كليًا بالنسبة لي: حلّلت تسلسلات الحمض النووي وبيانات التعبير الجيني والبروتينات من مجموعات بيانات جينومية عامة وأخرى خاصة بالمملكة، ونظّفتها وطبّعتها باستخدام Python وpandas، ثم قارنت بين الكائنات الحية عبر تحليل الارتباط."

@@ -1,0 +1,30 @@
+---
+// Hidden until the first file is added to src/content/experience.
+import T from '../T.astro';
+import Icon from '../Icon.astro';
+import { range, t } from '../../i18n/ui';
+import type { Site } from '../../lib/data';
+
+const { site } = Astro.props as { site: Site };
+---
+{site.experience.length > 0 && (
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head reveal"><div class="sec-label">// experience</div><T as="h2" k="ex.h" /></div>
+    <div class="exp-list">
+      {site.experience.map(({ data: e }) => (
+        <article class="card exp reveal">
+          <div class="exp-ico"><Icon name="briefcase" /></div>
+          <div class="exp-body">
+            <div class="p-meta"><T v={range(e.start, e.end, t('ex.present'))!} />{e.location && <T v={e.location} />}</div>
+            <h3><T v={e.role} /> · <span class="exp-co">{e.company}</span></h3>
+            <T as="p" v={e.summary} />
+            {e.highlights.length > 0 && <ul class="qv-list">{e.highlights.map((h) => <T as="li" v={h} />)}</ul>}
+            {e.skills.length > 0 && <div class="chips">{e.skills.map((s) => <span class="chip">{s}</span>)}</div>}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+)}

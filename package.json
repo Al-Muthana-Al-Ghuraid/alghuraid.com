@@ -1,0 +1,21 @@
+{
+    "name":  "alghuraid-portfolio",
+    "type":  "module",
+    "version":  "1.0.0",
+    "private":  true,
+    "scripts":  {
+                    "dev":  "astro dev",
+                    "build":  "astro build",
+                    "preview":  "astro preview",
+                    "astro":  "astro",
+                    "postinstall":  "node scripts/local-wasi.mjs"
+                },
+    "dependencies":  {
+                         "astro":  "^7.4.0"
+                     },
+    "devDependencies":  {
+                            "@emnapi/core":  "^1.11.3",
+                            "@emnapi/runtime":  "^1.11.3",
+                            "@napi-rs/wasm-runtime":  "^1.2.5"
+                        }
+}

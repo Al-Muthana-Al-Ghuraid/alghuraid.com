@@ -1,0 +1,37 @@
+order: 4
+year: 2024
+org: Tuwaiq Academy
+categories: [web]
+tags: [Django, Python, SQL, Bootstrap]
+codeCover:
+  file: shop/models.py
+  code: |
+    class Product(models.Model):
+      discount = 0.15
+      is_visible = True
+title:
+  en: Django e-commerce platform
+  ar: متجر إلكتروني باستخدام Django
+summary:
+  en: A complete online store with separate user and admin authentication, discount management, product visibility controls, a searchable catalog and a working cart.
+  ar: متجر إلكتروني متكامل بتسجيل دخول منفصل للمستخدم والمسؤول، مع إدارة الخصومات، والتحكم في ظهور المنتجات، وكتالوج قابل للبحث، وسلة تسوق.
+impact:
+  en: "End-to-end build: models, auth, admin tools and checkout flow"
+  ar: "بناء متكامل: النماذج، والمصادقة، وأدوات الإدارة، وإتمام الشراء"
+caseStudy:
+  intro:
+    en: Built during the Web Development Using Django program at Tuwaiq Academy.
+    ar: بُني خلال برنامج تطوير الويب باستخدام Django في أكاديمية طويق.
+  problem:
+    en: A store needs customers and admins to see very different things, and admins need to change products, prices and visibility without touching code.
+    ar: يحتاج المتجر إلى أن يرى العملاء والمسؤولون أشياء مختلفة تمامًا، وأن يتمكن المسؤول من تعديل المنتجات والأسعار وظهورها دون لمس الرمز.
+  built:
+    - en: Separate user and admin authentication.
+      ar: تسجيل دخول منفصل للمستخدم والمسؤول.
+    - en: Admin tools to add products, apply discounts and control which items are visible.
+      ar: أدوات للمسؤول لإضافة المنتجات وتطبيق الخصومات والتحكم في ظهور المنتجات.
+    - en: A searchable, categorized catalog and a working shopping cart.
+      ar: كتالوج مصنّف قابل للبحث، وسلة تسوق عاملة.
+  results:
+    - en: A working end-to-end store built in Django.
+      ar: متجر عامل من البداية إلى النهاية مبني بـDjango.

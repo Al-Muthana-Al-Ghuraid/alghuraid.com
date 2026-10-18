@@ -1,0 +1,32 @@
+---
+import T from './T.astro';
+import Icon from './Icon.astro';
+import CodeCover from './CodeCover.astro';
+import type { Site } from '../lib/data';
+
+type Project = Site['projects'][number];
+const { p } = Astro.props as { p: Project };
+const d = p.data;
+const href = `/projects/${p.id}/`;
+---
+<article class:list={['card project reveal', { featured: d.featured }]} data-cat={d.categories.join(' ')}>
+  <a class="cover-link" href={href} tabindex="-1" aria-hidden="true">
+    {d.cover
+      ? <div class="cover"><img src={d.cover} alt="" loading="lazy" decoding="async"></div>
+      : d.codeCover && <CodeCover file={d.codeCover.file} code={d.codeCover.code} />}
+  </a>
+  <div class="p-body">
+    <div class="p-meta">{d.featured && <T k="pr.feat" />}{d.org && <span>{d.org}</span>}<span>{d.year}</span></div>
+    <h3><a href={href}><T v={d.title} /></a></h3>
+    <T as="p" v={d.summary} />
+    <div class="impact"><Icon name="trend" /><T v={d.impact} /></div>
+    <div class="chips">{d.tags.map((t) => <span class="chip">{t}</span>)}</div>
+    <div class="p-actions">
+      <a href={href} class="btn btn-primary btn-sm"><T k="btn.case" /></a>
+      {d.github
+        ? <a href={d.github} target="_blank" rel="noopener" class="btn btn-ghost btn-sm"><Icon name="github" />GitHub</a>
+        : d.github === '' && <span class="btn btn-ghost btn-sm" aria-disabled="true">GitHub <T k="btn.soon" class="soon" /></span>}
+      {d.live && <a href={d.live} target="_blank" rel="noopener" class="btn btn-ghost btn-sm"><Icon name="external" /><T k="btn.live" /></a>}
+    </div>
+  </div>
+</article>

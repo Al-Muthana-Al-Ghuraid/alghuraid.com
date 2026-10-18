@@ -1,0 +1,8 @@
+order: 5
+name: Data Analysis Using SQL
+provider: Tuwaiq Academy
+hours: 20
+skills: [SQL, Joins, Aggregation]
+summary:
+  en: "Querying and analyzing relational data with SQL: filtering, joins, aggregation and turning raw tables into answers."
+  ar: "الاستعلام عن البيانات العلائقية وتحليلها باستخدام SQL: التصفية، والربط، والتجميع، وتحويل الجداول الخام إلى إجابات."

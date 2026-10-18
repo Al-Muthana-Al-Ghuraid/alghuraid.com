@@ -1,0 +1,40 @@
+---
+import T from '../T.astro';
+import Icon from '../Icon.astro';
+import { fill } from '../../i18n/ui';
+import type { Site } from '../../lib/data';
+
+const { site } = Astro.props as { site: Site };
+const s = site.settings;
+const certChip = (c: Site['certifications'][number]['data']) => {
+  const n = c.short ?? c.badge;
+  return c.status === 'in-progress' ? { en: `${n} (in progress)`, ar: `${n} (قيد التحضير)` } : { en: n, ar: n };
+};
+const hours = site.totalHours.toLocaleString('en');
+---
+<div class="modal" id="qv" role="dialog" aria-modal="true" aria-labelledby="qvName">
+  <div class="modal-box qv-box">
+    <div class="modal-head"><span class="sec-label" style="margin:0">⚡ <T k="qv.label" /></span><button class="icon-btn" data-close aria-label="Close">✕</button></div>
+    <T as="h3" id="qvName" class="qv-name" v={s.name} />
+    <div class="qv-role"><T v={{ en: `${s.role.en}<span class="sep">·</span>${s.roleBadge.en}`, ar: `${s.role.ar}<span class="sep">·</span>${s.roleBadge.ar}` }} /></div>
+    <div class="qv-grid">
+      <div class="qv-cell"><T as="small" k="f.loc" /><T v={{ en: `${s.location.en.split(',')[0]} · ${s.relocate.en}`, ar: `${s.location.ar.split('،')[0]} · ${s.relocate.ar}` }} /></div>
+      <div class="qv-cell"><T as="small" k="qv.avail" /><T v={s.availability} /></div>
+      <div class="qv-cell"><T as="small" k="f.edu" /><T v={{ en: `${s.education.degree.en}, ${s.education.years.slice(-4)}`, ar: `${s.education.degree.ar}، ${s.education.years.slice(-4)}` }} /></div>
+      <div class="qv-cell"><T as="small" k="f.lang" /><T v={{ en: s.languages.en.replace(/ \([^)]*\)/g, ''), ar: s.languages.ar.replace(/ \([^)]*\)/g, '') }} /></div>
+    </div>
+    {site.certifications.length > 0 && (
+      <div class="qv-sec"><T as="small" k="qv.certs" /><div class="chips">{site.certifications.filter((c) => c.data.status !== 'expired').map((c) => <T class="chip" v={certChip(c.data)} />)}</div></div>
+    )}
+    <div class="qv-sec"><T as="small" k="qv.skills" /><div class="chips">{s.topSkills.map((x) => <span class="chip">{x}</span>)}</div></div>
+    <div class="qv-sec"><T as="small" k="qv.hl" />
+      <ul class="qv-list">{s.highlights.map((h) => <T as="li" v={fill(h, { hours })} />)}</ul>
+    </div>
+    <div class="p-actions" style="margin-top:20px">
+      <a href={s.links.cv} download class="btn btn-primary btn-sm"><Icon name="download" /><T k="nav.cv" /></a>
+      <a href={s.links.linkedin} target="_blank" rel="noopener" class="btn btn-ghost btn-sm">LinkedIn</a>
+      <a href={`mailto:${s.links.email}`} class="btn btn-ghost btn-sm"><T k="co.email" /></a>
+      <a href={`https://wa.me/${s.links.whatsapp}`} target="_blank" rel="noopener" class="btn btn-ghost btn-sm"><T v={{ en: 'WhatsApp', ar: 'واتساب' }} /></a>
+    </div>
+  </div>
+</div>

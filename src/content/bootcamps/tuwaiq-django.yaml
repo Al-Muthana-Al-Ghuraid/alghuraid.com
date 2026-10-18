@@ -1,0 +1,11 @@
+order: 4
+name: Web Development Using Django
+provider: Tuwaiq Academy
+start: 2024-08
+end: 2024-09
+hours: 60
+capstone: django-ecommerce
+skills: [Django, Python, ORM, Auth]
+summary:
+  en: "Building data-driven web apps with Django: models and the ORM, authentication, admin tooling, templates and deployment basics."
+  ar: "بناء تطبيقات ويب قائمة على البيانات باستخدام Django: النماذج وORM، والمصادقة، وأدوات الإدارة، والقوالب، وأساسيات النشر."

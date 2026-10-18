@@ -1,0 +1,12 @@
+order: 2
+name: Cloud Engineering Bootcamp
+provider: WeCloudData Institute
+start: 2025-02
+end: 2025-05
+hours: 500
+mode: online
+capstone: rag-chatbot
+skills: [Azure, Terraform, Docker, GitHub Actions, Serverless, Cloud security]
+summary:
+  en: "Deploying and running production-style infrastructure on Microsoft Azure: Infrastructure as Code, CI/CD pipelines, containers, serverless and cloud security."
+  ar: "نشر بنية تحتية بمستوى بيئات الإنتاج وتشغيلها على Microsoft Azure: البنية التحتية كرمز، وخطوط CI/CD، والحاويات، والحوسبة دون خوادم، وأمن السحابة."

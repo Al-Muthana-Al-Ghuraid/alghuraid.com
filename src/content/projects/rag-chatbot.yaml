@@ -1,0 +1,40 @@
+order: 3
+year: 2025
+org: WeCloudData capstone
+categories: [cloud, ai]
+tags: [Azure, Terraform, FastAPI, Streamlit, Cosmos DB, Key Vault]
+codeCover:
+  file: rag-chatbot/main.tf
+  code: |
+    resource "azurerm_container_app"
+      name = "rag-api"
+      replicas = 2
+title:
+  en: RAG-powered AI chatbot on Azure
+  ar: روبوت محادثة ذكي بتقنية RAG على Azure
+summary:
+  en: Context-aware answers from a PDF knowledge base using retrieval-augmented generation. I deployed it two ways, on VM Scale Sets and on Azure Container Apps, all provisioned with Terraform.
+  ar: إجابات دقيقة مستندة إلى قاعدة معرفية من ملفات PDF باستخدام تقنية RAG، ونشرته بطريقتين، على VM Scale Sets وعلى Azure Container Apps، وكل ذلك عبر Terraform.
+impact:
+  en: 2 deployment architectures · 100% Infrastructure as Code · CI/CD
+  ar: معماريتان للنشر · البنية التحتية بالكامل كرمز (IaC) · تكامل ونشر مستمر (CI/CD)
+caseStudy:
+  intro:
+    en: The capstone project of my WeCloudData Cloud Engineering bootcamp.
+    ar: مشروع التخرج في معسكر هندسة السحابة من WeCloudData.
+  problem:
+    en: Answering questions accurately from a set of PDF documents, and running it on cloud infrastructure that is reproducible and secure.
+    ar: الإجابة بدقة عن الأسئلة من مجموعة مستندات PDF، وتشغيل ذلك على بنية سحابية قابلة لإعادة الإنشاء وآمنة.
+  built:
+    - en: A retrieval-augmented generation backend in FastAPI with a Streamlit front end.
+      ar: واجهة خلفية بتقنية RAG مبنية بـFastAPI مع واجهة أمامية بـStreamlit.
+    - en: Two deployment architectures, VM Scale Sets and Azure Container Apps, both provisioned with Terraform.
+      ar: معماريتان للنشر، VM Scale Sets وAzure Container Apps، وكلتاهما مجهّزة عبر Terraform.
+    - en: Azure Blob Storage, Cosmos DB, PostgreSQL and Key Vault for data and secrets, with CI/CD through GitHub Actions.
+      ar: Azure Blob Storage وCosmos DB وPostgreSQL وKey Vault للبيانات والأسرار، مع CI/CD عبر GitHub Actions.
+  results:
+    - en: The full stack can be rebuilt from code, with secrets kept out of the codebase.
+      ar: يمكن إعادة بناء المنظومة كاملة من الرمز، مع إبقاء الأسرار خارج قاعدة الرمز.
+  stats:
+    - { value: "2", label: { en: deployment architectures, ar: معماريتان للنشر } }
+    - { value: "100%", label: { en: Infrastructure as Code, ar: بنية تحتية كرمز } }

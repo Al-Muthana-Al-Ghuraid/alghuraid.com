@@ -1,0 +1,52 @@
+order: 1
+featured: true
+year: 2026
+categories: [cloud, ai]
+tags: [Oracle Cloud, Docker Compose, Cloudflare Tunnel, n8n, OpenAI, Bash]
+cover: /media/projects/n8n.webp
+github: ""
+live: ""
+title:
+  en: Self-hosted job-hunt automation on Oracle Cloud
+  ar: منصة أتمتة للبحث عن الوظائف على Oracle Cloud
+summary:
+  en: "An automation platform I designed and run on Oracle Cloud: n8n in Docker, locked behind Cloudflare Zero Trust. Every morning it scrapes, de-duplicates and AI-scores job posts from four job boards. Work that used to take hours by hand now runs on its own."
+  ar: "منصة أتمتة صمّمتها وأديرها على Oracle Cloud: تعمل n8n داخل Docker، ومحميّة بنموذج Cloudflare Zero Trust. كل صباح تجمع إعلانات الوظائف من أربع منصات توظيف، وتزيل المكرر منها، وتقيّمها بالذكاء الاصطناعي؛ فما كان يستغرق ساعات من العمل اليدوي أصبح يُنجَز تلقائيًا."
+impact:
+  en: "~1,000 posts processed → ~80 AI-shortlisted daily · hours of manual work automated · zero open ports"
+  ar: معالجة ~1,000 إعلان واختيار ~80 منها بالذكاء الاصطناعي يوميًا · أتمتة ساعات من العمل اليدوي · لا منافذ مفتوحة
+caseStudy:
+  diagram: n8n
+  intro:
+    en: I moved my job-search automations off my laptop onto a hardened cloud server, behind a zero-trust tunnel, with scheduled daily runs and nightly backups.
+    ar: نقلت أتمتة البحث عن الوظائف من حاسوبي الشخصي إلى خادم سحابي مُحصَّن، خلف نفق بنموذج Zero Trust، مع تشغيل يومي مجدول ونسخ احتياطي كل ليلة.
+  problem:
+    en: Searching LinkedIn, Indeed, Bayt and Workable by hand every day took hours, and my automations only ran while my laptop was on.
+    ar: كان البحث اليدوي اليومي في LinkedIn وIndeed وBayt وWorkable يستغرق ساعات، ولم تكن الأتمتة تعمل إلا عندما يكون حاسوبي قيد التشغيل.
+  built:
+    - en: An ARM server on Oracle Cloud running n8n and cloudflared with Docker Compose, with no app ports published on the host.
+      ar: خادم ARM على Oracle Cloud يشغّل n8n وcloudflared عبر Docker Compose، دون نشر أي منفذ للتطبيق على الخادم.
+    - en: Cloudflare Tunnel and Access in front of n8n, so the only way in is an email PIN for a single allowed user, then n8n's own login.
+      ar: Cloudflare Tunnel وAccess أمام n8n، فلا يمكن الدخول إلا برمز عبر البريد لمستخدم واحد مسموح له، ثم تسجيل الدخول الخاص بـn8n.
+    - en: A daily pipeline that scrapes four job boards, normalizes and de-duplicates posts, pre-scores them in JavaScript, then lets an LLM extract job facts and decide.
+      ar: خط معالجة يومي يجمع الإعلانات من أربع منصات، ويوحّدها ويزيل المكرر، ويقيّمها مبدئيًا بلغة JavaScript، ثم يستخرج نموذج لغوي تفاصيل الوظيفة ويتخذ القرار.
+    - en: Nightly backups of workflows and encrypted credentials with 14-day retention, plus a monthly off-server copy.
+      ar: نسخ احتياطي ليلي لسير العمل وبيانات الاعتماد المشفّرة مع الاحتفاظ بها 14 يومًا، إضافة إلى نسخة شهرية خارج الخادم.
+  challenges:
+    - en: Google OAuth tokens expired every 7 days in "Testing" mode; moving the consent screen to production fixed it.
+      ar: كانت رموز Google OAuth تنتهي كل 7 أيام في وضع الاختبار، وحُلّت المشكلة بنقل شاشة الموافقة إلى وضع الإنتاج.
+    - en: Re-runs created duplicate rows until de-duplication checked the sheet across runs.
+      ar: كانت إعادة التشغيل تُنشئ صفوفًا مكررة، حتى أصبح التحقق من التكرار يشمل جميع عمليات التشغيل.
+  results:
+    - en: The daily job pipeline runs unattended in the cloud. My laptop no longer needs to be on.
+      ar: يعمل خط البحث اليومي في السحابة دون تدخل، ولم يعد حاسوبي بحاجة إلى أن يكون قيد التشغيل.
+    - en: About 1,000 posts in, about 80 ranked and shortlisted out, with zero duplicates on re-runs.
+      ar: نحو 1,000 إعلان تُعالَج، ونحو 80 وظيفة مرتّبة ومرشّحة، دون أي تكرار عند إعادة التشغيل.
+  stats:
+    - { value: "~1,000", label: { en: posts processed / day, ar: إعلان يُعالَج يوميًا } }
+    - { value: "~80", label: { en: shortlisted / day, ar: وظيفة مرشّحة يوميًا } }
+    - { value: "0", label: { en: open inbound ports, ar: منافذ واردة مفتوحة } }
+    - { value: "24/7", label: { en: automated, unattended, ar: أتمتة متواصلة دون تدخل } }
+  screenshots:
+    - src: /media/projects/n8n.webp
+      caption: { en: The daily job-applications pipeline in n8n, ar: خط معالجة طلبات الوظائف اليومي في n8n }

@@ -1,0 +1,51 @@
+---
+import T from '../T.astro';
+import Icon from '../Icon.astro';
+import type { Site } from '../../lib/data';
+
+const { site } = Astro.props as { site: Site };
+const { settings: s, certifications } = site;
+const active = certifications.filter((c) => c.data.status === 'active').map((c) => c.data.short ?? c.data.badge);
+// data for the typing terminal (src/scripts/terminal.ts)
+const profile = {
+  name: s.name.en,
+  role: s.role.en,
+  certs: active,
+  cloud: s.terminal.cloud,
+  iac: s.terminal.iac,
+  ships: s.terminal.ships,
+  based: s.terminal.based,
+};
+const [first, ...rest] = s.name.en.split(' ');
+---
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow reveal"><T v={{ en: `${s.location.en} · ${s.relocate.en}`, ar: `${s.location.ar} · ${s.relocate.ar}` }} /></div>
+      <h1 class="reveal"><T k="hero.hi" /><br><T class="grad" v={{ en: `<span class="nw">${first}</span> <span class="nw">${rest.join(' ')}</span>`, ar: s.name.ar }} /></h1>
+      <div class="role reveal"><T v={{ en: `${s.role.en}<span class="sep">·</span>${s.roleBadge.en}`, ar: `${s.role.ar}<span class="sep">·</span>${s.roleBadge.ar}` }} /></div>
+      <p class="lead reveal"><T v={s.lead} /></p>
+      <div class="ctas reveal">
+        <a href="#projects" class="btn btn-primary"><T k="hero.cta1" /><Icon name="arrow" class="arrow-flip" /></a>
+        <a href="#contact" class="btn btn-ghost"><T k="hero.cta2" /></a>
+        <button class="btn btn-ghost" id="openQv"><Icon name="bolt" /><T k="hero.qv" /></button>
+      </div>
+      <div class="socials reveal">
+        <a class="icon-btn" href={s.links.github} target="_blank" rel="noopener" aria-label="GitHub"><Icon name="github" /></a>
+        <a class="icon-btn" href={s.links.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn"><Icon name="linkedin" /></a>
+        <a class="icon-btn" href={`mailto:${s.links.email}`} aria-label="Email"><Icon name="mail" /></a>
+        <a class="icon-btn" href={`https://wa.me/${s.links.whatsapp}`} target="_blank" rel="noopener" aria-label="WhatsApp"><Icon name="chat" /></a>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="terminal" id="terminal">
+        <div class="term-bar"><i></i><i></i><i></i><span id="termTitle">~/alghuraid — zsh</span></div>
+        <div class="term-body" id="term" aria-live="polite"></div>
+        <input id="termInput" class="term-input" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal input">
+        <div class="dpad" id="dpad"><button data-d="up">↑</button><button data-d="left">←</button><button data-d="down">↓</button><button data-d="right">→</button><button data-d="esc">esc</button></div>
+      </div>
+      <T as="button" class="term-hint" id="termHint" k="sn.hint" />
+    </div>
+  </div>
+  <script type="application/json" id="profileData" set:html={JSON.stringify(profile)} />
+</header>

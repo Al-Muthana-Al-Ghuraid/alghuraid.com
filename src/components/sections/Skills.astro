@@ -1,0 +1,21 @@
+---
+import T from '../T.astro';
+import Icon from '../Icon.astro';
+import type { Site } from '../../lib/data';
+
+const { site } = Astro.props as { site: Site };
+---
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head reveal"><div class="sec-label">02 // stack</div><T as="h2" k="skills.h" /></div>
+    <div class="skills-grid">
+      {site.settings.skills.map((g) => (
+        <div class="card reveal">
+          <div class="skill-ico"><Icon name={g.icon as any} /></div>
+          <T as="h3" v={g.title} />
+          <div class="chips">{g.items.map((i) => <span class="chip">{i}</span>)}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

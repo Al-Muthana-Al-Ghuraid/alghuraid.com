@@ -1,0 +1,46 @@
+---
+import T from '../T.astro';
+import { month } from '../../i18n/ui';
+import type { Site } from '../../lib/data';
+
+const { site } = Astro.props as { site: Site };
+---
+{site.certifications.length > 0 && (
+<section id="certs">
+  <div class="wrap">
+    <div class="sec-head reveal"><div class="sec-label">04 // certifications</div><T as="h2" k="ce.h" /></div>
+    <div class="certs-grid">
+      {site.certifications.map(({ data: c }) => {
+        const issued = month(c.issued), expires = month(c.expires);
+        return (
+          <div class="card cert reveal">
+            <div class="cert-top">
+              <div class:list={['badge-logo', { alt: c.color === 'cyan', alt2: c.color === 'slate' }]}>{c.badge}</div>
+              <div><h3>{c.name}</h3><div class="issuer">{c.issuer}</div></div>
+            </div>
+            {c.status === 'in-progress'
+              ? <span class="status prog"><i></i><T k="st.in-progress" /></span>
+              : <span class:list={['status', c.status === 'active' ? 'ok' : 'exp']}>{c.status === 'active' ? '✓ ' : ''}<T k={`st.${c.status}`} /></span>}
+            {issued
+              ? <T class="when" v={expires ? { en: `${issued.en} → ${expires.en}`, ar: `${issued.ar} ← ${expires.ar}` } : issued} />
+              : c.status === 'in-progress' && <T class="when" k="ce.prepping" />}
+            {(c.verifyUrl || c.certificate) && (
+              <div class="p-actions">
+                {c.verifyUrl && <a href={c.verifyUrl} target="_blank" rel="noopener" class="btn btn-primary btn-sm"><T k="btn.verify" /></a>}
+                {c.certificate && <button class="btn btn-ghost btn-sm" data-cert-img={c.certificate} data-cert-name={c.name}><T k="btn.view" /></button>}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
+)}
+
+<div class="modal" id="certModal" role="dialog" aria-modal="true" aria-labelledby="certModalTitle">
+  <div class="modal-box">
+    <div class="modal-head"><h3 class="mono" id="certModalTitle" style="font-size:15px"></h3><button class="icon-btn" data-close aria-label="Close">✕</button></div>
+    <img id="certModalImg" class="cert-img" alt="">
+  </div>
+</div>
