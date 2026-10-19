@@ -447,12 +447,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .egg-toast small{display:block;font-family:var(--font-mono);font-size:11px;color:var(--cyan);text-transform:uppercase;letter-spacing:.06em}
 [dir="rtl"] .egg-toast small{font-family:var(--font-body);letter-spacing:0}
 .egg-toast b{font-weight:600;font-size:14.5px}
-/* hidden words: plain text with a green underline, clickable (no background fill) */
+/* hidden words: plain text underlined in the same colour, clickable (no background fill) */
 .egg-word{cursor:pointer;font-weight:600;color:var(--text);background:none;
-  text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--blue) 75%,transparent);text-decoration-thickness:2px;text-underline-offset:4px;
+  text-decoration:underline;text-decoration-color:currentColor;text-decoration-thickness:2px;text-underline-offset:4px;
   -webkit-tap-highlight-color:transparent;transition:text-decoration-color .25s,text-shadow .25s,transform .2s}
-/* hover only where a real hover exists (on touch screens :hover sticks after a tap): the underline lights up */
-@media (hover:hover){.egg-word:hover{text-decoration-color:var(--blue);text-shadow:0 0 12px color-mix(in srgb,var(--blue) 45%,transparent)}}
+/* hover only where a real hover exists (on touch screens :hover sticks after a tap): a soft glow */
+@media (hover:hover){.egg-word:hover{text-shadow:0 0 12px color-mix(in srgb,var(--text) 45%,transparent)}}
 .egg-word:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:3px}
 .egg-word:active{transform:scale(.96)}
 .hero .role .egg-word{font-weight:inherit}
