@@ -38,11 +38,17 @@ const [first, ...rest] = s.name.en.split(' ');
       </div>
     </div>
     <div class="reveal">
-      <div class="terminal" id="terminal">
-        <div class="term-bar"><i></i><i></i><i></i><span id="termTitle">~/alghuraid — zsh</span></div>
-        <div class="term-body" id="term" aria-live="polite"></div>
+      <div class="terminal crt off" id="terminal">
+        <div class="crt-screen">
+          <div class="crt-content" id="crtContent">
+            <div class="term-bar"><i></i><i></i><i></i><span id="termTitle">GHURAID-TEC TERMLINK</span></div>
+            <div class="term-body" id="term" aria-live="polite"></div>
+            <div class="crt-boot" id="crtBoot" hidden><canvas id="crtMascot" width="416" height="624" aria-hidden="true"></canvas><div class="crt-boot-text" id="crtBootText"></div></div>
+            <div class="dpad" id="dpad"><button data-d="up">↑</button><button data-d="left">←</button><button data-d="down">↓</button><button data-d="right">→</button><button data-d="esc">esc</button></div>
+          </div>
+        </div>
         <input id="termInput" class="term-input" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal input">
-        <div class="dpad" id="dpad"><button data-d="up">↑</button><button data-d="left">←</button><button data-d="down">↓</button><button data-d="right">→</button><button data-d="esc">esc</button></div>
+        <div class="crt-foot" aria-hidden="true"><span>GHURAID-TEC · MODEL 26</span><span class="crt-led"></span></div>
       </div>
       <T as="button" class="term-hint" id="termHint" k="sn.hint" />
     </div>

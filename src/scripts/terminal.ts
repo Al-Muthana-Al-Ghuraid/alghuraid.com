@@ -9,7 +9,7 @@ const profile = JSON.parse(document.getElementById('profileData')!.textContent!)
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const esc = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]!);
-const PROMPT = '<span class="t-prompt">➜</span> <span class="t-key">~</span> ';
+const PROMPT = '<span class="t-prompt">&gt;</span> ';
 const str = (s: string) => `<span class="t-str">${esc(s)}</span>`;
 const list = (a: string[]) => `[${a.map(str).join(', ')}]`;
 const kv = (k: string, v: string) => `<span class="t-key">${(k + ':').padEnd(10)}</span>${v}`;
@@ -36,6 +36,7 @@ const SN = {
         startKeys: 'press ← ↑ ↓ → to start  ·  esc to quit', startTouch: 'swipe or use the buttons to start',
         crash: 'Segmentation fault (snake dumped)', score: (s: number) => `score: ${s}`, retry: 'enter / tap: retry  ·  esc: exit',
         exited: (s: number, b: number) => `# snake exited · score ${s} · best ${b}`, font: '"JetBrains Mono",monospace',
+        welcome: 'WELCOME, VISITOR.',
         gahwa: ['☕ pouring Saudi coffee…', '🌴 served with dates. Take a break, then keep exploring.'],
         weather: ['🌡️ Riyadh: 47°C, sunny, zero clouds…', '☁️ …except the cloud I deploy to.'],
         gravity: ['🍎 disabling gravity…'],
@@ -48,6 +49,7 @@ const SN = {
           '  weather       Riyadh forecast 🌡️',
           '  haboob        summon a sandstorm 🌪️',
           '  gravity       switch gravity off 🍎',
+          '  reboot        power-cycle this terminal 📺',
           '  clear         clear the screen',
           '# psst: more secrets are hiding outside the terminal 👀',
         ] },
@@ -55,6 +57,7 @@ const SN = {
         startKeys: 'اضغط ← ↑ ↓ → للبدء  ·  Esc للخروج', startTouch: 'اسحب أو استخدم الأزرار للبدء',
         crash: 'اصطدمت الأفعى! (Segmentation fault)', score: (s: number) => `النتيجة: ${s}`, retry: 'Enter أو نقرة: إعادة  ·  Esc: خروج',
         exited: (s: number, b: number) => `# انتهت اللعبة · النتيجة ${s} · الأفضل ${b}`, font: '"IBM Plex Sans Arabic",sans-serif',
+        welcome: 'أهلًا وسهلًا بك.',
         gahwa: ['☕ جارٍ صبّ القهوة السعودية…', '🌴 مع التمر. خذ استراحة ثم واصل الاستكشاف.'],
         weather: ['🌡️ الرياض: 47° مئوية، مشمس، بلا غيوم…', '☁️ …إلا السحابة التي أنشر عليها.'],
         gravity: ['🍎 جارٍ إيقاف الجاذبية…'],
@@ -67,6 +70,7 @@ const SN = {
           '  weather       طقس الرياض 🌡️',
           '  haboob        استدعِ عاصفة رملية 🌪️',
           '  gravity       أوقف الجاذبية 🍎',
+          '  reboot        أعد تشغيل الطرفية 📺',
           '  clear         مسح الشاشة',
           '# تلميح: أسرار أخرى مخبّأة خارج الطرفية 👀',
         ] },
@@ -74,24 +78,79 @@ const SN = {
 const sn = () => SN[root.lang === 'ar' ? 'ar' : 'en'];
 
 /* ---------- typing intro + prompt ---------- */
-let history = '', buf = '', mode: 'intro' | 'prompt' | 'auto' | 'game' = 'intro';
+let history = '', buf = '', mode: 'boot' | 'intro' | 'prompt' | 'auto' | 'game' = 'boot';
 const strip = (h: string) => { const d = document.createElement('div'); d.innerHTML = h; return d.textContent!; };
 
 async function typeAll() {
+  history = ''; mode = 'intro'; const run0 = bootRun;
   if (reduce) history = lines.map((l) => l[0]).join('\n') + '\n';
   else for (const [html, speed] of lines) {
     if (speed) {
       // keep the prompt markup, type only the command after it
       const pre = html.startsWith(PROMPT) ? PROMPT : '', cmd = strip(html.slice(pre.length));
-      for (let i = 1; i <= cmd.length; i++) { term.innerHTML = history + pre + esc(cmd.slice(0, i)) + '<span class="cursor"></span>'; await sleep(speed); }
+      for (let i = 1; i <= cmd.length; i++) { if (bootRun !== run0) return; term.innerHTML = history + pre + esc(cmd.slice(0, i)) + '<span class="cursor"></span>'; await sleep(speed); }
       await sleep(250);
     } else await sleep(70);
+    if (bootRun !== run0) return;
     history += html + '\n'; term.innerHTML = history + '<span class="cursor"></span>';
   }
   history += `<span class="t-help">${esc(sn().helpHint)}</span>\n`;
   mode = 'prompt'; render();
 }
-setTimeout(typeAll, 600);
+
+/* ---------- CRT power-on + boot screen (full version once per visit; `reboot` replays it) ---------- */
+const TITLE = 'GHURAID-TEC TERMLINK';
+const content = document.getElementById('crtContent')!;
+const bootBox = document.getElementById('crtBoot')!;
+const bootText = document.getElementById('crtBootText')!;
+const cv = document.getElementById('crtMascot') as HTMLCanvasElement;
+const mascot = new Image(); mascot.src = '/media/terminal/mascot.webp';
+const BOOT_LOG = ['GHURAID-TEC (TM)', 'TERMLINK v2.6', '', '> BOOT ..... OK', '> MEMORY ... OK', '> PROFILE .. OK', '> UPLINK ... ON'];
+let bootRun = 0, skip = false;
+const wait = (ms: number, id: number) => new Promise<boolean>((r) => { const t0 = performance.now(); const f = () => (skip || bootRun !== id ? r(false) : performance.now() - t0 >= ms ? r(true) : requestAnimationFrame(f)); f(); });
+/** Draw the mascot at a given block size: big blocks look like a low-res signal, 1 is the full picture. */
+function rez(block: number) {
+  const ctx = cv.getContext('2d')!, W = cv.width, H = cv.height;
+  ctx.imageSmoothingEnabled = false; ctx.clearRect(0, 0, W, H);
+  if (!mascot.complete || !mascot.naturalWidth) return;
+  if (block <= 1) { ctx.drawImage(mascot, 0, 0, W, H); return; }
+  const w = Math.max(1, Math.round(W / block)), h = Math.max(1, Math.round(H / block));
+  ctx.drawImage(mascot, 0, 0, w, h); ctx.drawImage(cv, 0, 0, w, h, 0, 0, W, H);
+}
+async function boot(full: boolean) {
+  const id = ++bootRun; skip = false; mode = 'boot'; buf = ''; input.value = '';
+  terminal.classList.remove('on'); terminal.classList.add('off'); term.innerHTML = ''; termTitle.textContent = TITLE;
+  await sleep(full ? 450 : 150);
+  terminal.classList.replace('off', 'on');
+  if (!reduce) await content.animate([ // the tube warms up: a dot, a line, then the picture opens out
+    { transform: 'scale(.02,.004)', filter: 'brightness(5)' },
+    { transform: 'scale(1,.004)', filter: 'brightness(4)', offset: 0.45 },
+    { transform: 'scale(1,1)', filter: 'brightness(1)' },
+  ], { duration: full ? 750 : 420, easing: 'cubic-bezier(.2,.8,.2,1)' }).finished;
+  if (full && !reduce) {
+    bootBox.hidden = false; bootText.textContent = ''; rez(64);
+    if (!mascot.complete) await new Promise((r) => { mascot.onload = mascot.onerror = r; });
+    for (const line of BOOT_LOG) { bootText.textContent += line + '\n'; if (!(await wait(line ? 150 : 60, id))) break; }
+    for (const b of [48, 32, 22, 15, 10, 7, 5, 3, 2, 1]) { rez(b); if (!(await wait(85, id))) break; }
+    rez(1);
+    bootText.insertAdjacentHTML('beforeend', `<b>${sn().welcome}</b>`);
+    cv.animate([{ transform: 'none' }, { transform: 'translateY(-8px) scale(1.04)' }, { transform: 'none' }, { transform: 'translateY(-4px) scale(1.02)' }, { transform: 'none' }],
+      { duration: 900, easing: 'ease-in-out' });
+    await wait(1700, id);
+    if (bootRun !== id) return;
+    for (const b of [2, 4, 8, 16, 32]) { rez(b); if (!(await wait(45, id))) break; }
+    bootBox.hidden = true;
+  }
+  if (bootRun !== id) return;
+  try { sessionStorage.setItem('crtBooted', '1'); } catch {}
+  typeAll();
+}
+// clicking or pressing a key during the boot screen skips ahead
+terminal.addEventListener('click', () => { if (mode === 'boot') skip = true; });
+const booted = (() => { try { return sessionStorage.getItem('crtBooted') === '1'; } catch { return false; } })();
+// start when the terminal is actually on screen (on phones it sits below the intro)
+const bio = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { bio.disconnect(); boot(!booted); } }, { threshold: 0.3 });
+bio.observe(terminal);
 
 function render() { if (mode === 'prompt') term.innerHTML = history + PROMPT + esc(buf) + '<span class="cursor"></span>'; }
 terminal.addEventListener('click', () => { if (mode !== 'game') input.focus({ preventScroll: true }); });
@@ -107,6 +166,7 @@ function run(cmd: string) {
   const say = (lines: string[], cls = 't-str') => { history += lines.map((l) => `<span class="${cls}">${esc(l)}</span>`).join('\n') + '\n'; };
   const s = sn();
   if (c === 'clear') history = '';
+  else if (['reboot', 'restart', 'اعادة تشغيل'].includes(c)) { boot(true); return; }
   else if (['gahwa', 'coffee', 'قهوة', 'قهوه'].includes(c)) { say(s.gahwa); egg('gahwa'); }
   else if (['weather', 'الطقس', 'طقس'].includes(c)) { say(s.weather); egg('weather'); }
   else if (['gravity', 'الجاذبية'].includes(c)) { say(s.gravity); dispatchEvent(new CustomEvent('egg:gravity')); }
@@ -169,28 +229,28 @@ function tick() {
 }
 function draw() {
   const g = G; if (!g) return;
-  const { ctx, cols, rows, cell } = g, W = cols * cell, H = rows * cell, cs = getComputedStyle(root), t = sn();
+  const { ctx, cols, rows, cell } = g, W = cols * cell, H = rows * cell, t = sn();
   ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = cs.getPropertyValue('--grid');
+  ctx.fillStyle = 'rgba(65,255,125,.16)';
   for (let x = 0; x < cols; x++) for (let y = 0; y < rows; y++) ctx.fillRect(x * cell + cell / 2 - 1, y * cell + cell / 2 - 1, 2, 2);
-  ctx.strokeStyle = cs.getPropertyValue('--border-strong'); ctx.strokeRect(0.5, 0.5, W - 1, H - 1);
+  ctx.strokeStyle = 'rgba(65,255,125,.35)'; ctx.strokeRect(0.5, 0.5, W - 1, H - 1);
   const n = g.snake.length;
-  g.snake.forEach((s, i) => { // blue → violet along the body
+  g.snake.forEach((s, i) => { // bright → dim phosphor along the body
     const k = n > 1 ? i / (n - 1) : 0;
-    ctx.fillStyle = `rgb(${79 + 60 * k},${140 - 48 * k},${255 - 9 * k})`;
-    ctx.shadowColor = i === 0 ? 'rgba(79,140,255,.9)' : 'transparent'; ctx.shadowBlur = i === 0 ? 12 : 0;
+    ctx.fillStyle = `rgb(${65 - 30 * k},${255 - 110 * k},${125 - 55 * k})`;
+    ctx.shadowColor = i === 0 ? 'rgba(65,255,125,.9)' : 'transparent'; ctx.shadowBlur = i === 0 ? 12 : 0;
     ctx.beginPath(); ctx.roundRect(s.x * cell + 1.5, s.y * cell + 1.5, cell - 3, cell - 3, i === 0 ? 6 : 4); ctx.fill();
   });
   ctx.shadowBlur = 0;
   ctx.font = `${cell - 3}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillText(g.food.e, g.food.x * cell + cell / 2, g.food.y * cell + cell / 2 + 1);
   ctx.direction = root.lang === 'ar' ? 'rtl' : 'ltr';
-  if (!g.started) { ctx.fillStyle = '#8c93ad'; ctx.font = `13px ${t.font}`; ctx.fillText(matchMedia('(pointer:coarse)').matches ? t.startTouch : t.startKeys, W / 2, H - 22); }
+  if (!g.started) { ctx.fillStyle = '#22a24f'; ctx.font = `13px ${t.font}`; ctx.fillText(matchMedia('(pointer:coarse)').matches ? t.startTouch : t.startKeys, W / 2, H - 22); }
   if (g.over) {
-    ctx.fillStyle = 'rgba(5,7,15,.78)'; ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = '#f87171'; ctx.font = `500 15px ${t.font}`; ctx.fillText(t.crash, W / 2, H / 2 - 26);
-    ctx.fillStyle = '#e6e9f5'; ctx.font = `500 22px ${t.font}`; ctx.fillText(t.score(g.score), W / 2, H / 2 + 4);
-    ctx.fillStyle = '#8c93ad'; ctx.font = `12.5px ${t.font}`; ctx.fillText(t.retry, W / 2, H / 2 + 34);
+    ctx.fillStyle = 'rgba(2,12,5,.8)'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#41ff7d'; ctx.font = `500 15px ${t.font}`; ctx.fillText(t.crash, W / 2, H / 2 - 26);
+    ctx.fillStyle = '#b8ffcc'; ctx.font = `500 22px ${t.font}`; ctx.fillText(t.score(g.score), W / 2, H / 2 + 4);
+    ctx.fillStyle = '#22a24f'; ctx.font = `12.5px ${t.font}`; ctx.fillText(t.retry, W / 2, H / 2 + 34);
   }
   ctx.direction = 'ltr';
 }
@@ -198,7 +258,7 @@ function exitSnake() {
   if (!G) return; clearTimeout(G.timer);
   history += `<span class="t-com">${sn().exited(G.score, G.best)}</span>\n`;
   G = null; mode = 'prompt'; terminal.classList.remove('playing', 'touch');
-  termTitle.textContent = '~/alghuraid — zsh'; render();
+  termTitle.textContent = TITLE; render();
 }
 function steer(d: string) {
   const g = G; if (!g) return;
