@@ -15,7 +15,9 @@ const { site } = Astro.props as { site: Site };
         return (
           <div class="card cert reveal">
             <div class="cert-top">
-              <div class:list={['badge-logo', { alt: c.color === 'cyan', alt2: c.color === 'slate' }]}>{c.badge}</div>
+              <div class:list={['badge-logo coin', { alt: c.color === 'cyan', alt2: c.color === 'slate' }]} data-coin tabindex="0" role="button" aria-label={`${c.badge}: spin`}>
+                <span class="spin"><span class="face front">{c.badge}</span><span class="face back">{c.issued ? c.issued.slice(0, 4) : '⏳'}</span></span>
+              </div>
               <div><h3>{c.name}</h3><div class="issuer">{c.issuer}</div></div>
             </div>
             {c.status === 'in-progress'

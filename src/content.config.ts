@@ -53,6 +53,7 @@ const projects = defineCollection({
         intro: optText,
         problem: optText,
         built: textList,
+        decisions: textList, // design choices and why
         challenges: textList,
         results: textList,
         stats: list(z.object({ value: z.string(), label: text })),

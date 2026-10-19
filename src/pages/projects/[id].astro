@@ -49,6 +49,7 @@ let n = 0; const num = () => String(++n).padStart(2, '0');
 
       {cs?.problem && <section class="cs-sec reveal"><div class="cs-h"><span class="mono">{num()}</span> <T k="cs.problem" /></div><T as="p" class="cs-text" v={cs.problem} /></section>}
       {cs && cs.built.length > 0 && <section class="cs-sec reveal"><div class="cs-h"><span class="mono">{num()}</span> <T k="cs.built" /></div><ul class="qv-list cs-list">{cs.built.map((b) => <T as="li" v={b} />)}</ul></section>}
+      {cs && cs.decisions.length > 0 && <section class="cs-sec reveal"><div class="cs-h"><span class="mono">{num()}</span> <T k="cs.decisions" /></div><ul class="qv-list cs-list">{cs.decisions.map((b) => <T as="li" v={b} />)}</ul></section>}
       {cs && cs.challenges.length > 0 && <section class="cs-sec reveal"><div class="cs-h"><span class="mono">{num()}</span> <T k="cs.challenges" /></div><ul class="qv-list cs-list">{cs.challenges.map((b) => <T as="li" v={b} />)}</ul></section>}
       {cs && cs.results.length > 0 && <section class="cs-sec reveal"><div class="cs-h"><span class="mono">{num()}</span> <T k="cs.results" /></div><ul class="qv-list cs-list">{cs.results.map((b) => <T as="li" v={b} />)}</ul></section>}
 

@@ -198,6 +198,19 @@ nav .wrap{display:flex;align-items:center;gap:24px;height:68px}
   color:#fff;background:var(--grad);box-shadow:0 8px 24px -10px rgba(99,102,241,.7)}
 .badge-logo.alt{background:linear-gradient(135deg,#0ea5e9,#22d3ee)}
 .badge-logo.alt2{background:linear-gradient(135deg,#475569,#64748b)}
+/* spinning badge (grab and flick; see eggs.ts) */
+.badge-logo.coin,.badge-logo.coin.alt,.badge-logo.coin.alt2{position:relative;background:none;box-shadow:none;perspective:420px;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.coin{--coin:var(--grad)}
+.coin.alt{--coin:linear-gradient(135deg,#0ea5e9,#22d3ee)}
+.coin.alt2{--coin:linear-gradient(135deg,#475569,#64748b)}
+.coin.spinning{cursor:grabbing;transform:scale(1.14)}
+.coin:focus-visible{outline:2px solid var(--cyan);outline-offset:4px;border-radius:14px}
+.coin .spin{position:absolute;inset:0;transform-style:preserve-3d}
+.coin .face{position:absolute;inset:0;border-radius:14px;display:grid;place-items:center;overflow:hidden;background:var(--coin);
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 8px 24px -10px rgba(99,102,241,.7),inset 0 0 0 1px rgba(255,255,255,.18)}
+.coin .face::after{content:'';position:absolute;inset:-20%;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.5) 50%,transparent 65%);transform:translateX(var(--shine,-140%));pointer-events:none}
+.coin .back{transform:rotateY(180deg);font-size:12px;letter-spacing:.5px}
+.coin-ring{position:absolute;inset:0;border-radius:14px;border:2px solid var(--cyan);pointer-events:none}
 .cert h3{font-size:16px}
 .issuer{font-size:13px;color:var(--muted)}
 .cert .when{font-family:var(--font-mono);font-size:12px;color:var(--faint);direction:ltr;text-align:start}

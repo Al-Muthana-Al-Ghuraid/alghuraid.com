@@ -8,5 +8,5 @@ mode: online
 capstone: trackflow
 skills: [React, FastAPI, JWT, SQLAlchemy, OpenAI API, Git]
 summary:
-  en: "Full-stack engineering: React front ends, FastAPI back ends with JWT auth, SQL/ORM data layers, and applied AI/LLM integration with RAG and vector databases."
-  ar: "هندسة برمجيات متكاملة: واجهات React، وخوادم FastAPI مع مصادقة JWT، وطبقات بيانات SQL/ORM، ودمج تطبيقي للذكاء الاصطناعي والنماذج اللغوية مع تقنية RAG وقواعد البيانات المتجهية."
+  en: "An intensive full-stack program: React front ends, FastAPI back ends with JWT authentication, SQL and ORM data layers, and applied AI, integrating language models with retrieval-augmented generation and vector databases. I put it all into practice as team lead on TrackFlow, a complete bootcamp management platform."
+  ar: "برنامج مكثف في هندسة البرمجيات المتكاملة: واجهات React، وخوادم FastAPI مع مصادقة JWT، وطبقات بيانات SQL وORM، وذكاء اصطناعي تطبيقي يدمج النماذج اللغوية مع تقنية RAG وقواعد البيانات المتجهية. وطبّقت ذلك كله قائدًا للفريق في TrackFlow، منصة متكاملة لإدارة المعسكرات التدريبية."

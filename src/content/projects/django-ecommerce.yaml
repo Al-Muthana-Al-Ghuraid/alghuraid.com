@@ -2,7 +2,7 @@ order: 4
 year: 2024
 org: Tuwaiq Academy
 categories: [web]
-tags: [Django, Python, SQL, Bootstrap]
+tags: [Django, Python, Django ORM, SQL, Django templates, Bootstrap]
 codeCover:
   file: shop/models.py
   code: |
@@ -13,25 +13,34 @@ title:
   en: Django e-commerce platform
   ar: متجر إلكتروني باستخدام Django
 summary:
-  en: A complete online store with separate user and admin authentication, discount management, product visibility controls, a searchable catalog and a working cart.
-  ar: متجر إلكتروني متكامل بتسجيل دخول منفصل للمستخدم والمسؤول، مع إدارة الخصومات، والتحكم في ظهور المنتجات، وكتالوج قابل للبحث، وسلة تسوق.
+  en: "A complete online store built the Django way: a relational data model for products, stock, carts and reviews, separate experiences for shoppers and staff, and admin tools that let the business change prices, discounts, stock and visibility without touching code."
+  ar: "متجر إلكتروني متكامل مبني على طريقة Django: نموذج بيانات علائقي للمنتجات والمخزون وسلال التسوق والمراجعات، وتجربة مختلفة للمتسوق عن فريق الإدارة، وأدوات تتيح للنشاط التجاري تعديل الأسعار والخصومات والمخزون وظهور المنتجات دون لمس الرمز."
 impact:
-  en: "End-to-end build: models, auth, admin tools and checkout flow"
-  ar: "بناء متكامل: النماذج، والمصادقة، وأدوات الإدارة، وإتمام الشراء"
+  en: "Data model, auth, admin operations and checkout flow, built end to end in Django"
+  ar: "نموذج البيانات، والمصادقة، وعمليات الإدارة، ومسار الشراء؛ بناء متكامل بـDjango"
 caseStudy:
   intro:
-    en: Built during the Web Development Using Django program at Tuwaiq Academy.
-    ar: بُني خلال برنامج تطوير الويب باستخدام Django في أكاديمية طويق.
+    en: "Built during the Web Development Using Django program at Tuwaiq Academy. The goal was to understand how a real store works from the backend out: the data, the permissions and the everyday operations staff rely on."
+    ar: "بُني خلال برنامج تطوير الويب باستخدام Django في أكاديمية طويق. كان الهدف فهم آلية عمل المتجر الحقيقي من الواجهة الخلفية إلى الخارج: البيانات، والصلاحيات، والعمليات اليومية التي يعتمد عليها فريق الإدارة."
   problem:
-    en: A store needs customers and admins to see very different things, and admins need to change products, prices and visibility without touching code.
-    ar: يحتاج المتجر إلى أن يرى العملاء والمسؤولون أشياء مختلفة تمامًا، وأن يتمكن المسؤول من تعديل المنتجات والأسعار وظهورها دون لمس الرمز.
+    en: "A store serves two very different audiences. Shoppers need to find products, read reviews and check out smoothly. Staff need to run the catalogue day to day, changing prices, discounts, stock and what is on sale, without a developer in the loop."
+    ar: "يخدم المتجر جمهورين مختلفين تمامًا: يحتاج المتسوق إلى إيجاد المنتجات وقراءة المراجعات وإتمام الشراء بسلاسة، ويحتاج فريق الإدارة إلى تشغيل الكتالوج يوميًا، من تعديل الأسعار والخصومات والمخزون إلى تحديد المعروض للبيع، دون الرجوع إلى مطوّر."
   built:
-    - en: Separate user and admin authentication.
-      ar: تسجيل دخول منفصل للمستخدم والمسؤول.
-    - en: Admin tools to add products, apply discounts and control which items are visible.
-      ar: أدوات للمسؤول لإضافة المنتجات وتطبيق الخصومات والتحكم في ظهور المنتجات.
-    - en: A searchable, categorized catalog and a working shopping cart.
-      ar: كتالوج مصنّف قابل للبحث، وسلة تسوق عاملة.
+    - en: "A relational data model in the Django ORM for categories, products, stock quantities, carts, orders and reviews, with migrations keeping the schema in step with the code."
+      ar: "نموذج بيانات علائقي عبر Django ORM للفئات والمنتجات وكميات المخزون وسلال التسوق والطلبات والمراجعات، مع ترحيلات (migrations) تُبقي مخطط قاعدة البيانات متوافقًا مع الرمز."
+    - en: "Shopper pages: a categorized, searchable catalogue, product pages with reviews, and a cart that carries through to checkout."
+      ar: "صفحات المتسوق: كتالوج مصنّف قابل للبحث، وصفحات منتجات مع المراجعات، وسلة تسوق تمتد حتى إتمام الشراء."
+    - en: "Staff operations: add and remove products, apply discounts, update stock, hide or show items instantly, and moderate customer reviews."
+      ar: "عمليات فريق الإدارة: إضافة المنتجات وحذفها، وتطبيق الخصومات، وتحديث المخزون، وإخفاء المنتجات أو إظهارها فورًا، ومراجعة تقييمات العملاء وإدارتها."
+    - en: "Separate authentication and permissions for shoppers and staff, so each side only sees and changes what it should."
+      ar: "مصادقة وصلاحيات منفصلة للمتسوقين وفريق الإدارة، فلا يرى كل طرف ولا يعدّل إلا ما يخصه."
+  decisions:
+    - en: "Visibility as a switch, not a deletion: hiding a product keeps its history, orders and reviews intact, and it can come back at any time."
+      ar: "الإخفاء مفتاح لا حذف: إخفاء المنتج يحفظ سجله وطلباته ومراجعاته كما هي، ويمكن إعادته في أي وقت."
+    - en: "Business rules in the model layer, so discounts and stock behave the same everywhere they appear."
+      ar: "قواعد العمل في طبقة النماذج، لتعمل الخصومات والمخزون بالطريقة نفسها أينما ظهرت."
   results:
-    - en: A working end-to-end store built in Django.
-      ar: متجر عامل من البداية إلى النهاية مبني بـDjango.
+    - en: "A working end-to-end store, and a solid grounding in how Django connects models, views, templates and permissions."
+      ar: "متجر عامل من البداية إلى النهاية، وأساس متين في كيفية ربط Django بين النماذج والعروض والقوالب والصلاحيات."
+    - en: "A rebuild is planned, extending it with the patterns I have used since in larger projects."
+      ar: "إعادة بنائه مخطط لها، مع توسيعه بالأنماط التي استخدمتها لاحقًا في مشاريع أكبر."

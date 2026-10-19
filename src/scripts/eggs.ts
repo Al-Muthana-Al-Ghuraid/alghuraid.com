@@ -26,6 +26,7 @@ const SECRETS: Record<string, [string, string, string]> = {
   snake: ['🐍', 'Snake Charmer', 'ساحر الأفاعي'],
   gahwa: ['☕', 'Coffee Break', 'استراحة قهوة'],
   weather: ['🌡️', 'Riyadh Summer', 'صيف الرياض'],
+  coin: ['🪙', 'Heads or Tails', 'ملك أم كتابة'],
 };
 const TOTAL = Object.keys(SECRETS).length;
 const found = new Set<string>((store.get('secrets') ?? '').split(',').filter((k) => k in SECRETS));
@@ -481,6 +482,80 @@ if (dallahBtn) {
     }, 1100);
   });
 }
+
+/* ======================================================= spinning certification badges */
+// Grab a badge and drag sideways to turn it like a coin; let go and it keeps spinning with inertia,
+// then springs to land face-up. A plain click (or Enter / Space) flicks it. The back shows the year.
+type Coin = { el: HTMLElement; spin: HTMLElement; a: number; v: number; tilt: number; total: number; drag: boolean; x: number; y: number; t: number; moved: number; raf: number };
+const coins = new WeakMap<HTMLElement, Coin>();
+const coinOf = (el: HTMLElement) => {
+  let c = coins.get(el);
+  if (!c) { c = { el, spin: el.querySelector<HTMLElement>('.spin')!, a: 0, v: 0, tilt: 0, total: 0, drag: false, x: 0, y: 0, t: 0, moved: 0, raf: 0 }; coins.set(el, c); }
+  return c;
+};
+function coinPaint(c: Coin) {
+  c.spin.style.transform = `rotateX(${c.tilt.toFixed(1)}deg) rotateY(${c.a.toFixed(1)}deg)`;
+  const m = ((c.a % 180) + 180) % 180; // shine sweeps across once per half turn
+  c.el.style.setProperty('--shine', `${(m / 180) * 280 - 140}%`);
+}
+function coinLand(c: Coin) {
+  c.el.classList.remove('spinning'); c.a = 0; c.tilt = 0; coinPaint(c);
+  const ring = c.el.appendChild(el('span', 'coin-ring'));
+  ring.animate([{ transform: 'scale(1)', opacity: 0.9 }, { transform: 'scale(1.6)', opacity: 0 }], { duration: 650, easing: 'ease-out' }).finished.then(() => ring.remove());
+  if (Math.abs(c.total) >= 720) unlock('coin');
+  c.total = 0;
+}
+function coinRun(c: Coin) {
+  cancelAnimationFrame(c.raf);
+  let target: number | null = null;
+  const step = () => {
+    if (c.drag) return;
+    if (target === null) {
+      c.a += c.v; c.total += c.v; c.v *= 0.965; c.tilt *= 0.9;
+      if (Math.abs(c.v) < 2.4) target = (c.v >= 0 ? Math.ceil(c.a / 360) : Math.floor(c.a / 360)) * 360; // nearest face-up in the spin direction
+    } else { // spring onto the face
+      c.v = (c.v + (target - c.a) * 0.07) * 0.8; c.a += c.v; c.tilt *= 0.85;
+      if (Math.abs(target - c.a) < 0.4 && Math.abs(c.v) < 0.3) { coinLand(c); return; }
+    }
+    coinPaint(c); c.raf = requestAnimationFrame(step);
+  };
+  c.el.classList.add('spinning'); c.raf = requestAnimationFrame(step);
+}
+function coinFlick(c: Coin, dir = 1) {
+  if (reduce) { c.el.classList.remove('spinning'); c.spin.animate([{ transform: 'rotateY(0deg)' }, { transform: `rotateY(${360 * dir}deg)` }], { duration: 600, easing: 'ease-in-out' }); return; }
+  c.v = (24 + Math.random() * 10) * dir; coinRun(c);
+}
+document.addEventListener('pointerdown', (e) => {
+  const t = e.target instanceof Element ? e.target.closest<HTMLElement>('[data-coin]') : null;
+  if (!t || e.button !== 0) return;
+  e.preventDefault();
+  const c = coinOf(t); cancelAnimationFrame(c.raf);
+  Object.assign(c, { drag: true, x: e.clientX, y: e.clientY, t: performance.now(), moved: 0, v: 0 });
+  t.setPointerCapture(e.pointerId); t.classList.add('spinning');
+});
+document.addEventListener('pointermove', (e) => {
+  const t = e.target instanceof Element ? e.target.closest<HTMLElement>('[data-coin]') : null;
+  const c = t && coins.get(t); if (!c?.drag) return;
+  const now = performance.now(), dx = e.clientX - c.x, frames = Math.max((now - c.t) / 16.7, 0.5);
+  c.a += dx * 1.8; c.total += dx * 1.8; c.moved += Math.abs(dx);
+  c.v = c.v * 0.5 + ((dx * 1.8) / frames) * 0.5; // smoothed release speed, degrees per frame
+  c.tilt = Math.max(-25, Math.min(25, (c.y - e.clientY) * 0.6));
+  c.x = e.clientX; c.t = now; coinPaint(c);
+});
+const coinRelease = (e: PointerEvent) => {
+  const t = e.target instanceof Element ? e.target.closest<HTMLElement>('[data-coin]') : null;
+  const c = t && coins.get(t); if (!c?.drag) return;
+  c.drag = false;
+  if (c.moved < 4) { coinFlick(c, isAr() ? -1 : 1); return; } // a tap, not a drag
+  if (performance.now() - c.t > 120) c.v *= 0.3; // held still before letting go: little momentum left
+  c.v = Math.max(-60, Math.min(60, c.v)); coinRun(c);
+};
+document.addEventListener('pointerup', coinRelease);
+document.addEventListener('pointercancel', coinRelease);
+document.addEventListener('keydown', (e) => {
+  const t = e.target instanceof Element ? e.target.closest<HTMLElement>('[data-coin]') : null;
+  if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); coinFlick(coinOf(t), isAr() ? -1 : 1); }
+});
 
 /* ======================================================= schedule + lang */
 wrapWords();

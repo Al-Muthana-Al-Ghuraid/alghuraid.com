@@ -56,6 +56,8 @@ content:
               { name: en, label: English, type: text }, { name: ar, label: العربية, type: text } ] }
           - { name: built, label: What I built (one point each), type: object, list: true, fields: [
               { name: en, label: English, type: text }, { name: ar, label: العربية, type: text } ] }
+          - { name: decisions, label: Key decisions (choice + why), type: object, list: true, fields: [
+              { name: en, label: English, type: text }, { name: ar, label: العربية, type: text } ] }
           - { name: challenges, label: Challenges, type: object, list: true, fields: [
               { name: en, label: English, type: text }, { name: ar, label: العربية, type: text } ] }
           - { name: results, label: Results, type: object, list: true, fields: [
