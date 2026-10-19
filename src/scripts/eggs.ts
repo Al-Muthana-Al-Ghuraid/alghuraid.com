@@ -27,6 +27,7 @@ const SECRETS: Record<string, [string, string, string]> = {
   coin: ['🪙', 'Heads or Tails', 'ملك أم كتابة'],
   radio: ['📻', 'Wasteland Radio', 'راديو الأرض القاحلة'],
   radiation: ['☢️', 'Rad Resistant', 'مقاوم للإشعاع'],
+  radroach: ['🪳', 'Pest Control', 'مكافحة الآفات'],
 };
 const TOTAL = Object.keys(SECRETS).length;
 const found = new Set<string>((store.get('secrets') ?? '').split(',').filter((k) => k in SECRETS));

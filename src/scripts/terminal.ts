@@ -40,7 +40,7 @@ const SN = {
         exited: (s: number, b: number) => `# snake exited · score ${s} · best ${b}`, font: '"JetBrains Mono",monospace',
         welcome: 'WELCOME, VISITOR.',
         radioOn: '📻 tuning in… (again to stop)', radioOff: '# radio off',
-        radStart: '☢ geiger counter on…', radEnd: "# reading dropped. you'll live.",
+        radStart: '☢ geiger counter on…', roachIn: '!! something is crawling… tap it!', roachSquish: '# squish. pest controlled.', roachGone: '# it got away…', radEnd: "# reading dropped. you'll live.",
         gravity: ['🍎 disabling gravity…'],
         haboob: ['🌪️ incoming haboob… hold on!'],
         help: [
@@ -50,6 +50,7 @@ const SN = {
           '  haboob        summon a sandstorm 🌪️',
           '  fallout       wasteland radio 📻',
           '  radiation     geiger counter ☢',
+          '  radroach      pest control',
           '  reboot        restart terminal 📺',
           '  clear         clear the screen',
           '# more secrets hide outside 👀',
@@ -60,7 +61,7 @@ const SN = {
         exited: (s: number, b: number) => `# انتهت اللعبة · النتيجة ${s} · الأفضل ${b}`, font: '"IBM Plex Sans Arabic",sans-serif',
         welcome: 'أهلًا وسهلًا بك.',
         radioOn: '📻 جارٍ ضبط الموجة… (أعده للإيقاف)', radioOff: '# أُطفئ الراديو',
-        radStart: '☢ عدّاد غايغر يعمل…', radEnd: '# انخفضت القراءة. ستنجو.',
+        radStart: '☢ عدّاد غايغر يعمل…', roachIn: '!! شيء يزحف… اضغط عليه!', roachSquish: '# سُحِق. تمت المكافحة.', roachGone: '# هرب…', radEnd: '# انخفضت القراءة. ستنجو.',
         gravity: ['🍎 جارٍ إيقاف الجاذبية…'],
         haboob: ['🌪️ هبوب قادم… تمسّك!'],
         help: [
@@ -70,6 +71,7 @@ const SN = {
           '  haboob        استدعِ عاصفة رملية 🌪️',
           '  fallout       راديو القفار 📻',
           '  radiation     عدّاد غايغر ☢',
+          '  radroach      مكافحة الحشرات',
           '  reboot        أعد تشغيل الطرفية 📺',
           '  clear         مسح الشاشة',
           '# أسرار أخرى في الخارج 👀',
@@ -172,6 +174,7 @@ function run(cmd: string) {
   else if (['haboob', 'هبوب'].includes(c)) { say(s.haboob); dispatchEvent(new CustomEvent('egg:haboob')); }
   else if (['fallout', 'radio', 'راديو'].includes(c)) radio();
   else if (['radiation', 'geiger', 'اشعاع', 'إشعاع'].includes(c)) radiation();
+  else if (['radroach', 'roach', 'صرصور'].includes(c)) radroach();
   else if (c) history += `<span class="t-err">zsh: command not found: ${esc(cmd)}</span>\n<span class="t-com">${s.notFound}</span>\n`;
   const ls = history.split('\n'); if (ls.length > 16) history = ls.slice(-16).join('\n');
   render();
@@ -239,6 +242,75 @@ function radiation() {
     }
   };
   requestAnimationFrame(tick);
+}
+
+/* ---------- `radroach`: a bug scuttles across the screen; tap it to squish it ----------
+   Our own top-down cockroach drawing; the squish sound is synthesized (no audio file). */
+const ROACH = `<svg viewBox="0 0 60 40" aria-hidden="true"><g class="legs" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round">
+  <path class="l1" d="M26 15 L20 6 L14 4"/><path class="l2" d="M30 14 L30 4 L26 0"/><path class="l3" d="M34 15 L40 5 L46 3"/>
+  <path class="l2" d="M26 25 L20 34 L14 36"/><path class="l1" d="M30 26 L30 36 L26 40"/><path class="l3" d="M34 25 L40 35 L46 37"/></g>
+  <path class="ant" d="M47 18 Q55 10 60 11 M47 22 Q55 30 60 29" stroke="currentColor" stroke-width="1" fill="none"/>
+  <ellipse cx="28" cy="20" rx="17" ry="9" fill="currentColor"/><path d="M28 11 L28 29" stroke="rgba(0,0,0,.45)" stroke-width="1.2"/>
+  <ellipse cx="45" cy="20" rx="5" ry="5.5" fill="currentColor"/><circle cx="47.5" cy="17.6" r="1.1" fill="#021006"/><circle cx="47.5" cy="22.4" r="1.1" fill="#021006"/></svg>`;
+const SPLAT = `<svg viewBox="0 0 60 60" aria-hidden="true"><path fill="currentColor" d="M30 12c5 0 6 6 11 5s9 4 6 9 3 8-1 12-9 2-11 7-8 4-10-1-9-3-11-8-2-9 2-12 1-9 6-10 3-2 8-2z"/>
+  <circle cx="10" cy="14" r="2.5" fill="currentColor"/><circle cx="52" cy="48" r="2" fill="currentColor"/><circle cx="49" cy="9" r="1.6" fill="currentColor"/></svg>`;
+let roachOut = false;
+function squishSound() {
+  try {
+    const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const ac = new AC(), sr = ac.sampleRate, len = Math.floor(sr * 0.45), buf = ac.createBuffer(1, len, sr), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) {
+      const t = i / sr;
+      const crunch = (Math.random() * 2 - 1) * Math.exp(-t * 38) * (Math.random() < 0.3 ? 1.4 : 0.6);           // shell cracking
+      const goo = Math.sin(2 * Math.PI * (260 - 380 * t) * t) * Math.exp(-t * 9) * 0.55 * (1 + 0.5 * Math.sin(t * 90)); // wet squelch sliding down
+      d[i] = crunch * 0.8 + goo;
+    }
+    const src = ac.createBufferSource(), lp = ac.createBiquadFilter(), g = ac.createGain();
+    lp.type = 'lowpass'; lp.frequency.value = 2600; g.gain.value = 0.7;
+    src.buffer = buf; src.connect(lp).connect(g).connect(ac.destination); src.onended = () => ac.close(); src.start();
+  } catch {}
+}
+function radroach() {
+  if (roachOut) return;
+  roachOut = true;
+  history += `<span class="t-str">${esc(sn().roachIn)}</span>\n`;
+  const box = content.getBoundingClientRect();
+  const bug = content.appendChild(Object.assign(document.createElement('button'), { className: 'roach', innerHTML: ROACH, type: 'button', ariaLabel: 'radroach' }));
+  const W = box.width, H = box.height, size = 54, ltr = Math.random() < 0.5;
+  let x = ltr ? -size : W + size, y = H * (0.35 + Math.random() * 0.4), heading = ltr ? 0 : Math.PI, speed = 0, pause = 0, done = false;
+  const target = ltr ? W + size : -size;
+  const end = (squished: boolean) => {
+    if (done) return; done = true; roachOut = false;
+    history += `<span class="t-com">${esc(squished ? sn().roachSquish : sn().roachGone)}</span>\n`;
+    if (mode === 'prompt') render();
+  };
+  bug.addEventListener('click', (e) => {
+    e.stopPropagation(); if (done) return;
+    squishSound(); egg('radroach');
+    bug.classList.add('squished'); bug.innerHTML = SPLAT;
+    bug.style.transform = `translate(${x - size / 2}px,${y - size / 2}px) rotate(${Math.random() * 360}deg)`;
+    bug.animate([{ opacity: 1 }, { opacity: 1, offset: 0.6 }, { opacity: 0 }], { duration: 2600 }).finished.then(() => bug.remove());
+    end(true);
+  });
+  let last = performance.now();
+  const step = (now: number) => {
+    if (done) return;
+    const dt = Math.min(50, now - last) / 16.7; last = now;
+    if (pause > 0) { pause -= dt; bug.classList.add('still'); }
+    else {
+      bug.classList.remove('still');
+      if (Math.random() < 0.012) pause = 10 + Math.random() * 30;                // freezes like a real roach
+      speed += ((reduce ? 2 : 4.2) - speed) * 0.1;
+      const goal = Math.atan2(y + Math.sin(now / 260) * 60 - y, target - x);      // weave toward the far side
+      heading += (goal + (Math.random() - 0.5) * 0.9 - heading) * 0.12;
+      x += Math.cos(heading) * speed * dt; y += Math.sin(heading) * speed * dt;
+      y = Math.max(size, Math.min(H - size / 2, y));
+    }
+    bug.style.transform = `translate(${x - size / 2}px,${y - size / 2}px) rotate(${heading}rad)`;
+    if ((ltr && x > W + size) || (!ltr && x < -size)) { bug.remove(); end(false); return; }
+    requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
 }
 
 document.getElementById('termHint')!.addEventListener('click', async () => {
