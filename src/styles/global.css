@@ -402,6 +402,28 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .gravity-body{cursor:grab;user-select:none;touch-action:none;will-change:transform}
 .gravity-body:active{cursor:grabbing}
 .gravity-restore{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:180;animation:pop .4s}
+/* background ripple + draw-a-network canvas (behind the content) */
+.bg-fx{position:fixed;inset:0;width:100vw;height:100vh;z-index:-1;pointer-events:none}
+.drawing,.drawing *{cursor:crosshair !important;user-select:none !important}
+/* magnetic name */
+.hero h1 .grad.magnet-on{cursor:grabbing}
+.hero h1 .grad{cursor:grab;touch-action:none}
+.mag{display:inline-block;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  transition:transform .55s cubic-bezier(.34,1.56,.64,1)}
+/* dallah (Arabic coffee pot) */
+footer .wrap{align-items:center}
+.dallah{display:inline-flex;align-items:center;gap:6px;background:none;border:0;cursor:pointer;color:#b8893e;padding:4px 8px;border-radius:10px;transition:background .2s}
+[data-theme="light"] .dallah{color:#8a5a22}
+.dallah:hover{background:var(--surface-2)}
+.dallah svg{width:30px;height:30px;overflow:visible}
+.dallah .pot{fill:currentColor;transform-box:view-box;transform-origin:24px 39px;transition:transform .35s ease}
+.dallah .stream{opacity:0;stroke-dasharray:30;stroke-dashoffset:30}
+.dallah.pouring .pot{transform:rotate(-38deg)}
+.dallah.pouring .stream{animation:pour 1s ease forwards .25s}
+@keyframes pour{20%{opacity:1}60%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+.cups{display:inline-flex;gap:3px}
+.finjan{display:block;width:10px;height:8px;border-radius:0 0 6px 6px;background:currentColor;position:relative;animation:pop .4s}
+.finjan::after{content:"";position:absolute;inset:1px 1px auto;height:2px;border-radius:2px;background:#5b3410}
 /* background cracks ("don't break production") */
 .crack-layer{position:fixed;inset:0;z-index:-1;pointer-events:none}
 .crack{position:absolute;width:240px;height:240px;margin:-120px 0 0 -120px;transform:rotate(var(--rot));animation:crack-in .18s ease-out}

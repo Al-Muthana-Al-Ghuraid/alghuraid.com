@@ -68,7 +68,11 @@ const h = home ? '' : '/';
 
   <slot />
 
-  <footer><div class="wrap"><span>© {new Date().getFullYear()} <T v={settings.name} /></span><T k="ft.built" class="mono" /></div></footer>
+  <footer><div class="wrap">
+    <span>© {new Date().getFullYear()} <T v={settings.name} /></span>
+    <button class="dallah" id="dallah" type="button" aria-label="Arabic coffee · قهوة عربية" title="☕"><span class="cups"></span></button>
+    <T k="ft.built" class="mono" />
+  </div></footer>
 
   <script>import '../scripts/site';</script>
 </body>
