@@ -362,15 +362,14 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .egg-word:hover,.egg-word:focus-visible{background:var(--grad);color:#fff;box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 25%,transparent);outline:none}
 .egg-word:active{transform:scale(.96)}
 .hero .role .egg-word{font-weight:inherit}
-.haboob{position:fixed;inset:0;z-index:140;pointer-events:none;background:linear-gradient(90deg,rgba(200,150,80,.10),rgba(200,150,80,.38),rgba(200,150,80,.10));animation:fade .5s}
-.haboob canvas{width:100%;height:100%}
-.haboob.out{opacity:0;transition:opacity .5s}
+.haboob{position:fixed;inset:0;width:100vw;height:100vh;z-index:-1;pointer-events:none} /* dust storm sits in the background layer */
 .walker{position:fixed;bottom:10px;inset-inline-start:0;z-index:70;font-size:40px;pointer-events:none;animation:walk 7s linear forwards}
 .walker span{display:inline-block;animation:bob .35s ease-in-out infinite alternate}
 @keyframes walk{from{transform:translateX(calc(var(--dir) * -8vw))}to{transform:translateX(calc(var(--dir) * 104vw))}}
 @keyframes bob{to{transform:translateY(-6px) rotate(4deg)}}
-.rain-cloud{position:fixed;top:-60px;z-index:140;pointer-events:none;animation:cloud-fall linear forwards;opacity:.9}
-@keyframes cloud-fall{to{transform:translate(var(--drift),110vh)}}
+.puff-cloud{position:fixed;pointer-events:none;will-change:transform,opacity}
+.puff-cloud svg{width:100%;height:auto;display:block;fill:#eef2ff;filter:drop-shadow(0 6px 14px rgba(40,60,140,.25))}
+[data-theme="light"] .puff-cloud svg{fill:#ffffff;filter:drop-shadow(0 6px 16px rgba(40,60,140,.22))}
 /* gravity */
 .gravity-body{cursor:grab;user-select:none;touch-action:none;will-change:transform}
 .gravity-body:active{cursor:grabbing}
@@ -381,9 +380,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 /* magnetic name */
 .hero h1 .grad.magnet-on{cursor:grabbing}
 .hero h1 .grad{cursor:grab;touch-action:none}
-.mag{display:inline-block;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;will-change:transform;
-  position:relative;z-index:5;transition:filter .3s}
-.magnet-held .mag{filter:drop-shadow(0 0 10px color-mix(in srgb,var(--blue) 75%,transparent)) drop-shadow(0 0 2px color-mix(in srgb,var(--violet) 80%,transparent))}
+.mag{display:inline-block;background-image:var(--grad);background-repeat:no-repeat;-webkit-background-clip:text;background-clip:text;color:transparent;
+  will-change:transform;position:relative;z-index:5}
+/* glow only while held; switched off instantly on release (animating a filter on 20 moving letters stutters) */
+.magnet-held .mag{filter:drop-shadow(0 0 8px color-mix(in srgb,var(--blue) 70%,transparent))}
 .hero h1 .grad.magnet-held{cursor:grabbing}
 /* dallah (Arabic coffee pot) */
 footer .wrap{align-items:center}
@@ -414,7 +414,7 @@ footer .wrap{align-items:center}
 .shard{position:absolute;width:var(--w);height:var(--h);background:linear-gradient(135deg,color-mix(in srgb,var(--blue) 30%,transparent),color-mix(in srgb,var(--text) 12%,transparent));
   border:1px solid color-mix(in srgb,var(--text) 30%,transparent);animation:shard-fall 1.8s cubic-bezier(.5,0,.8,.6) forwards}
 @keyframes shard-fall{to{transform:translate(var(--x),110vh) rotate(var(--r));opacity:.2}}
-@media (prefers-reduced-motion: reduce){.walker,.rain-cloud,.shard{display:none}}
+@media (prefers-reduced-motion: reduce){.walker,.puff-cloud,.shard{display:none}}
 
 /* ---------- smooth language / theme switch (View Transitions) ---------- */
 :root[data-vt]::view-transition-old(root){animation:vt-out .22s ease-in both}

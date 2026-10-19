@@ -66,23 +66,38 @@ function wrapWords() {
     }
   }
 }
-const fire = (egg: string) => (egg === 'haboob' ? haboob() : egg === 'robot' ? robot() : egg === 'clouds' ? cloudRain() : null);
-document.addEventListener('click', (e) => { const w = (e.target instanceof Element ? e.target : document.body).closest<HTMLElement>('.egg-word'); if (w) fire(w.dataset.egg!); });
-document.addEventListener('keydown', (e) => { const w = (e.target instanceof Element ? e.target.closest<HTMLElement>('.egg-word') : null); if (w && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); fire(w.dataset.egg!); } });
+const fire = (egg: string, w?: HTMLElement) => (egg === 'haboob' ? haboob() : egg === 'robot' ? robot() : egg === 'clouds' ? cloudPuff(w) : null);
+document.addEventListener('click', (e) => { const w = (e.target instanceof Element ? e.target : document.body).closest<HTMLElement>('.egg-word'); if (w) fire(w.dataset.egg!, w); });
+document.addEventListener('keydown', (e) => { const w = (e.target instanceof Element ? e.target.closest<HTMLElement>('.egg-word') : null); if (w && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); fire(w.dataset.egg!, w); } });
 addEventListener('egg:haboob', haboob);
 
+/** Haboob: a dust storm in the background layer (behind the content), coloured to suit the current theme. */
 function haboob() {
   if (document.querySelector('.haboob')) return;
   unlock('haboob');
-  const box = document.body.appendChild(el('div', 'haboob'));
-  const c = box.appendChild(document.createElement('canvas')), x = c.getContext('2d')!;
-  const W = (c.width = innerWidth), H = (c.height = innerHeight), dir = isAr() ? 1 : -1;
-  const grains = Array.from({ length: reduce ? 60 : 420 }, () => ({ x: dir < 0 ? W + rand(0, W) : -rand(0, W), y: rand(0, H), v: rand(8, 22), s: rand(1, 3.2), a: rand(0.3, 0.9) }));
+  const c = document.body.appendChild(el('canvas', 'haboob')) as HTMLCanvasElement, x = c.getContext('2d')!;
+  const d = devicePixelRatio || 1, W = innerWidth, H = innerHeight;
+  c.width = W * d; c.height = H * d; x.scale(d, d);
+  const light = root.dataset.theme === 'light', dir = isAr() ? 1 : -1, DUR = 4200;
+  const grain = light ? '150,104,52' : '222,184,128', puff = light ? '176,128,72' : '196,152,96';
+  const grains = Array.from({ length: reduce ? 80 : 520 }, () => ({ x: rand(0, W), y: rand(0, H), v: rand(3, 11), s: rand(0.8, 2.6), a: rand(0.25, 0.8), w: rand(0, Math.PI * 2) }));
+  const puffs = Array.from({ length: reduce ? 3 : 9 }, () => ({ x: dir < 0 ? rand(W * 0.6, W * 1.6) : rand(-W * 0.6, W * 0.4), y: rand(H * 0.1, H * 0.95), r: rand(120, 300), v: rand(1.6, 3.6), a: rand(0.1, 0.2) }));
   const t0 = performance.now();
   (function frame(t: number) {
+    const p = (t - t0) / DUR, env = Math.min(1, p * 4, (1 - p) * 3); // fade in, hold, fade out
     x.clearRect(0, 0, W, H);
-    for (const g of grains) { g.x += g.v * dir; g.y += Math.sin((g.x + t) / 90) * 0.8; x.fillStyle = `rgba(214,170,110,${g.a})`; x.fillRect(g.x, g.y, g.s * 2.2, g.s); }
-    if (t - t0 < 2800) requestAnimationFrame(frame); else { box.classList.add('out'); setTimeout(() => box.remove(), 500); }
+    for (const q of puffs) { // soft rolling dust clouds
+      q.x += q.v * dir;
+      const g = x.createRadialGradient(q.x, q.y, 0, q.x, q.y, q.r);
+      g.addColorStop(0, `rgba(${puff},${q.a * env})`); g.addColorStop(1, `rgba(${puff},0)`);
+      x.fillStyle = g; x.beginPath(); x.arc(q.x, q.y, q.r, 0, Math.PI * 2); x.fill();
+    }
+    for (const g of grains) { // fine sand streaking with the wind
+      g.x += g.v * dir; g.y += Math.sin(t / 260 + g.w) * 0.6;
+      if (g.x < -10) g.x = W + 10; else if (g.x > W + 10) g.x = -10;
+      x.fillStyle = `rgba(${grain},${g.a * env})`; x.fillRect(g.x, g.y, g.s * 2.6, g.s);
+    }
+    if (p < 1) requestAnimationFrame(frame); else c.remove();
   })(t0);
   toast(`<span class="egg-ico">🌪️</span><span><b>${tr('Haboob! A classic Riyadh afternoon.', 'هبوب! عصرية رياضية معتادة.')}</b></span>`, 2600);
 }
@@ -93,14 +108,29 @@ function robot() {
   r.style.setProperty('--dir', isAr() ? '-1' : '1');
   r.addEventListener('animationend', (e) => { if (e.target === r) r.remove(); });
 }
-function cloudRain() {
+/** Clouds: soft drawn clouds puff out of the word itself, rise and drift apart at different depths. */
+const CLOUD = `<svg viewBox="0 0 64 40" aria-hidden="true"><circle cx="20" cy="25" r="11"/><circle cx="33" cy="17" r="13"/><circle cx="46" cy="24" r="10.5"/><rect x="14" y="23" width="38" height="13" rx="6.5"/></svg>`;
+let puffing = false;
+function cloudPuff(word?: HTMLElement) {
+  if (puffing) return;
+  puffing = true; setTimeout(() => (puffing = false), 1200);
   unlock('clouds');
-  for (let i = 0; i < (reduce ? 6 : 22); i++) {
-    const c = document.body.appendChild(el('div', 'rain-cloud', '☁️'));
-    c.style.left = `${rand(0, 96)}vw`; c.style.fontSize = `${rand(18, 40)}px`;
-    c.style.animationDelay = `${rand(0, 1.4)}s`; c.style.animationDuration = `${rand(3, 5.5)}s`;
-    c.style.setProperty('--drift', `${rand(-60, 60)}px`);
-    c.addEventListener('animationend', () => c.remove());
+  const r = (word ?? document.querySelector('.hero .role') ?? document.body).getBoundingClientRect();
+  const ox = r.left + r.width / 2, oy = r.top + r.height / 2;
+  word?.animate([{ opacity: 1 }, { opacity: 0.25, filter: 'blur(2px)' }, { opacity: 1 }], { duration: 1400, easing: 'ease-in-out' });
+  const n = reduce ? 5 : 16;
+  for (let i = 0; i < n; i++) {
+    const depth = Math.random(), size = 34 + depth * 84;
+    const c = document.body.appendChild(el('div', 'puff-cloud', CLOUD));
+    Object.assign(c.style, { left: `${ox}px`, top: `${oy}px`, width: `${size}px`, filter: `blur(${((1 - depth) * 2.4).toFixed(1)}px)`, zIndex: depth > 0.5 ? '90' : '-1' });
+    const ang = rand(-Math.PI * 0.95, -Math.PI * 0.05), dist = rand(140, 420) * (0.6 + depth * 0.6);
+    const dx = Math.cos(ang) * dist * 1.6, dy = Math.sin(ang) * dist * 0.8 - rand(30, 120);
+    c.animate([
+      { transform: 'translate(-50%,-50%) scale(.15)', opacity: 0 },
+      { transform: `translate(calc(-50% + ${dx * 0.18}px),calc(-50% + ${dy * 0.25}px)) scale(.75)`, opacity: 0.6 + depth * 0.35, offset: 0.18 },
+      { transform: `translate(calc(-50% + ${dx * 0.7}px),calc(-50% + ${dy * 0.75}px)) scale(1)`, opacity: 0.5 + depth * 0.3, offset: 0.7 },
+      { transform: `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(1.15)`, opacity: 0 },
+    ], { duration: rand(2800, 4600), delay: i * rand(30, 70), easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'both' }).finished.then(() => c.remove());
   }
 }
 
@@ -318,29 +348,35 @@ function shatter() {
 }
 
 /* ======================================================= magnetic name (press, drag, release) */
-// Press on the name: letters get magnetized (closest first), swarm around the cursor and follow it while held.
-// Release: each letter springs back home with an elastic bounce. English splits into letters,
-// Arabic into words (splitting Arabic letters would break how they join).
-type Mag = { s: HTMLElement; rx: number; ry: number; x: number; y: number; vx: number; vy: number; delay: number; ang: number; rad: number };
-let mag: { el: HTMLElement; html: string; lang: string; parts: Mag[]; held: boolean; cx: number; cy: number; t0: number } | null = null;
+// Press on the name: letters get magnetized (closest first), swarm around the cursor and follow it while held
+// (JS spring physics). Release: each letter flies home on a GPU-driven elastic animation, then the word is restored.
+// Each letter carries its own slice of the name's gradient, so colours never jump.
+// English splits into letters, Arabic into words (splitting Arabic letters would break how they join).
+type Mag = { s: HTMLElement; rx: number; ry: number; x: number; y: number; vx: number; vy: number; rot: number; sc: number; delay: number; ang: number; rad: number; anim?: Animation };
+let mag: { el: HTMLElement; html: string; lang: string; parts: Mag[]; held: boolean; cx: number; cy: number; t0: number; homeTimer?: number } | null = null;
 let magRaf = 0;
 const escHtml = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]!);
 document.addEventListener('pointerdown', (e) => {
   const name = e.target instanceof Element ? e.target.closest<HTMLElement>('.hero h1 .grad') : null;
   if (!name || e.button !== 0 || root.classList.contains('gravity-on')) return;
   e.preventDefault();
-  if (mag) { // grabbed again while letters are still flying home
-    Object.assign(mag, { held: true, cx: e.clientX, cy: e.clientY, t0: performance.now() });
-    mag.el.classList.add('magnet-held'); return;
-  }
+  if (mag) { regrab(e.clientX, e.clientY); return; } // caught again while flying home
   const html = name.innerHTML, text = name.textContent ?? '';
   const pieces = isAr() ? text.split(/(\s+)/) : [...text];
   name.innerHTML = pieces.map((p) => (/^\s+$/.test(p) ? p : `<span class="mag">${escHtml(p)}</span>`)).join('');
-  name.classList.add('magnet-on', 'magnet-held');
   const box = name.getBoundingClientRect(), spans = [...name.querySelectorAll<HTMLElement>('.mag')];
+  // gradient slices: measure every fragment (letters and spaces) along the text flow
+  let run = 0; const offsets = new Map<HTMLElement, number>();
+  for (const node of [...name.childNodes]) {
+    if (node instanceof HTMLElement) { offsets.set(node, run); run += node.getBoundingClientRect().width; }
+    else { const rg = document.createRange(); rg.selectNodeContents(node); run += rg.getBoundingClientRect().width; }
+  }
+  spans.forEach((s) => { s.style.backgroundSize = `${run}px 100%`; s.style.backgroundPosition = `${-offsets.get(s)!}px 0`; });
+  if (isAr()) spans.forEach((s) => { s.style.backgroundPosition = `${-(run - offsets.get(s)! - s.getBoundingClientRect().width)}px 0`; });
+  name.classList.add('magnet-on', 'magnet-held');
   const parts: Mag[] = spans.map((s, i) => {
     const r = s.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-    return { s, rx: cx - box.left, ry: cy - box.top, x: 0, y: 0, vx: 0, vy: 0,
+    return { s, rx: cx - box.left, ry: cy - box.top, x: 0, y: 0, vx: 0, vy: 0, rot: 0, sc: 1,
       delay: Math.hypot(cx - e.clientX, cy - e.clientY) * 1.3, // nearest letters are collected first
       ang: (i / spans.length) * Math.PI * 2, rad: 16 + spans.length * 1.1 + rand(-6, 6) };
   });
@@ -349,41 +385,61 @@ document.addEventListener('pointerdown', (e) => {
   cancelAnimationFrame(magRaf); magRaf = requestAnimationFrame(magFrame);
 });
 addEventListener('pointermove', (e) => { if (mag?.held) { mag.cx = e.clientX; mag.cy = e.clientY; } });
+function regrab(x: number, y: number) {
+  const m = mag!; clearTimeout(m.homeTimer);
+  for (const p of m.parts) { // pick each letter up from wherever its flight home has reached
+    const tr = new DOMMatrixReadOnly(getComputedStyle(p.s).transform === 'none' ? undefined : getComputedStyle(p.s).transform);
+    p.anim?.cancel(); p.anim = undefined; p.x = tr.m41; p.y = tr.m42; p.vx = p.vy = 0; p.delay = 0;
+  }
+  Object.assign(m, { held: true, cx: x, cy: y, t0: performance.now() });
+  m.el.classList.add('magnet-held');
+  cancelAnimationFrame(magRaf); magRaf = requestAnimationFrame(magFrame);
+}
+function magFrame(t: number) {
+  const m = mag; if (!m || !m.held) return;
+  const box = m.el.getBoundingClientRect(); // homes follow the page if it scrolls
+  for (const p of m.parts) {
+    const hx = box.left + p.rx, hy = box.top + p.ry;
+    let tx = 0, ty = 0;
+    const active = t - m.t0 > p.delay;
+    if (active) {
+      const a = p.ang + t * 0.0025, r = p.rad * (0.85 + 0.15 * Math.sin(t * 0.004 + p.ang * 3));
+      tx = m.cx + Math.cos(a) * r - hx; ty = m.cy + Math.sin(a) * r * 0.75 - hy;
+    }
+    p.vx = (p.vx + (tx - p.x) * 0.09) * 0.76; p.vy = (p.vy + (ty - p.y) * 0.09) * 0.76;
+    p.x += p.vx; p.y += p.vy;
+    const speed = Math.hypot(p.vx, p.vy);
+    p.rot = Math.max(-35, Math.min(35, p.vx * 1.6));
+    p.sc = active ? 1.12 + Math.min(speed / 60, 0.25) : 1;
+    p.s.style.transform = `translate(${p.x.toFixed(2)}px,${p.y.toFixed(2)}px) rotate(${p.rot.toFixed(1)}deg) scale(${p.sc.toFixed(3)})`;
+  }
+  magRaf = requestAnimationFrame(magFrame);
+}
 function magRelease() {
-  if (!mag?.held) return;
-  mag.held = false; mag.el.classList.remove('magnet-held');
+  const m = mag; if (!m?.held) return;
+  m.held = false; cancelAnimationFrame(magRaf);
+  m.el.classList.remove('magnet-held');
+  let longest = 0;
+  m.parts.forEach((p, i) => {
+    const dist = Math.hypot(p.x, p.y), dur = Math.min(900, 420 + dist * 0.9), delay = i * 14;
+    longest = Math.max(longest, dur + delay);
+    p.anim = p.s.animate(
+      [{ transform: p.s.style.transform || 'none' }, { transform: 'translate(0px,0px) rotate(0deg) scale(1)' }],
+      { duration: dur, delay, easing: 'cubic-bezier(.34,1.42,.5,1)', fill: 'forwards' },
+    );
+    p.s.style.transform = '';
+  });
+  m.homeTimer = window.setTimeout(() => { // all letters are home: landing ripple, then restore the word
+    const b = m.el.getBoundingClientRect();
+    ripples.push({ x: b.left + b.width / 2, y: b.top + b.height / 2, t0: performance.now() }); fxCanvas();
+    m.el.classList.remove('magnet-on');
+    if (root.lang === m.lang) m.el.innerHTML = m.html;
+    mag = null;
+  }, longest + 30);
 }
 addEventListener('pointerup', magRelease);
 addEventListener('pointercancel', magRelease);
 addEventListener('blur', magRelease);
-function magFrame(t: number) {
-  const m = mag; if (!m) return;
-  const box = m.el.getBoundingClientRect(); // homes follow the page if it scrolls
-  let moving = false;
-  for (const p of m.parts) {
-    const hx = box.left + p.rx, hy = box.top + p.ry;
-    let tx = 0, ty = 0;
-    if (m.held && t - m.t0 > p.delay) {
-      const a = p.ang + t * 0.0025, r = p.rad * (0.85 + 0.15 * Math.sin(t * 0.004 + p.ang * 3));
-      tx = m.cx + Math.cos(a) * r - hx; ty = m.cy + Math.sin(a) * r * 0.75 - hy;
-    }
-    const k = m.held ? 0.09 : 0.13, damp = m.held ? 0.76 : 0.8; // softer pull while held, springy return
-    p.vx = (p.vx + (tx - p.x) * k) * damp; p.vy = (p.vy + (ty - p.y) * k) * damp;
-    p.x += p.vx; p.y += p.vy;
-    const speed = Math.hypot(p.vx, p.vy);
-    const rot = Math.max(-35, Math.min(35, p.vx * 1.6));
-    const sc = m.held && t - m.t0 > p.delay ? 1.12 + Math.min(speed / 60, 0.25) : 1 + Math.min(speed / 80, 0.2);
-    p.s.style.transform = `translate(${p.x.toFixed(2)}px,${p.y.toFixed(2)}px) rotate(${rot.toFixed(1)}deg) scale(${sc.toFixed(3)})`;
-    if (m.held || Math.abs(p.x) > 0.4 || Math.abs(p.y) > 0.4 || speed > 0.3) moving = true;
-  }
-  if (moving) { magRaf = requestAnimationFrame(magFrame); return; }
-  // everyone is home: small landing ripple, then restore the original markup
-  const b = m.el.getBoundingClientRect();
-  ripples.push({ x: b.left + b.width / 2, y: b.top + b.height / 2, t0: performance.now() }); fxCanvas();
-  m.el.classList.remove('magnet-on');
-  if (root.lang === m.lang) m.el.innerHTML = m.html;
-  mag = null;
-}
 
 /* ======================================================= dallah (Arabic coffee) in the footer */
 const DALLAH = `<svg viewBox="0 0 48 48" aria-hidden="true"><g class="pot">
@@ -420,4 +476,4 @@ wrapWords();
 addEventListener('langchange', () => wrapWords());
 // handy for the preview: ?egg=haboob|robot|clouds|gravity
 const demo = new URLSearchParams(location.search).get('egg');
-if (demo) setTimeout(() => ({ haboob, robot, clouds: cloudRain, gravity: gravityOn } as Record<string, () => void>)[demo]?.(), 1200);
+if (demo) setTimeout(() => ({ haboob, robot, clouds: () => cloudPuff(document.querySelector<HTMLElement>('.egg-word[data-egg="clouds"]') ?? undefined), gravity: gravityOn } as Record<string, () => void>)[demo]?.(), 1200);
