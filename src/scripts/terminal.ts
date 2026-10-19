@@ -40,7 +40,7 @@ const SN = {
         exited: (s: number, b: number) => `# snake exited · score ${s} · best ${b}`, font: '"JetBrains Mono",monospace',
         welcome: 'WELCOME, VISITOR.',
         radioOn: '📻 tuning in… (again to stop)', radioOff: '# radio off',
-        radStart: '☢ geiger counter on…', roachIn: '!! something is crawling… tap it!', roachSquish: '# squish. pest controlled.', roachGone: '# it got away…', radEnd: "# reading dropped. you'll live.",
+        radStart: '☢ geiger counter on…', roachIn: '!! something is crawling… tap it!', roachSquish: '# squish. pest controlled.', roachGone: '# it got away…', clawIn: '!! something big is out there…', clawOut: '# it left. that was close.', radEnd: "# reading dropped. you'll live.",
         gravity: ['🍎 disabling gravity…'],
         haboob: ['🌪️ incoming haboob… hold on!'],
         help: [
@@ -51,6 +51,7 @@ const SN = {
           '  fallout       wasteland radio 📻',
           '  radiation     geiger counter ☢',
           '  radroach      pest control',
+          "  claw          don't.",
           '  reboot        restart terminal 📺',
           '  clear         clear the screen',
           '# more secrets hide outside 👀',
@@ -61,7 +62,7 @@ const SN = {
         exited: (s: number, b: number) => `# انتهت اللعبة · النتيجة ${s} · الأفضل ${b}`, font: '"IBM Plex Sans Arabic",sans-serif',
         welcome: 'أهلًا وسهلًا بك.',
         radioOn: '📻 جارٍ ضبط الموجة… (أعده للإيقاف)', radioOff: '# أُطفئ الراديو',
-        radStart: '☢ عدّاد غايغر يعمل…', roachIn: '!! شيء يزحف… اضغط عليه!', roachSquish: '# سُحِق. تمت المكافحة.', roachGone: '# هرب…', radEnd: '# انخفضت القراءة. ستنجو.',
+        radStart: '☢ عدّاد غايغر يعمل…', roachIn: '!! شيء يزحف… اضغط عليه!', roachSquish: '# سُحِق. تمت المكافحة.', roachGone: '# هرب…', clawIn: '!! هناك شيء ضخم في الخارج…', clawOut: '# رحل. كانت قريبة.', radEnd: '# انخفضت القراءة. ستنجو.',
         gravity: ['🍎 جارٍ إيقاف الجاذبية…'],
         haboob: ['🌪️ هبوب قادم… تمسّك!'],
         help: [
@@ -72,6 +73,7 @@ const SN = {
           '  fallout       راديو القفار 📻',
           '  radiation     عدّاد غايغر ☢',
           '  radroach      مكافحة الحشرات',
+          '  claw          لا تفعل.',
           '  reboot        أعد تشغيل الطرفية 📺',
           '  clear         مسح الشاشة',
           '# أسرار أخرى في الخارج 👀',
@@ -175,6 +177,7 @@ function run(cmd: string) {
   else if (['fallout', 'radio', 'راديو'].includes(c)) radio();
   else if (['radiation', 'geiger', 'اشعاع', 'إشعاع'].includes(c)) radiation();
   else if (['radroach', 'roach', 'صرصور'].includes(c)) radroach();
+  else if (['claw', 'beast', 'مخلب', 'وحش'].includes(c)) claw();
   else if (c) history += `<span class="t-err">zsh: command not found: ${esc(cmd)}</span>\n<span class="t-com">${s.notFound}</span>\n`;
   const ls = history.split('\n'); if (ls.length > 16) history = ls.slice(-16).join('\n');
   render();
@@ -311,6 +314,68 @@ function radroach() {
     requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
+}
+
+/* ---------- `claw`: a beast approaches and roars; the page shakes in time with the sound ----------
+   The shake follows the audio's loudness live (Web Audio analyser), so heavy steps jolt the page and the
+   roar shakes it hard and rakes claw marks across the screen. Default sound is our own synthesized clip;
+   a claw.mp3 in public/media/sounds/ takes priority. */
+const CLAW_SRC = ['/media/sounds/claw.mp3', '/media/sounds/claw.wav'];
+let clawing = false;
+function shakeTargets() { // everything on the page that isn't fixed (shaking a fixed element would make it jump)
+  return [...document.body.children].filter((el): el is HTMLElement => el instanceof HTMLElement && !/SCRIPT|STYLE/.test(el.tagName) && getComputedStyle(el).position !== 'fixed');
+}
+function clawMarks() {
+  const ov = document.body.appendChild(Object.assign(document.createElement('div'), { className: 'claw-marks' }));
+  ov.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${[0, 1, 2, 3].map((i) => `<path d="M${18 + i * 14} ${8 + i * 3} C ${30 + i * 14} 40, ${44 + i * 13} 62, ${62 + i * 12} ${90 - i * 2}" pathLength="1"/>`).join('')}</svg>`;
+  ov.animate([{ opacity: 1 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], { duration: 2600, easing: 'ease-in' }).finished.then(() => ov.remove());
+}
+function claw() {
+  if (clawing) return;
+  clawing = true; egg('claw');
+  history += `<span class="t-str">${esc(sn().clawIn)}</span>\n`;
+  const targets = shakeTargets();
+  let ended = false;
+  const finish = (ac?: AudioContext) => {
+    if (ended) return; ended = true;
+    targets.forEach((el) => (el.style.transform = ''));
+    document.documentElement.classList.remove('beast-near');
+    if (ac && ac.state !== 'closed') ac.close().catch(() => {});
+    clawing = false;
+    history += `<span class="t-com">${esc(sn().clawOut)}</span>\n`;
+    if (mode === 'prompt') render();
+  };
+  const play = (i: number) => {
+    const audio = new Audio(CLAW_SRC[i]); audio.crossOrigin = 'anonymous';
+    let ac: AudioContext | undefined, an: AnalyserNode | undefined;
+    try {
+      const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      ac = new AC(); an = ac.createAnalyser(); an.fftSize = 1024;
+      ac.createMediaElementSource(audio).connect(an).connect(ac.destination);
+    } catch { ac = undefined; an = undefined; }
+    audio.addEventListener('error', () => { if (ac && ac.state !== 'closed') ac.close().catch(() => {}); if (i + 1 < CLAW_SRC.length) play(i + 1); else finish(); }, { once: true });
+    audio.addEventListener('ended', () => finish(ac), { once: true });
+    // a missing file also rejects play(); the 'error' handler above moves on to the next source,
+    // so only give up here when the browser refuses to play sound at all
+    audio.volume = 0.85; audio.play().catch((e) => { if (e?.name === 'NotAllowedError') finish(ac); });
+    const data = new Float32Array(an ? an.fftSize : 0);
+    let level = 0, loudFor = 0, slashed = false, last = performance.now();
+    const frame = (now: number) => {
+      if (!clawing || ended) return;
+      const dt = now - last; last = now;
+      let rms = 0;
+      if (an) { an.getFloatTimeDomainData(data); for (const v of data) rms += v * v; rms = Math.sqrt(rms / data.length); }
+      level = Math.max(rms, level * 0.86);                                   // fast attack, smooth release
+      const amp = reduce ? 0 : Math.max(0, level - 0.04) * 90;             // quiet = still, loud = violent
+      targets.forEach((el) => (el.style.transform = amp > 0.3 ? `translate(${(Math.random() - 0.5) * amp}px,${(Math.random() - 0.5) * amp}px)` : ''));
+      document.documentElement.classList.toggle('beast-near', level > 0.12);
+      loudFor = level > 0.22 ? loudFor + dt : 0;                             // a sustained loud stretch = the roar
+      if (!slashed && loudFor > 350) { slashed = true; clawMarks(); }
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  };
+  play(0);
 }
 
 document.getElementById('termHint')!.addEventListener('click', async () => {

@@ -28,6 +28,7 @@ const SECRETS: Record<string, [string, string, string]> = {
   radio: ['📻', 'Wasteland Radio', 'راديو الأرض القاحلة'],
   radiation: ['☢️', 'Rad Resistant', 'مقاوم للإشعاع'],
   radroach: ['🪳', 'Pest Control', 'مكافحة الآفات'],
+  claw: ['🐾', 'Survived the Beast', 'نجوت من الوحش'],
 };
 const TOTAL = Object.keys(SECRETS).length;
 const found = new Set<string>((store.get('secrets') ?? '').split(',').filter((k) => k in SECRETS));
