@@ -245,7 +245,7 @@ function radiation() {
       glow.remove(); irradiating = false;
       history = history.replace(/<span class="t-num" data-rad>[^<]*<\/span>/, `<span class="t-num">☢ peak 9.81 µSv/h  ${'▮'.repeat(10)}</span>`);
       history += `<span class="t-com">${esc(sn().radEnd)}</span>\n`;
-      if (mode === 'prompt') render();
+      if (mode === 'prompt') { render(); setTimeout(() => { if (mode === 'prompt') boot(true); }, 1200); } // the terminal power-cycles after the exposure
     }
   };
   requestAnimationFrame(tick);
