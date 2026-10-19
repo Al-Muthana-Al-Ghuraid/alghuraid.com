@@ -37,6 +37,7 @@ const SN = {
         crash: 'Segmentation fault (snake dumped)', score: (s: number) => `score: ${s}`, retry: 'enter / tap: retry  ·  esc: exit',
         exited: (s: number, b: number) => `# snake exited · score ${s} · best ${b}`, font: '"JetBrains Mono",monospace',
         welcome: 'WELCOME, VISITOR.',
+        radioOn: '📻 tuning in… (type fallout again to stop)', radioOff: '# radio off',
         gahwa: ['☕ pouring Saudi coffee…', '🌴 served with dates. Take a break, then keep exploring.'],
         weather: ['🌡️ Riyadh: 47°C, sunny, zero clouds…', '☁️ …except the cloud I deploy to.'],
         gravity: ['🍎 disabling gravity…'],
@@ -49,6 +50,7 @@ const SN = {
           '  weather       Riyadh forecast 🌡️',
           '  haboob        summon a sandstorm 🌪️',
           '  gravity       switch gravity off 🍎',
+          '  fallout       tune in the wasteland radio 📻',
           '  reboot        power-cycle this terminal 📺',
           '  clear         clear the screen',
           '# psst: more secrets are hiding outside the terminal 👀',
@@ -58,6 +60,7 @@ const SN = {
         crash: 'اصطدمت الأفعى! (Segmentation fault)', score: (s: number) => `النتيجة: ${s}`, retry: 'Enter أو نقرة: إعادة  ·  Esc: خروج',
         exited: (s: number, b: number) => `# انتهت اللعبة · النتيجة ${s} · الأفضل ${b}`, font: '"IBM Plex Sans Arabic",sans-serif',
         welcome: 'أهلًا وسهلًا بك.',
+        radioOn: '📻 جارٍ ضبط الموجة… (اكتب fallout مرة أخرى للإيقاف)', radioOff: '# أُطفئ الراديو',
         gahwa: ['☕ جارٍ صبّ القهوة السعودية…', '🌴 مع التمر. خذ استراحة ثم واصل الاستكشاف.'],
         weather: ['🌡️ الرياض: 47° مئوية، مشمس، بلا غيوم…', '☁️ …إلا السحابة التي أنشر عليها.'],
         gravity: ['🍎 جارٍ إيقاف الجاذبية…'],
@@ -70,6 +73,7 @@ const SN = {
           '  weather       طقس الرياض 🌡️',
           '  haboob        استدعِ عاصفة رملية 🌪️',
           '  gravity       أوقف الجاذبية 🍎',
+          '  fallout       شغّل راديو الأرض القاحلة 📻',
           '  reboot        أعد تشغيل الطرفية 📺',
           '  clear         مسح الشاشة',
           '# تلميح: أسرار أخرى مخبّأة خارج الطرفية 👀',
@@ -172,12 +176,32 @@ function run(cmd: string) {
   else if (['gravity', 'الجاذبية'].includes(c)) { say(s.gravity); dispatchEvent(new CustomEvent('egg:gravity')); }
   else if (['help', 'مساعدة', '?'].includes(c)) { history += s.help.map((l, i) => `<span class="${i === 0 ? 't-key' : l.startsWith('#') ? 't-com' : 't-help'}">${esc(l)}</span>`).join('\n') + '\n'; }
   else if (['haboob', 'هبوب'].includes(c)) { say(s.haboob); dispatchEvent(new CustomEvent('egg:haboob')); }
+  else if (['fallout', 'radio', 'راديو'].includes(c)) radio();
   else if (c) history += `<span class="t-err">zsh: command not found: ${esc(cmd)}</span>\n<span class="t-com">${s.notFound}</span>\n`;
   const ls = history.split('\n'); if (ls.length > 16) history = ls.slice(-16).join('\n');
   render();
 }
 
 const egg = (id: string) => dispatchEvent(new CustomEvent('egg:unlock', { detail: id }));
+
+/* ---------- `fallout`: plays a short radio clip; typing it again stops it ----------
+   To use your own sound, drop it in public/media/sounds/ as fallout.mp3 (it wins over the .wav). */
+const RADIO_SRC = ['/media/sounds/fallout.mp3', '/media/sounds/fallout.wav'];
+let player: HTMLAudioElement | null = null;
+function loadPlayer(i = 0): HTMLAudioElement {
+  const a = new Audio(RADIO_SRC[i]); a.volume = 0.6; a.preload = 'auto';
+  a.addEventListener('error', () => { if (i + 1 < RADIO_SRC.length) { player = loadPlayer(i + 1); if (wantPlay) player.play().catch(() => {}); } }, { once: true });
+  a.addEventListener('ended', () => { if (mode === 'prompt') { history += `<span class="t-com">${esc(sn().radioOff)}</span>\n`; render(); } });
+  return a;
+}
+let wantPlay = false;
+function radio() {
+  player ??= loadPlayer();
+  if (!player.paused) { player.pause(); player.currentTime = 0; wantPlay = false; history += `<span class="t-com">${esc(sn().radioOff)}</span>\n`; return; }
+  wantPlay = true; player.currentTime = 0; player.play().catch(() => {});
+  history += `<span class="t-str">${esc(sn().radioOn)}</span>\n`;
+  egg('radio');
+}
 
 document.getElementById('termHint')!.addEventListener('click', async () => {
   if (mode !== 'prompt') return;
