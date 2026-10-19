@@ -28,8 +28,8 @@ caseStudy:
       ar: خادم ARM على Oracle Cloud يشغّل n8n وcloudflared عبر Docker Compose، دون نشر أي منفذ للتطبيق على الخادم.
     - en: Cloudflare Tunnel and Access in front of n8n, so the only way in is an email PIN for a single allowed user, then n8n's own login.
       ar: Cloudflare Tunnel وAccess أمام n8n، فلا يمكن الدخول إلا برمز عبر البريد لمستخدم واحد مسموح له، ثم تسجيل الدخول الخاص بـn8n.
-    - en: A daily pipeline that scrapes four job boards, normalizes and de-duplicates posts, pre-scores them in JavaScript, then lets an LLM extract job facts and decide.
-      ar: خط معالجة يومي يجمع الإعلانات من أربع منصات، ويوحّدها ويزيل المكرر، ويقيّمها مبدئيًا بلغة JavaScript، ثم يستخرج نموذج لغوي تفاصيل الوظيفة ويتخذ القرار.
+    - en: A daily pipeline that collects posts from four job boards, cleans and de-duplicates them, then filters and AI-ranks the best matches.
+      ar: خط معالجة يومي يجمع الإعلانات من أربع منصات توظيف، وينظّفها ويزيل المكرر منها، ثم يفرزها ويرتّب أنسبها بالذكاء الاصطناعي.
     - en: Nightly backups of workflows and encrypted credentials with 14-day retention, plus a monthly off-server copy.
       ar: نسخ احتياطي ليلي لسير العمل وبيانات الاعتماد المشفّرة مع الاحتفاظ بها 14 يومًا، إضافة إلى نسخة شهرية خارج الخادم.
   challenges:
