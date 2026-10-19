@@ -36,7 +36,9 @@ const h = home ? '' : '/';
   <!-- apply saved theme/language before first paint (no flash) -->
   <script is:inline>
     try {
-      const d = document.documentElement, t = localStorage.getItem('theme'), l = localStorage.getItem('lang');
+      // ?lang=ar / ?lang=en in the link wins over the saved choice (handy for sharing the Arabic version)
+      const q = new URLSearchParams(location.search).get('lang');
+      const d = document.documentElement, t = localStorage.getItem('theme'), l = q || localStorage.getItem('lang');
       if (t) d.dataset.theme = t;
       if (l === 'ar') { d.lang = 'ar'; d.dir = 'rtl'; }
     } catch (e) {}
