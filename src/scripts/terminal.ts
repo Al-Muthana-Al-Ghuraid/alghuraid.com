@@ -38,6 +38,7 @@ const SN = {
         exited: (s: number, b: number) => `# snake exited · score ${s} · best ${b}`, font: '"JetBrains Mono",monospace',
         welcome: 'WELCOME, VISITOR.',
         radioOn: '📻 tuning in… (type fallout again to stop)', radioOff: '# radio off',
+        radStart: '☢ geiger counter on… something nearby is hot.', radEnd: "# reading dropped. you'll live (probably).",
         gahwa: ['☕ pouring Saudi coffee…', '🌴 served with dates. Take a break, then keep exploring.'],
         weather: ['🌡️ Riyadh: 47°C, sunny, zero clouds…', '☁️ …except the cloud I deploy to.'],
         gravity: ['🍎 disabling gravity…'],
@@ -51,6 +52,7 @@ const SN = {
           '  haboob        summon a sandstorm 🌪️',
           '  gravity       switch gravity off 🍎',
           '  fallout       tune in the wasteland radio 📻',
+          '  radiation     run the geiger counter ☢',
           '  reboot        power-cycle this terminal 📺',
           '  clear         clear the screen',
           '# psst: more secrets are hiding outside the terminal 👀',
@@ -61,6 +63,7 @@ const SN = {
         exited: (s: number, b: number) => `# انتهت اللعبة · النتيجة ${s} · الأفضل ${b}`, font: '"IBM Plex Sans Arabic",sans-serif',
         welcome: 'أهلًا وسهلًا بك.',
         radioOn: '📻 جارٍ ضبط الموجة… (اكتب fallout مرة أخرى للإيقاف)', radioOff: '# أُطفئ الراديو',
+        radStart: '☢ عدّاد غايغر يعمل… هناك شيء مشعّ قريب.', radEnd: '# انخفضت القراءة. ستنجو (على الأرجح).',
         gahwa: ['☕ جارٍ صبّ القهوة السعودية…', '🌴 مع التمر. خذ استراحة ثم واصل الاستكشاف.'],
         weather: ['🌡️ الرياض: 47° مئوية، مشمس، بلا غيوم…', '☁️ …إلا السحابة التي أنشر عليها.'],
         gravity: ['🍎 جارٍ إيقاف الجاذبية…'],
@@ -74,6 +77,7 @@ const SN = {
           '  haboob        استدعِ عاصفة رملية 🌪️',
           '  gravity       أوقف الجاذبية 🍎',
           '  fallout       شغّل راديو الأرض القاحلة 📻',
+          '  radiation     شغّل عدّاد غايغر ☢',
           '  reboot        أعد تشغيل الطرفية 📺',
           '  clear         مسح الشاشة',
           '# تلميح: أسرار أخرى مخبّأة خارج الطرفية 👀',
@@ -177,6 +181,7 @@ function run(cmd: string) {
   else if (['help', 'مساعدة', '?'].includes(c)) { history += s.help.map((l, i) => `<span class="${i === 0 ? 't-key' : l.startsWith('#') ? 't-com' : 't-help'}">${esc(l)}</span>`).join('\n') + '\n'; }
   else if (['haboob', 'هبوب'].includes(c)) { say(s.haboob); dispatchEvent(new CustomEvent('egg:haboob')); }
   else if (['fallout', 'radio', 'راديو'].includes(c)) radio();
+  else if (['radiation', 'geiger', 'اشعاع', 'إشعاع'].includes(c)) radiation();
   else if (c) history += `<span class="t-err">zsh: command not found: ${esc(cmd)}</span>\n<span class="t-com">${s.notFound}</span>\n`;
   const ls = history.split('\n'); if (ls.length > 16) history = ls.slice(-16).join('\n');
   render();
@@ -201,6 +206,49 @@ function radio() {
   wantPlay = true; player.currentTime = 0; player.play().catch(() => {});
   history += `<span class="t-str">${esc(sn().radioOn)}</span>\n`;
   egg('radio');
+}
+
+/* ---------- `radiation`: Geiger counter clicks speed up while the page glows green ----------
+   The clicks are synthesized in the browser (random bursts of filtered noise), no audio file. */
+let irradiating = false;
+function radiation() {
+  if (irradiating) return;
+  irradiating = true; egg('radiation');
+  const DUR = 5.2;
+  history += `<span class="t-str">${esc(sn().radStart)}</span>\n<span class="t-num" data-rad>☢ 0.00 µSv/h  ▯▯▯▯▯▯▯▯▯▯</span>\n`;
+  // sound: render all clicks into one buffer, the rate climbs steeply then cuts out
+  try {
+    const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const ac = new AC(), sr = ac.sampleRate, buf = ac.createBuffer(1, Math.floor(sr * DUR), sr), d = buf.getChannelData(0);
+    for (let t = 0.15; t < DUR - 0.3;) {
+      const rate = 2 + 70 * (t / DUR) ** 2.4;                      // clicks per second
+      const i0 = Math.floor(t * sr), amp = 0.35 + Math.random() * 0.65;
+      for (let k = 0; k < sr * 0.0025 && i0 + k < d.length; k++) d[i0 + k] += (Math.random() * 2 - 1) * amp * Math.exp(-k / (sr * 0.0004));
+      t += -Math.log(1 - Math.random()) / rate;                    // random (Poisson) spacing, like real decay
+    }
+    const src = ac.createBufferSource(), hp = ac.createBiquadFilter(), gain = ac.createGain();
+    hp.type = 'highpass'; hp.frequency.value = 1400; gain.gain.value = 0.45;
+    src.buffer = buf; src.connect(hp).connect(gain).connect(ac.destination);
+    src.onended = () => ac.close(); src.start();
+  } catch {}
+  // visuals: a green glow over the page that swells and flickers with the readout
+  const glow = document.body.appendChild(Object.assign(document.createElement('div'), { className: 'rad-glow' }));
+  const t0 = performance.now();
+  const tick = (now: number) => {
+    const p = Math.min(1, (now - t0) / (DUR * 1000)), level = p < 0.9 ? (p / 0.9) ** 2 : (1 - p) / 0.1;
+    const flicker = reduce ? 1 : 0.85 + Math.random() * 0.3;
+    glow.style.opacity = String(Math.min(1, level * flicker));
+    const meter = term.querySelector('[data-rad]');
+    if (meter) { const n = Math.round(Math.min(1, p / 0.9) * 10); meter.textContent = `☢ ${(level * 9.81).toFixed(2)} µSv/h  ${'▮'.repeat(n)}${'▯'.repeat(10 - n)}`; }
+    if (p < 1) requestAnimationFrame(tick);
+    else {
+      glow.remove(); irradiating = false;
+      history = history.replace(/<span class="t-num" data-rad>[^<]*<\/span>/, `<span class="t-num">☢ peak 9.81 µSv/h  ${'▮'.repeat(10)}</span>`);
+      history += `<span class="t-com">${esc(sn().radEnd)}</span>\n`;
+      if (mode === 'prompt') render();
+    }
+  };
+  requestAnimationFrame(tick);
 }
 
 document.getElementById('termHint')!.addEventListener('click', async () => {

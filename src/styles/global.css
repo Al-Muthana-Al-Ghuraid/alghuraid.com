@@ -419,8 +419,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 /* hidden words: highlighted like the bold words, clickable */
 .egg-word{cursor:pointer;font-weight:600;color:var(--text);border-radius:4px;padding:0 2px;
   background:linear-gradient(90deg,color-mix(in srgb,var(--blue) 22%,transparent),color-mix(in srgb,var(--violet) 22%,transparent));
-  box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--blue) 70%,transparent);transition:background .25s,box-shadow .25s,transform .2s}
-.egg-word:hover,.egg-word:focus-visible{background:var(--grad);color:var(--on-acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 25%,transparent);outline:none}
+  -webkit-tap-highlight-color:transparent;transition:background .25s,box-shadow .25s,transform .2s}
+/* full fill only where a real hover exists (on touch screens :hover sticks after a tap) */
+@media (hover:hover){.egg-word:hover{background:var(--grad);color:var(--on-acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 25%,transparent)}}
+.egg-word:focus-visible{background:var(--grad);color:var(--on-acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 25%,transparent);outline:none}
 .egg-word:active{transform:scale(.96)}
 .hero .role .egg-word{font-weight:inherit}
 .haboob{position:fixed;inset:0;width:100vw;height:100vh;z-index:-1;pointer-events:none} /* dust storm sits in the background layer */
@@ -574,3 +576,8 @@ body{transition:none} /* the view transition handles the cross-fade */
 }
 
 .badge-logo.alt2,.coin.alt2 .face{color:#e3f5e8}
+/* `radiation` terminal command: green glow over the whole page */
+.rad-glow{position:fixed;inset:0;z-index:95;pointer-events:none;opacity:0;mix-blend-mode:screen;
+  background:radial-gradient(ellipse at 50% 45%,rgba(65,255,125,.18),rgba(65,255,125,.5) 75%,rgba(20,140,60,.75));
+  box-shadow:inset 0 0 160px 40px rgba(65,255,125,.55)}
+[data-theme="light"] .rad-glow{mix-blend-mode:multiply;background:radial-gradient(ellipse at 50% 45%,rgba(120,255,150,.35),rgba(60,200,100,.7))}
