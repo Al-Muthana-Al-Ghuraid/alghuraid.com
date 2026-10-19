@@ -65,5 +65,6 @@
     "whatsapp": "966508707029",
     "cv": "/cv/Al-Muthana-Al-Ghuraid-CV.pdf"
   },
-  "contactFormEndpoint": ""
+  "contactFormEndpoint": "https://api.web3forms.com/submit",
+  "contactFormKey": "f2db9286-6f15-4f12-91d1-aa1e04e30bec"
 }

@@ -213,3 +213,4 @@ content:
           - { name: whatsapp, label: "WhatsApp number (digits only, with 966)", type: string }
           - { name: cv, label: CV file path, type: string }
       - { name: contactFormEndpoint, label: Contact form endpoint, type: string }
+      - { name: contactFormKey, label: "Contact form key (Web3Forms, public)", type: string }
