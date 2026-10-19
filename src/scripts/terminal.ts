@@ -364,25 +364,53 @@ function claw() {
   if (clawing) return;
   clawing = true; egg('claw');
   history += `<span class="t-str">${esc(sn().clawIn)}</span>\n`;
-  // Each part of the page shakes on its own: page blocks plus the hero's pieces (name, buttons, terminal…),
-  // with independent jitter while the beast is active. Underneath, every part also sits on a spring, so
-  // when the sound ends the jitter fades out gently and the springs glide everything back into place.
-  const vh = innerHeight;
-  const parts = [
-    ...shakeTargets().map((el) => ({ el, w: 1 })),
+  // Every part of the page is a little mass on a spring with its own jitter while the beast is active:
+  //  - blocks (page sections, nav) shake and also ride a shared "camera" that dips on each heavy step
+  //  - pieces (name, buttons, terminal…) wobble on top of their block
+  //  - small loose things (chips, icons, badges, the terminal's knobs) rattle and keep ringing longer
+  // When the sound ends the jitter fades and the springs glide everything back into place.
+  // Extras: dust falls from the top after steps and during the roar, the CRT flickers on each step and
+  // glitches during the roar, and phones that support it vibrate along.
+  const vh = innerHeight, vw = innerWidth;
+  const onScreen = (el: Element) => { const r = el.getBoundingClientRect(); return r.bottom > -40 && r.top < vh + 40 && r.width > 0; };
+  type Kind = 'block' | 'piece' | 'rattle';
+  const parts: { el: HTMLElement; kind: Kind }[] = [
+    ...shakeTargets().map((el) => ({ el, kind: 'block' as Kind })),
     ...[...document.querySelectorAll<HTMLElement>('.hero .eyebrow, .hero h1, .hero .role, .hero .lead, .hero .ctas, .hero .socials, #terminal, .sec-head, .card')]
-      .map((el) => ({ el, w: 0.5 })),                                           // inner pieces wobble on top of their block
+      .map((el) => ({ el, kind: 'piece' as Kind })),
+    ...[...document.querySelectorAll<HTMLElement>('.chip, .icon-btn, .badge-logo, .status, .tv-knobs i, .tv-buttons b, .tv-toggles i, .tv-gauge, .tv-plate, .crt-led, .egg-word')]
+      .filter(onScreen).slice(0, 80).map((el) => ({ el, kind: 'rattle' as Kind })),
   ];
-  const bodies = parts.map(({ el, w }) => {
+  const TUNE = { block: { w: 1, k: 0.16, damp: 0.84 }, piece: { w: 0.5, k: 0.16, damp: 0.84 }, rattle: { w: 0.45, k: 0.24, damp: 0.93 } };
+  const bodies = parts.map(({ el, kind }) => {
     const fixed = getComputedStyle(el).position === 'fixed', r = el.getBoundingClientRect();
-    return { el, x: 0, y: 0, r: 0, vx: 0, vy: 0, vr: 0, jit: 0, jx: 0, jy: 0,
-      depth: (fixed ? 0.55 : 1) * w,                                            // the nav bar / backdrop sway less: feels like depth
-      delay: fixed ? 0 : Math.max(0, Math.min(0.12, (vh - r.top) / vh * 0.06)), // the shock reaches lower blocks first
-      seed: Math.random() * 100, queue: [] as { at: number; ix: number; iy: number }[] };
+    return { el, kind, x: 0, y: 0, r: 0, vx: 0, vy: 0, vr: 0, jit: 0, jx: 0, jy: 0,
+      depth: (fixed ? 0.55 : 1) * TUNE[kind].w,                                // the nav bar / backdrop sway less: feels like depth
+      delay: fixed ? 0 : Math.max(0, Math.min(0.12, (vh - r.top) / vh * 0.06)), // the shock reaches lower parts first
+      seed: Math.random() * 100, queue: [] as { at: number; ix: number; iy: number; ir: number }[] };
   });
-  let ended = false, soundDone = false;
+  const cam = { y: 0, vy: 0 };                                                  // shared camera dip for whole blocks
+
+  // dust layer
+  const dustCv = document.body.appendChild(Object.assign(document.createElement('canvas'), { className: 'dust-fx' }));
+  const dpr = devicePixelRatio || 1; dustCv.width = vw * dpr; dustCv.height = vh * dpr;
+  const dx = dustCv.getContext('2d')!; dx.scale(dpr, dpr);
+  const dustRGB = root.dataset.theme === 'light' ? '90,78,60' : '205,196,172';
+  const dust: { x: number; y: number; vx: number; vy: number; s: number; a: number; life: number }[] = [];
+  const spawnDust = (n: number) => { for (let i = 0; i < n && dust.length < 400; i++) dust.push({ x: Math.random() * vw, y: -10 + Math.random() * vh * 0.22, vx: (Math.random() - 0.5) * 0.6, vy: 0.3 + Math.random() * 1.4, s: 0.6 + Math.random() * 1.9, a: 0.35 + Math.random() * 0.5, life: 1 }); };
+
+  // CRT flicker / glitch
+  const flicker = (strength: number) => content.animate(
+    [{ opacity: 1, filter: 'brightness(1)' }, { opacity: 0.35 + 0.4 * (1 - strength), filter: 'brightness(1.8)' }, { opacity: 1, filter: 'brightness(.9)' }, { opacity: 0.8, filter: 'brightness(1.2)' }, { opacity: 1, filter: 'brightness(1)' }],
+    { duration: 220, easing: 'steps(5)' });
+  const glitch = () => content.animate(
+    [{ transform: 'none' }, { transform: `translateX(${(Math.random() - 0.5) * 10}px) skewX(${(Math.random() - 0.5) * 4}deg)`, filter: 'brightness(1.4)' }, { transform: 'none' }],
+    { duration: 90 });
+  const buzz = (p: number | number[]) => { try { if (!reduce && 'vibrate' in navigator) navigator.vibrate(p); } catch {} };
+
+  let ended = false, soundDone = false, roarBuzzed = false, lastGlitch = 0;
   const done = () => { // the sound is over: print the message, but let the page keep settling
-    if (soundDone) return; soundDone = true; clawing = false;
+    if (soundDone) return; soundDone = true; clawing = false; buzz(0);
     history += `<span class="t-com">${esc(sn().clawOut)}</span>\n`;
     if (mode === 'prompt') render();
   };
@@ -391,11 +419,11 @@ function claw() {
     const audio = new Audio(CLAW_SRC[i]);
     let map: ClawMap | null = null;
     mapClip(CLAW_SRC[i]).then((m) => (map = m));
-    audio.addEventListener('error', () => (i + 1 < CLAW_SRC.length ? play(i + 1) : (done(), (ended = true))), { once: true });
+    audio.addEventListener('error', () => (i + 1 < CLAW_SRC.length ? play(i + 1) : (done(), (ended = true), dustCv.remove())), { once: true });
     audio.addEventListener('ended', done, { once: true });
     // a missing file also rejects play(); the 'error' handler moves on to the next source,
     // so only give up here when the browser refuses to play sound at all
-    audio.volume = 0.9; audio.play().catch((e) => { if (e?.name === 'NotAllowedError') { done(); ended = true; } });
+    audio.volume = 0.9; audio.play().catch((e) => { if (e?.name === 'NotAllowedError') { done(); ended = true; dustCv.remove(); } });
     let lastT = 0, lastNow = performance.now();
     const frame = (now: number) => {
       if (ended) return;
@@ -406,37 +434,66 @@ function claw() {
       const roar = roarSpan ? Math.min(1, (t - roarSpan[0]) / 0.25) * (0.5 + e) : 0;
       let stepEnv = 0;                                                         // how hard the latest footstep is still ringing
       if (m && playing) for (const s of m.steps) {
-        if (lastT < s.t && t >= s.t)                                           // a footstep lands: every part gets its own jolt
-          for (const b of bodies) b.queue.push({ at: now + b.delay * 1000, ix: (Math.random() - 0.5) * 6 * s.s, iy: (6 + 8 * s.s) * s.s * (0.7 + 0.6 * Math.random()) });
+        if (lastT < s.t && t >= s.t) {                                         // a footstep lands
+          for (const b of bodies) {
+            const rattle = b.kind === 'rattle';
+            b.queue.push({ at: now + b.delay * 1000, ix: (Math.random() - 0.5) * (rattle ? 10 : 6) * s.s,
+              iy: (rattle ? (Math.random() - 0.3) * 12 : (6 + 8 * s.s) * (0.7 + 0.6 * Math.random())) * s.s, ir: rattle ? (Math.random() - 0.5) * 6 * s.s : 0 });
+          }
+          cam.vy += (5 + 9 * s.s) * s.s;                                       // the whole view dips with the impact
+          spawnDust(Math.round(22 * s.s));
+          flicker(s.s);
+          buzz(Math.round(40 + 90 * s.s));
+        }
         if (t >= s.t && t < s.t + 0.6) stepEnv = Math.max(stepEnv, s.s * Math.exp(-(t - s.t) / 0.12));
+      }
+      if (roar > 0) {
+        if (!roarBuzzed) { roarBuzzed = true; buzz([350, 60, 450, 60, 700]); }
+        spawnDust(Math.random() < roar * 0.8 ? 2 : 0);
+        if (now - lastGlitch > 120 + Math.random() * 260) { lastGlitch = now; glitch(); }
       }
       lastT = t;
       const activity = playing ? Math.max(stepEnv * 16, roar * 15, e * 1.5) : 0; // target jitter size in px
-      let moving = false;
+      // camera: springs back after each dip, rumbles a little during the roar
+      cam.vy += (-cam.y * 0.14 + noise(now / 1000, 3) * roar * 1.2) * dt; cam.vy *= Math.pow(soundDone ? 0.8 : 0.82, dt); cam.y += cam.vy * dt;
+      let moving = Math.abs(cam.y) + Math.abs(cam.vy) > 0.05;
       for (const b of bodies) {
-        b.queue = b.queue.filter((q) => (now >= q.at ? ((b.vx += q.ix * b.depth), (b.vy += q.iy * b.depth), false) : true));
+        const tune = TUNE[b.kind];
+        b.queue = b.queue.filter((q) => (now >= q.at ? ((b.vx += q.ix * b.depth), (b.vy += q.iy * b.depth), (b.vr += q.ir), false) : true));
         // independent jitter: jumps in fast, fades out slowly (that slow fade is what makes the ending smooth)
-        b.jit += (activity - b.jit) * (activity > b.jit ? 0.6 : 0.045 * dt);
+        b.jit += (activity * (b.kind === 'rattle' ? 1.5 : 1) - b.jit) * (activity > b.jit ? 0.6 : 0.045 * dt);
         // roar also shoves each part around with smooth noise; the springs pull everything back to rest
         const push = roar * 2.2 * b.depth;
         b.vx += noise(now / 1000, b.seed) * push * dt; b.vy += noise(now / 1000, b.seed + 9) * push * 0.8 * dt;
-        b.vr += noise(now / 1000, b.seed + 4) * roar * 0.09 * b.depth * dt;
+        b.vr += noise(now / 1000, b.seed + 4) * roar * (b.kind === 'rattle' ? 0.6 : 0.09) * b.depth * dt;
         // after the sound ends a softer, slower spring lets everything glide home instead of snapping back
-        const k = soundDone ? 0.06 : 0.16;
+        const k = soundDone ? 0.06 : tune.k;
         b.vx += -b.x * k * dt; b.vy += -b.y * k * dt; b.vr += -b.r * k * 0.75 * dt;
-        const damp = Math.pow(soundDone ? 0.8 : 0.84, dt); b.vx *= damp; b.vy *= damp; b.vr *= Math.pow(soundDone ? 0.8 : 0.86, dt);
+        const damp = Math.pow(soundDone ? 0.8 : tune.damp, dt); b.vx *= damp; b.vy *= damp; b.vr *= Math.pow(soundDone ? 0.8 : tune.damp, dt);
         b.x += b.vx * dt; b.y += b.vy * dt; b.r += b.vr * dt;
         // while the beast is loud the jitter is crisp (a new spot every frame); as it calms down each part
         // glides toward its next spot instead of jumping, so the wind-down is smooth
         const crisp = activity > 2 ? 1 : 0.18;
         b.jx += ((Math.random() - 0.5) * b.jit * b.depth - b.jx) * crisp;
         b.jy += ((Math.random() - 0.5) * b.jit * b.depth * 1.2 - b.jy) * crisp;
-        const jx = b.jx, jy = b.jy;
-        const still = Math.abs(b.x) + Math.abs(b.y) + Math.abs(b.vx) + Math.abs(b.vy) < 0.08 && Math.abs(b.r) + Math.abs(b.vr) < 0.004 && b.jit < 0.08 && Math.abs(b.jx) + Math.abs(b.jy) < 0.08 && !b.queue.length;
-        if (still) { b.x = b.y = b.r = b.vx = b.vy = b.vr = b.jit = b.jx = b.jy = 0; b.el.style.translate = ''; b.el.style.rotate = ''; }
-        else { moving = true; b.el.style.translate = `${(b.x + jx).toFixed(2)}px ${(b.y + jy).toFixed(2)}px`; b.el.style.rotate = Math.abs(b.r) > 0.003 ? `${b.r.toFixed(3)}deg` : ''; }
+        const camY = b.kind === 'block' ? cam.y * b.depth : 0;
+        const settled = Math.abs(b.x) + Math.abs(b.y) + Math.abs(b.vx) + Math.abs(b.vy) < 0.08 && Math.abs(b.r) + Math.abs(b.vr) < 0.004
+          && b.jit < 0.08 && Math.abs(b.jx) + Math.abs(b.jy) < 0.08 && !b.queue.length && Math.abs(camY) < 0.05;
+        if (settled) { b.x = b.y = b.r = b.vx = b.vy = b.vr = b.jit = b.jx = b.jy = 0; b.el.style.translate = ''; b.el.style.rotate = ''; }
+        else { moving = true; b.el.style.translate = `${(b.x + b.jx).toFixed(2)}px ${(b.y + b.jy + camY).toFixed(2)}px`; b.el.style.rotate = Math.abs(b.r) > 0.003 ? `${b.r.toFixed(3)}deg` : ''; }
       }
-      if (soundDone && !moving) { ended = true; return; }                     // fully settled
+      // dust: drifts down, sways, fades
+      dx.clearRect(0, 0, vw, vh);
+      for (let k = dust.length - 1; k >= 0; k--) {
+        const p = dust[k];
+        p.vy += 0.035 * dt; p.vx += Math.sin(now / 400 + p.x) * 0.01 * dt; p.vx *= 0.99; p.vy *= 0.985;
+        p.x += p.vx * dt; p.y += p.vy * dt; p.life -= 0.006 * dt;
+        if (p.life <= 0 || p.y > vh + 10) { dust.splice(k, 1); continue; }
+        dx.fillStyle = `rgba(${dustRGB},${(p.a * Math.min(1, p.life * 2)).toFixed(3)})`;
+        dx.beginPath(); dx.arc(p.x, p.y, p.s, 0, Math.PI * 2); dx.fill();
+      }
+      if (dust.length) moving = true;
+      if (soundDone && !moving) { ended = true; cam.y = 0; dustCv.remove(); return; } // fully settled
       requestAnimationFrame(frame);
     };
     requestAnimationFrame(frame);

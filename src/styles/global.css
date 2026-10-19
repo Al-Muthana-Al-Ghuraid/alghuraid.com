@@ -764,3 +764,5 @@ body{transition:none} /* the view transition handles the cross-fade */
 @keyframes roach-ant{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
 .roach.squished{width:54px;height:54px;cursor:default;color:#2fbf5c;filter:drop-shadow(0 0 4px rgba(65,255,125,.4))}
 
+/* `claw`: dust drifting down over the page */
+.dust-fx{position:fixed;inset:0;width:100vw;height:100vh;z-index:93;pointer-events:none}
