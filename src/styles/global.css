@@ -223,8 +223,9 @@ nav .wrap{display:flex;align-items:center;gap:24px;height:68px}
 .c-link .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--surface-2);border:1px solid var(--border);color:var(--blue);flex:none}
 .c-link .ico svg{width:19px;height:19px}
 .c-link small{display:block;font-family:var(--font-mono);font-size:11.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em}
-.c-link span{font-size:15px;word-break:break-all}
-.c-link .go{margin-inline-start:auto;color:var(--faint);transition:.25s}
+.c-link > div:not(.ico){min-width:0}
+.c-link span{font-size:15px;overflow-wrap:anywhere}
+.c-link .go{width:18px;height:18px;flex:none;margin-inline-start:auto;color:var(--faint);transition:.25s}
 .c-link:hover .go{color:var(--blue);transform:translateX(4px)}
 [dir="rtl"] .c-link:hover .go{transform:translateX(-4px) scaleX(-1)}
 [dir="rtl"] .c-link .go{transform:scaleX(-1)}
