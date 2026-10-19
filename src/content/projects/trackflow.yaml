@@ -1,42 +1,82 @@
-order: 2
-year: 2026
-org: Saudi Digital Academy
-categories: [web]
-tags: [React 18, FastAPI, SQLAlchemy, JWT, Bootstrap 5]
-cover: /media/projects/trackflow.png
-githubSoon: true
 title:
   en: "TrackFlow: bootcamp management platform"
   ar: "TrackFlow: منصة لإدارة المعسكرات التدريبية"
 summary:
-  en: Full-stack platform for running training cohorts, with four roles (admin, instructor, manager, student). Cohort isolation is enforced at the API through JWT, and content unlocks week by week.
-  ar: منصة متكاملة لإدارة الدفعات التدريبية بأربعة أدوار (مسؤول، ومدرّب، وإدارة، وطالب)، مع عزل بيانات كل دفعة على مستوى الـAPI عبر JWT، ومحتوى يُتاح أسبوعًا بعد أسبوع.
+  en: Full-stack platform for running training cohorts, with four roles (admin,
+    instructor, manager, student). Cohort isolation is enforced at the API
+    through JWT, and content unlocks week by week.
+  ar: منصة متكاملة لإدارة الدفعات التدريبية بأربعة أدوار (مسؤول، ومدرّب، وإدارة،
+    وطالب)، مع عزل بيانات كل دفعة على مستوى الـAPI عبر JWT، ومحتوى يُتاح أسبوعًا
+    بعد أسبوع.
 impact:
   en: Team lead of 3 · 14 API modules · 4 role-based dashboards
   ar: قيادة فريق من 3 أعضاء · 14 وحدة API · 4 لوحات تحكم حسب الدور
+categories:
+  - web
+tags:
+  - React 18
+  - FastAPI
+  - SQLAlchemy
+  - JWT
+  - Bootstrap 5
+  - Vite
+org: Saudi Digital Academy
+year: 2026
+order: 2
+featured: false
+hidden: false
+cover: /media/projects/trackflow.png
+githubSoon: true
 caseStudy:
   intro:
-    en: My capstone for the Saudi Digital Academy software development bootcamp, where I was group leader of a three-person team.
-    ar: مشروع تخرجي في معسكر تطوير البرمجيات من الأكاديمية السعودية الرقمية، حيث كنت قائدًا لفريق من ثلاثة أعضاء.
+    en: My capstone for the Saudi Digital Academy software development bootcamp,
+      where I was group leader of a three-person team.
+    ar: مشروع تخرجي في معسكر تطوير البرمجيات من الأكاديمية السعودية الرقمية، حيث كنت
+      قائدًا لفريق من ثلاثة أعضاء.
   problem:
-    en: Bootcamps juggle cohorts, curricula, attendance, quizzes and at-risk students across many tools, and data from one cohort must never leak into another.
-    ar: تتعامل المعسكرات التدريبية مع الدفعات والمناهج والحضور والاختبارات والطلاب المعرّضين للتعثر عبر أدوات متعددة، ويجب ألّا تتسرب بيانات أي دفعة إلى أخرى.
+    en: Bootcamps juggle cohorts, curricula, attendance, quizzes and at-risk
+      students across many tools, and data from one cohort must never leak into
+      another.
+    ar: تتعامل المعسكرات التدريبية مع الدفعات والمناهج والحضور والاختبارات والطلاب
+      المعرّضين للتعثر عبر أدوات متعددة، ويجب ألّا تتسرب بيانات أي دفعة إلى
+      أخرى.
   built:
-    - en: A React 18 + Vite single-page app with a different sidebar and pages for each of the four roles.
-      ar: تطبيق صفحة واحدة بـReact 18 وVite، بشريط جانبي وصفحات مختلفة لكل دور من الأدوار الأربعة.
-    - en: A FastAPI backend with 14 router modules, where the JWT carries role and cohort and every endpoint checks both.
-      ar: واجهة خلفية بـFastAPI تضم 14 وحدة توجيه، يحمل فيها رمز JWT الدور والدفعة، ويتحقق كل مسار من الاثنين.
-    - en: "Time-aware learning: week gating, quiz deadlines with live countdowns, and attendance grouped by week automatically."
-      ar: "تعلّم مرتبط بالزمن: إتاحة المحتوى أسبوعيًا، ومواعيد اختبارات مع عدّ تنازلي مباشر، وتجميع الحضور تلقائيًا حسب الأسبوع."
-    - en: A risk register with one-click at-risk flagging that auto-assigns the cohort's programme manager.
-      ar: سجل مخاطر يتيح تحديد الطالب المعرّض للتعثر بنقرة واحدة، مع تعيين مدير البرنامج تلقائيًا مسؤولًا عن الخطر.
+    - en: A React 18 + Vite single-page app with a different sidebar and pages for
+        each of the four roles.
+      ar: تطبيق صفحة واحدة بـReact 18 وVite، بشريط جانبي وصفحات مختلفة لكل دور من
+        الأدوار الأربعة.
+    - en: A FastAPI backend with 14 router modules, where the JWT carries role and
+        cohort and every endpoint checks both.
+      ar: واجهة خلفية بـFastAPI تضم 14 وحدة توجيه، يحمل فيها رمز JWT الدور والدفعة،
+        ويتحقق كل مسار من الاثنين.
+    - en: "Time-aware learning: week gating, quiz deadlines with live countdowns, and
+        attendance grouped by week automatically."
+      ar: "تعلّم مرتبط بالزمن: إتاحة المحتوى أسبوعيًا، ومواعيد اختبارات مع عدّ تنازلي
+        مباشر، وتجميع الحضور تلقائيًا حسب الأسبوع."
+    - en: A risk register with one-click at-risk flagging that auto-assigns the
+        cohort's programme manager.
+      ar: سجل مخاطر يتيح تحديد الطالب المعرّض للتعثر بنقرة واحدة، مع تعيين مدير
+        البرنامج تلقائيًا مسؤولًا عن الخطر.
   results:
-    - en: A working platform covering the full bootcamp lifecycle, from cohort creation to career profiles.
-      ar: منصة عاملة تغطي دورة حياة المعسكر كاملة، من إنشاء الدفعة إلى ملفات المسار المهني.
+    - en: A working platform covering the full bootcamp lifecycle, from cohort
+        creation to career profiles.
+      ar: منصة عاملة تغطي دورة حياة المعسكر كاملة، من إنشاء الدفعة إلى ملفات المسار
+        المهني.
   stats:
-    - { value: "4", label: { en: user roles, ar: أدوار مستخدمين } }
-    - { value: "14", label: { en: API modules, ar: وحدة API } }
-    - { value: "3", label: { en: team members (lead), ar: أعضاء الفريق (قائد) } }
+    - value: "4"
+      label:
+        en: user roles
+        ar: أدوار مستخدمين
+    - value: "14"
+      label:
+        en: API modules
+        ar: وحدة API
+    - value: "3"
+      label:
+        en: team members (lead)
+        ar: أعضاء الفريق (قائد)
   screenshots:
     - src: /media/projects/trackflow.png
-      caption: { en: Admin view of cohorts, ar: عرض المسؤول للدفعات }
+      caption:
+        en: Admin view of cohorts
+        ar: عرض المسؤول للدفعات
