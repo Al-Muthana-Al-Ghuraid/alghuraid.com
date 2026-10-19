@@ -5,38 +5,49 @@ import { ui } from '../../i18n/ui';
 import type { Site } from '../../lib/data';
 
 const { site } = Astro.props as { site: Site };
-const l = site.settings.links;
-const handle = (url: string) => url.replace(/\/$/, '').split('/').pop()!.replace(/-\d+$/, '');
-const links = [
-  { href: `mailto:${l.email}`, icon: 'mail', label: ui['co.email'], value: { en: l.email, ar: l.email } },
-  { href: l.linkedin, icon: 'linkedin', label: { en: 'LinkedIn', ar: 'LinkedIn' }, value: { en: handle(l.linkedin), ar: handle(l.linkedin) } },
-  { href: l.github, icon: 'github', label: { en: 'GitHub', ar: 'GitHub' }, value: { en: handle(l.github), ar: handle(l.github) } },
-  { href: `https://wa.me/${l.whatsapp}`, icon: 'chat', label: { en: 'WhatsApp', ar: 'واتساب' }, value: ui['co.wa'] },
+const s = site.settings;
+const l = s.links;
+const tiles = [
+  { href: l.linkedin, icon: 'linkedin', label: { en: 'LinkedIn', ar: 'LinkedIn' } },
+  { href: l.github, icon: 'github', label: { en: 'GitHub', ar: 'GitHub' } },
+  { href: `https://wa.me/${l.whatsapp}`, icon: 'chat', label: { en: 'WhatsApp', ar: 'واتساب' } },
+  { href: l.cv, icon: 'download', label: ui['nav.cv'], download: true },
 ] as const;
-const endpoint = site.settings.contactFormEndpoint;
+const endpoint = s.contactFormEndpoint;
 ---
 <section id="contact">
   <div class="wrap">
     <div class="sec-head reveal"><div class="sec-label">06 // contact</div><T as="h2" k="co.h" /><T as="p" k="co.sub" /></div>
     <div class="contact-grid">
-      <div class="contact-links">
-        {links.map((x) => (
-          <a class="card c-link reveal" href={x.href} target={x.href.startsWith('http') ? '_blank' : undefined} rel="noopener">
-            <div class="ico"><Icon name={x.icon} /></div>
-            <div><T as="small" v={x.label} /><T v={x.value} /></div>
-            <Icon name="arrow" class="go" />
-          </a>
-        ))}
-      </div>
-      <form class="card reveal" id="contactForm" action={endpoint || `mailto:${l.email}`} method="post" data-endpoint={endpoint}>
-        <label><T k="fo.name" /><input name="name" required autocomplete="name" placeholder={ui['fo.name.ph'].en} data-ar-ph={ui['fo.name.ph'].ar}></label>
-        <label><T k="fo.email" /><input name="email" type="email" required autocomplete="email" placeholder="jane@company.com"></label>
-        <label><T k="fo.msg" /><textarea name="message" required placeholder={ui['fo.msg.ph'].en} data-ar-ph={ui['fo.msg.ph'].ar}></textarea></label>
-        {site.settings.contactFormKey && <input type="hidden" name="access_key" value={site.settings.contactFormKey}>}
+      <aside class="card contact-panel reveal">
+        <div class="avail"><span class="pulse-dot"></span><T k="co.avail" /> <T class="avail-v" v={s.availability} /></div>
+        <ul class="meta-list">
+          <li><Icon name="pin" /><T v={{ en: `${s.location.en} · ${s.relocate.en}`, ar: `${s.location.ar} · ${s.relocate.ar}` }} /></li>
+          <li><Icon name="bolt" /><T k="co.reply" /></li>
+        </ul>
+        <div class="email-row">
+          <a href={`mailto:${l.email}`} class="email-link"><Icon name="mail" /><span class="mono">{l.email}</span></a>
+          <button class="btn btn-ghost btn-sm copy-btn" data-copy={l.email} type="button"><T k="co.copy" class="copy-label" /><T k="co.copied" class="copied-label" /></button>
+        </div>
+        <div class="tiles">
+          {tiles.map((t) => (
+            <a class="tile" href={t.href} target={t.href.startsWith('http') ? '_blank' : undefined} rel="noopener" download={'download' in t ? true : undefined}>
+              <Icon name={t.icon} /><T v={t.label} />
+            </a>
+          ))}
+        </div>
+      </aside>
+
+      <form class="card contact-form reveal" id="contactForm" action={endpoint || `mailto:${l.email}`} method="post" data-endpoint={endpoint}>
+        {s.contactFormKey && <input type="hidden" name="access_key" value={s.contactFormKey}>}
         <input type="hidden" name="subject" value="New message from alghuraid.com">
         <input type="hidden" name="from_name" value="alghuraid.com contact form">
+        <T as="h3" class="form-title" k="co.formTitle" />
+        <label class="field"><input name="name" required autocomplete="name" placeholder=" "><T k="fo.name" /></label>
+        <label class="field"><input name="email" type="email" required autocomplete="email" placeholder=" "><T k="fo.email" /></label>
+        <label class="field"><textarea name="message" required placeholder=" "></textarea><T k="fo.msg" /></label>
         <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <button class="btn btn-primary" type="submit" style="justify-content:center"><T k="fo.send" /></button>
+        <button class="btn btn-primary send-btn" type="submit"><T k="fo.send" /><Icon name="send" class="plane" /></button>
         <T as="p" class="form-msg" k="fo.sent" hidden data-ok />
         <T as="p" class="form-msg err" k="fo.err" hidden data-err />
       </form>

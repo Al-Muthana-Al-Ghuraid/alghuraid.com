@@ -35,11 +35,23 @@ const SN = {
   en: { notFound: "# hint: there is exactly one command you shouldn't type…", title: (s: number, b: number) => `snake.py — score ${s} · best ${b}`,
         startKeys: 'press ← ↑ ↓ → to start  ·  esc to quit', startTouch: 'swipe or use the buttons to start',
         crash: 'Segmentation fault (snake dumped)', score: (s: number) => `score: ${s}`, retry: 'enter / tap: retry  ·  esc: exit',
-        exited: (s: number, b: number) => `# snake exited · score ${s} · best ${b}`, font: '"JetBrains Mono",monospace' },
+        exited: (s: number, b: number) => `# snake exited · score ${s} · best ${b}`, font: '"JetBrains Mono",monospace',
+        gahwa: ['☕ pouring Saudi coffee…', '🌴 served with dates. Take a break, then keep exploring.'],
+        weather: ['🌡️ Riyadh: 47°C, sunny, zero clouds…', '☁️ …except the cloud I deploy to.'],
+        kenobi: ['General Kenobi! 👋'],
+        back: ["I'll be back."],
+        gravity: ['🍎 disabling gravity…'],
+        national: ['💚 celebrating Saudi National Day!'] },
   ar: { notFound: '# تلميح: هناك أمر واحد فقط يجب ألّا تكتبه…', title: (s: number, b: number) => `snake.py — النتيجة ${s} · الأفضل ${b}`,
         startKeys: 'اضغط ← ↑ ↓ → للبدء  ·  Esc للخروج', startTouch: 'اسحب أو استخدم الأزرار للبدء',
         crash: 'اصطدمت الأفعى! (Segmentation fault)', score: (s: number) => `النتيجة: ${s}`, retry: 'Enter أو نقرة: إعادة  ·  Esc: خروج',
-        exited: (s: number, b: number) => `# انتهت اللعبة · النتيجة ${s} · الأفضل ${b}`, font: '"IBM Plex Sans Arabic",sans-serif' },
+        exited: (s: number, b: number) => `# انتهت اللعبة · النتيجة ${s} · الأفضل ${b}`, font: '"IBM Plex Sans Arabic",sans-serif',
+        gahwa: ['☕ جارٍ صبّ القهوة السعودية…', '🌴 مع التمر. خذ استراحة ثم واصل الاستكشاف.'],
+        weather: ['🌡️ الرياض: 47° مئوية، مشمس، بلا غيوم…', '☁️ …إلا السحابة التي أنشر عليها.'],
+        kenobi: ['الجنرال كينوبي! 👋'],
+        back: ['سأعود.'],
+        gravity: ['🍎 جارٍ إيقاف الجاذبية…'],
+        national: ['💚 احتفالًا باليوم الوطني السعودي!'] },
 };
 const sn = () => SN[root.lang === 'ar' ? 'ar' : 'en'];
 
@@ -71,12 +83,29 @@ input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && mode === 'pr
 
 function run(cmd: string) {
   history += PROMPT + esc(cmd) + '\n'; buf = ''; input.value = '';
-  const c = cmd.toLowerCase();
-  if (c === 'snake') return startSnake();
+  const c = cmd.toLowerCase().replace(/[’']/g, '').replace(/\s+/g, ' ').trim();
+  if (c === 'snake') { egg('snake'); return startSnake(); }
+  const say = (lines: string[], cls = 't-str') => { history += lines.map((l) => `<span class="${cls}">${esc(l)}</span>`).join('\n') + '\n'; };
+  const s = sn();
   if (c === 'clear') history = '';
-  else if (c) history += `<span class="t-err">zsh: command not found: ${esc(cmd)}</span>\n<span class="t-com">${sn().notFound}</span>\n`;
+  else if (['gahwa', 'coffee', 'قهوة', 'قهوه'].includes(c)) { say(s.gahwa); egg('gahwa'); }
+  else if (['weather', 'الطقس', 'طقس'].includes(c)) { say(s.weather); egg('weather'); }
+  else if (c === 'hello there') { say(s.kenobi); egg('kenobi'); }
+  else if (['ill be back', 'i will be back', 'سأعود'].includes(c)) { say(s.back); egg('terminator'); return shutdown(); }
+  else if (['gravity', 'الجاذبية'].includes(c)) { say(s.gravity); dispatchEvent(new CustomEvent('egg:gravity')); }
+  else if (['national day', 'saudi', 'ksa', 'اليوم الوطني', 'السعودية'].includes(c)) { say(s.national); dispatchEvent(new CustomEvent('egg:national')); }
+  else if (c) history += `<span class="t-err">zsh: command not found: ${esc(cmd)}</span>\n<span class="t-com">${s.notFound}</span>\n`;
   const ls = history.split('\n'); if (ls.length > 16) history = ls.slice(-16).join('\n');
   render();
+}
+
+const egg = (id: string) => dispatchEvent(new CustomEvent('egg:unlock', { detail: id }));
+/** "I'll be back": the terminal powers off like an old CRT, then boots up again. */
+function shutdown() {
+  mode = 'auto'; term.innerHTML = history + '<span class="cursor"></span>';
+  setTimeout(() => terminal.classList.add('crt-off'), 700);
+  setTimeout(() => { history = ''; term.innerHTML = ''; terminal.classList.remove('crt-off'); terminal.classList.add('crt-on'); mode = 'intro'; typeAll(); }, 2200);
+  setTimeout(() => terminal.classList.remove('crt-on'), 3000);
 }
 
 document.getElementById('termHint')!.addEventListener('click', async () => {
@@ -118,10 +147,10 @@ function tick() {
   const g = G; if (!g || g.over) return;
   g.dir = g.next;
   const head = { x: g.snake[0].x + g.dir.x, y: g.snake[0].y + g.dir.y };
-  if (head.x < 0 || head.y < 0 || head.x >= g.cols || head.y >= g.rows || g.snake.some((s) => s.x === head.x && s.y === head.y)) { g.over = true; draw(); return; }
+  if (head.x < 0 || head.y < 0 || head.x >= g.cols || head.y >= g.rows || g.snake.some((s) => s.x === head.x && s.y === head.y)) { g.over = true; draw(); dispatchEvent(new CustomEvent('egg:sfx', { detail: 'over' })); return; }
   g.snake.unshift(head);
   if (head.x === g.food.x && head.y === g.food.y) {
-    g.score++; g.speed = Math.max(60, g.speed - 4);
+    g.score++; g.speed = Math.max(60, g.speed - 4); dispatchEvent(new CustomEvent('egg:sfx', { detail: 'eat' }));
     if (g.score > g.best) { g.best = g.score; saveBest(g.best); }
     placeFood(); updateTitle();
   } else g.snake.pop();

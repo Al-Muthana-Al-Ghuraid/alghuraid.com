@@ -30,25 +30,52 @@ function isolateLatin(node: Node) {
     frag.append(s.slice(last)); t.replaceWith(frag);
   }
 }
+// Arabic HTML is prepared (bdi-isolated) once per element and cached, so switching is a quick swap.
+const arCache = new WeakMap<HTMLElement, string>();
+function arHtml(el: HTMLElement) {
+  let html = arCache.get(el);
+  if (html === undefined) {
+    if (el.closest('svg,.chip,.terminal')) html = el.dataset.ar!;
+    else { const box = document.createElement('div'); box.innerHTML = el.dataset.ar!; isolateLatin(box); html = box.innerHTML; }
+    arCache.set(el, html);
+  }
+  return html;
+}
+let pageIsolated = false; // English-only text outside [data-ar] (names, tech terms) only needs isolating once
+const i18nEls = () => $$('[data-ar]');
 function setLang(l: 'en' | 'ar', save = true) {
-  $$('[data-ar]').forEach((el) => { if (el.dataset.en === undefined) el.dataset.en = el.innerHTML; });
+  const els = i18nEls();
+  els.forEach((el) => { if (el.dataset.en === undefined) el.dataset.en = el.innerHTML; });
   $$<HTMLInputElement>('[data-ar-ph]').forEach((el) => { if (el.dataset.enPh === undefined) el.dataset.enPh = el.placeholder; });
   root.lang = l; root.dir = l === 'ar' ? 'rtl' : 'ltr';
-  $$('[data-ar]').forEach((el) => { el.innerHTML = l === 'ar' ? el.dataset.ar! : el.dataset.en!; });
+  els.forEach((el) => { el.innerHTML = l === 'ar' ? arHtml(el) : el.dataset.en!; });
   $$<HTMLInputElement>('[data-ar-ph]').forEach((el) => { el.placeholder = l === 'ar' ? el.dataset.arPh! : el.dataset.enPh!; });
-  if (l === 'ar') isolateLatin(document.body);
+  if (l === 'ar' && !pageIsolated) { isolateLatin(document.body); pageIsolated = true; }
   const s = $$('#langBtn span'); s[0]?.classList.toggle('on', l === 'en'); s[1]?.classList.toggle('on', l === 'ar');
   if (save) store.set('lang', l);
   window.dispatchEvent(new CustomEvent('langchange', { detail: l }));
 }
+/** Run a page-wide change inside a soft blur/fade transition where the browser supports it. */
+function smooth(kind: string, change: () => void) {
+  type VT = { finished: Promise<void>; ready: Promise<void>; updateCallbackDone: Promise<void> };
+  const d = document as Document & { startViewTransition?: (cb: () => void) => VT };
+  if (!d.startViewTransition || reduce || document.visibilityState !== 'visible') { change(); return; }
+  root.dataset.vt = kind;
+  // safety net: if the browser can't paint the transition promptly, apply the change anyway
+  let done = false; const run = () => { if (!done) { done = true; change(); } };
+  const timer = setTimeout(run, 250);
+  const vt = d.startViewTransition(() => { clearTimeout(timer); run(); });
+  vt.ready.catch(() => {}); vt.updateCallbackDone.catch(() => {}); // a skipped transition is fine
+  vt.finished.catch(() => {}).finally(() => delete root.dataset.vt);
+}
 if (root.lang === 'ar') setLang('ar', false);
-$('#langBtn')?.addEventListener('click', () => setLang(root.lang === 'ar' ? 'en' : 'ar'));
+$('#langBtn')?.addEventListener('click', () => smooth('lang', () => setLang(root.lang === 'ar' ? 'en' : 'ar')));
 
 /* ---------- theme ---------- */
-$('#themeBtn')?.addEventListener('click', () => {
+$('#themeBtn')?.addEventListener('click', () => smooth('theme', () => {
   root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
   store.set('theme', root.dataset.theme);
-});
+}));
 
 /* ---------- mobile menu ---------- */
 const nl = $('#navLinks');
@@ -127,13 +154,24 @@ form?.addEventListener('submit', async (e) => {
   if (!endpoint) return; // no endpoint configured yet: fall back to mailto action
   e.preventDefault();
   const ok = $('[data-ok]', form)!, err = $('[data-err]', form)!, btn = $<HTMLButtonElement>('button[type=submit]', form)!;
-  ok.hidden = err.hidden = true; btn.disabled = true;
+  ok.hidden = err.hidden = true; btn.disabled = true; btn.classList.add('sending');
   try {
     const res = await fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) });
     if (!res.ok) throw new Error(String(res.status));
     form.reset(); ok.hidden = false;
-  } catch { err.hidden = false; } finally { btn.disabled = false; }
+    window.dispatchEvent(new CustomEvent('formsent'));
+  } catch { err.hidden = false; } finally { btn.disabled = false; setTimeout(() => btn.classList.remove('sending'), 900); }
 });
+
+/* ---------- copy email ---------- */
+$$('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(b.dataset.copy!); } catch { return; }
+  b.classList.add('done'); setTimeout(() => b.classList.remove('done'), 1800);
+}));
 
 /* ---------- hero terminal + snake (home page only) ---------- */
 if ($('#terminal')) import('./terminal');
+
+/* ---------- Easter eggs (loaded when the browser is idle) ---------- */
+const idle = (cb: () => void) => ('requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 2500 }) : setTimeout(cb, 1200));
+idle(() => import('./eggs'));
