@@ -17,6 +17,7 @@ const profile = {
   based: s.terminal.based,
 };
 const [first, ...rest] = s.name.en.split(' ');
+const KEY_ROWS = [14, 13, 12, 11]; // decorative keyboard on the terminal's deck
 ---
 <header class="hero" id="top">
   <div class="wrap">
@@ -50,7 +51,7 @@ const [first, ...rest] = s.name.en.split(' ');
           <span class="tv-glass" aria-hidden="true"></span>
         </div>
         <input id="termInput" class="term-input" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal input">
-        <div class="crt-foot" aria-hidden="true"><span class="tv-switch"></span><span class="tv-vent"></span><span class="tv-plate">GHURAID-TEC · UNIT 26</span><span class="tv-knobs"><i></i><i></i><span class="crt-led"></span></span></div>
+        <div class="crt-foot" aria-hidden="true"><span class="tv-plate">GHURAID-TEC<small>UNIT 26</small></span><span class="tv-keys">{KEY_ROWS.map((n) => <span class="tv-row">{Array.from({ length: n }, () => <b />)}</span>)}<span class="tv-row"><b class="space" /></span></span><span class="tv-knobs"><i></i><span class="crt-led"></span></span></div>
       </div>
       <T as="button" class="term-hint" id="termHint" k="sn.hint" />
     </div>
