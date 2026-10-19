@@ -7,6 +7,10 @@ const input = document.getElementById('termInput') as HTMLInputElement;
 const termTitle = document.getElementById('termTitle')!;
 // the screen has a fixed size: older lines scroll off the top, the newest stay in view
 const paint = (html: string) => { term.innerHTML = html; term.scrollTop = term.scrollHeight; };
+// keep the newest line in view when the layout changes after drawing (window resized, phone rotated, font loaded)
+const pinBottom = () => { term.scrollTop = term.scrollHeight; };
+new ResizeObserver(pinBottom).observe(term);
+document.fonts?.ready.then(pinBottom);
 const profile = JSON.parse(document.getElementById('profileData')!.textContent!);
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
