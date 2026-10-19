@@ -1,6 +1,5 @@
-// Easter eggs: secret counter, falcon flyby (background), highlighted hidden words, gravity mode
-// and the "don't break production" background cracks. Loaded lazily (see site.ts); everything is bilingual.
-// Sounds only ever play in response to something the visitor does.
+// Easter eggs: secret counter, highlighted hidden words, gravity mode, background ripple / draw-a-network /
+// cracks, magnetic name and the dallah. Nothing happens until the visitor acts; no sound. Loaded lazily (see site.ts).
 const root = document.documentElement;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isAr = () => root.lang === 'ar';
@@ -14,38 +13,8 @@ const el = <K extends keyof HTMLElementTagNameMap>(tag: K, cls: string, html = '
   const e = document.createElement(tag); e.className = cls; e.innerHTML = html; return e;
 };
 
-/* ======================================================= sound (interaction only) */
-let ctx: AudioContext | null = null;
-function ac() { ctx ??= new AudioContext(); if (ctx.state === 'suspended') ctx.resume(); return ctx; }
-function noise(dur: number, freq: number, q: number, vol: number, sweepTo?: number) {
-  const a = ac(), t = a.currentTime, n = Math.floor(a.sampleRate * dur), buf = a.createBuffer(1, n, a.sampleRate), d = buf.getChannelData(0);
-  for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 3);
-  const src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
-  src.buffer = buf; f.type = 'bandpass'; f.frequency.setValueAtTime(freq, t); if (sweepTo) f.frequency.exponentialRampToValueAtTime(sweepTo, t + dur); f.Q.value = q;
-  g.gain.value = vol; src.connect(f); f.connect(g); g.connect(a.destination); src.start(t);
-}
-const sfx = {
-  crack: () => { noise(0.09, rand(2800, 4200), 2.5, 0.5); noise(0.05, 6500, 6, 0.25); },
-  shatter: () => { for (let i = 0; i < 7; i++) setTimeout(() => noise(rand(0.15, 0.35), rand(2500, 6000), 1.5, 0.35), i * rand(30, 70)); },
-  wind: () => noise(2.6, 500, 0.7, 0.9, 260),
-};
-/** Play the start of an audio file, faded out at the end. Silent if the file isn't there. */
-const clips = new Map<string, AudioBuffer | null>();
-async function playClip(url: string, seconds: number) {
-  const a = ac();
-  if (!clips.has(url)) {
-    try { const r = await fetch(url); if (!r.ok) throw 0; clips.set(url, await a.decodeAudioData(await r.arrayBuffer())); }
-    catch { clips.set(url, null); }
-  }
-  const buf = clips.get(url); if (!buf) return;
-  const src = a.createBufferSource(), g = a.createGain(), t = a.currentTime, len = Math.min(seconds, buf.duration);
-  src.buffer = buf; g.gain.setValueAtTime(0.9, t); g.gain.setValueAtTime(0.9, t + Math.max(0, len - 1.2)); g.gain.linearRampToValueAtTime(0.0001, t + len);
-  src.connect(g); g.connect(a.destination); src.start(t, 0, len);
-}
-
 /* ======================================================= secrets + toast */
 const SECRETS: Record<string, [string, string, string]> = {
-  falcon: ['🦅', 'Falconer', 'الصقّار'],
   haboob: ['🌪️', 'Haboob Survivor', 'نجوت من الهبوب'],
   robot: ['🤖', 'Automation Unleashed', 'الأتمتة طليقة'],
   clouds: ['☁️', 'Head in the Clouds', 'رأسي في السحاب'],
@@ -77,37 +46,6 @@ function unlock(id: string) {
 }
 addEventListener('egg:unlock', (e) => unlock((e as CustomEvent).detail));
 
-/* ======================================================= falcon (background layer) */
-// Top view, heading right: long pointed swept-back wings with a bent wrist, rounded tail, hooked beak.
-const FALCON = `<svg viewBox="0 -12 160 144" aria-hidden="true">
-  <path class="wing up" d="M108 52 C109 40 107 28 102 20 C96 10 86 0 68 -10 C75 0 78 7 78 12 C73 8 67 5 60 4 C69 13 74 23 75 32 C75 40 74 46 72 53 Z"/>
-  <path class="wing down" d="M108 68 C109 80 107 92 102 100 C96 110 86 120 68 130 C75 120 78 113 78 108 C73 112 67 115 60 116 C69 107 74 97 75 88 C75 80 74 74 72 67 Z"/>
-  <path d="M60 55 L36 50 Q28 60 36 70 L60 65 Z"/>
-  <path d="M128 60 C127 53 119 49 108 49 C92 49 74 53 58 55 L58 65 C74 67 92 71 108 71 C119 71 127 67 128 60 Z"/>
-  <circle cx="127" cy="60" r="7"/><path class="beak" d="M132 56.5 Q140 57.5 139.5 61 Q139 63.5 136.5 62.5 Q135.5 61 132.5 62.5 Z"/><circle class="eye" cx="129" cy="57.5" r="1.3"/>
-</svg>`;
-function falconFlyby() {
-  if (document.hidden || document.querySelector('.falcon') || root.classList.contains('gravity-on')) return;
-  const f = el('div', 'falcon', FALCON);
-  const ltr = Math.random() > 0.5;
-  if (!ltr) f.classList.add('to-left');
-  f.style.top = `${rand(14, 40)}vh`;
-  f.style.animationDuration = `${rand(11, 15)}s`;
-  document.body.appendChild(f);
-  f.addEventListener('animationend', (e) => { if (e.target === f) f.remove(); });
-}
-function catchFalcon(f: HTMLElement) {
-  f.classList.add('caught'); unlock('falcon'); saudiPride();
-  setTimeout(() => f.remove(), 1000);
-}
-function saudiPride() {
-  playClip('/media/sfx/anthem.mp3', ANTHEM_SECONDS);
-  const o = document.body.appendChild(el('div', 'pride', `<div class="pride-msg"><span class="pride-ico">💚</span><b>${tr('Proud to be Saudi', 'فخور بسعوديتي')}</b></div>`));
-  setTimeout(() => o.classList.add('out'), ANTHEM_SECONDS * 1000);
-  setTimeout(() => o.remove(), ANTHEM_SECONDS * 1000 + 900);
-}
-const ANTHEM_SECONDS = 5;
-
 /* ======================================================= hidden words (one each, highlighted, click) */
 const WORDS: { egg: string; scope: string; en: RegExp; ar: RegExp }[] = [
   { egg: 'haboob', scope: '.hero .eyebrow', en: /Riyadh/, ar: /الرياض/ },
@@ -137,7 +75,7 @@ addEventListener('egg:haboob', haboob);
 
 function haboob() {
   if (document.querySelector('.haboob')) return;
-  unlock('haboob'); sfx.wind();
+  unlock('haboob');
   const box = document.body.appendChild(el('div', 'haboob'));
   const c = box.appendChild(document.createElement('canvas')), x = c.getContext('2d')!;
   const W = (c.width = innerWidth), H = (c.height = innerHeight), dir = isAr() ? 1 : -1;
@@ -336,8 +274,6 @@ addEventListener('pointerup', (e) => {
 });
 addEventListener('pointercancel', () => { press = null; root.classList.remove('drawing'); });
 function backgroundClick(x: number, y: number) {
-  const f = document.querySelector<HTMLElement>('.falcon:not(.caught)');
-  if (f) { const r = f.getBoundingClientRect(); if (x >= r.left - 12 && x <= r.right + 12 && y >= r.top - 12 && y <= r.bottom + 12) { catchFalcon(f); return; } }
   ripples.push({ x, y, t0: performance.now() }); fxCanvas();
   const now = performance.now();
   clickTimes = clickTimes.filter((c) => now - c.t < 900 && Math.hypot(c.x - x, c.y - y) < 90);
@@ -357,13 +293,12 @@ function crack(x: number, y: number) {
   const svg = el('div', 'crack', `<svg viewBox="-120 -120 240 240" aria-hidden="true">${paths.join('')}<circle r="3"/></svg>`);
   svg.style.left = `${x}px`; svg.style.top = `${y}px`; svg.style.setProperty('--rot', `${rand(0, 360)}deg`);
   crackLayer.appendChild(svg);
-  sfx.crack();
   setTimeout(() => svg.classList.add('heal'), 5000);
   setTimeout(() => { svg.remove(); cracks = Math.max(0, cracks - 1); }, 6200);
   if (++cracks >= 4) shatter();
 }
 function shatter() {
-  shattering = true; cracks = 0; sfx.shatter();
+  shattering = true; cracks = 0;
   const layer = crackLayer!;
   layer.classList.add('shatter');
   const shards = document.body.appendChild(el('div', 'shards'));
@@ -429,7 +364,6 @@ if (dallahBtn) {
   dallahBtn.addEventListener('click', () => {
     if (pouring) return;
     pouring = true; dallahBtn.classList.add('pouring');
-    noise(1.1, 900, 0.9, 0.5, 600); // gentle pouring sound
     setTimeout(() => {
       dallahBtn.classList.remove('pouring'); pouring = false;
       if (cups < 3) { cups++; cupsBox.insertAdjacentHTML('beforeend', '<i class="finjan"></i>'); }
@@ -447,10 +381,6 @@ if (dallahBtn) {
 /* ======================================================= schedule + lang */
 wrapWords();
 addEventListener('langchange', () => wrapWords());
-if (!reduce) {
-  const next = (range: [number, number]) => setTimeout(() => { falconFlyby(); next([180, 300]); }, rand(range[0], range[1]) * 1000);
-  next([40, 70]); // first visit after ~1 minute, then every 3–5 minutes
-}
-// handy for the preview: ?egg=falcon|haboob|robot|clouds|gravity
+// handy for the preview: ?egg=haboob|robot|clouds|gravity
 const demo = new URLSearchParams(location.search).get('egg');
-if (demo) setTimeout(() => ({ falcon: falconFlyby, haboob, robot, clouds: cloudRain, gravity: gravityOn } as Record<string, () => void>)[demo]?.(), 1200);
+if (demo) setTimeout(() => ({ haboob, robot, clouds: cloudRain, gravity: gravityOn } as Record<string, () => void>)[demo]?.(), 1200);

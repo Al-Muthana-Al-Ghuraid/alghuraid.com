@@ -359,29 +359,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .egg-toast small{display:block;font-family:var(--font-mono);font-size:11px;color:var(--cyan);text-transform:uppercase;letter-spacing:.06em}
 [dir="rtl"] .egg-toast small{font-family:var(--font-body);letter-spacing:0}
 .egg-toast b{font-weight:600;font-size:14.5px}
-/* falcon: flies in the background layer, behind the content */
-.falcon{position:fixed;left:0;z-index:-1;width:120px;height:108px;pointer-events:none;color:var(--falcon);opacity:.9;
-  --falcon:#c8a46a;filter:drop-shadow(0 10px 18px rgba(0,0,0,.35));animation:fly-ltr linear forwards}
-[data-theme="light"] .falcon{--falcon:#7a5427;opacity:.75;filter:drop-shadow(0 10px 14px rgba(40,30,10,.18))}
-.falcon.to-left{animation-name:fly-rtl}
-.falcon.to-left svg{transform:scaleX(-1)}
-.falcon svg{width:100%;height:100%;fill:currentColor;overflow:visible}
-.falcon .beak{fill:#e8b84a}.falcon .eye{fill:#111}
-.falcon .wing{transform-box:fill-box;animation:flap-glide 2.4s ease-in-out infinite}
-.falcon .wing.up{transform-origin:50% 100%}.falcon .wing.down{transform-origin:50% 0}
-@keyframes flap-glide{0%,40%,100%{transform:scaleY(1)}8%,24%{transform:scaleY(.25)}16%,32%{transform:scaleY(1.05)}}
-@keyframes fly-ltr{0%{transform:translate(-14vw,0) rotate(4deg)}50%{transform:translate(48vw,5vh) rotate(-2deg)}100%{transform:translate(112vw,-3vh) rotate(3deg)}}
-@keyframes fly-rtl{0%{transform:translate(112vw,0) rotate(-4deg)}50%{transform:translate(48vw,5vh) rotate(2deg)}100%{transform:translate(-14vw,-3vh) rotate(-3deg)}}
-.falcon.caught{animation-play-state:paused}
-.falcon.caught svg{animation:falcon-caught 1s ease forwards}
-@keyframes falcon-caught{40%{transform:scale(1.4)}100%{transform:scale(.3) translateY(-80px);opacity:0}}
-.pride{position:fixed;inset:0;z-index:150;pointer-events:none;display:grid;place-items:center;
-  background:radial-gradient(ellipse at 50% 40%,rgba(0,108,53,.42),rgba(0,108,53,.12) 45%,transparent 75%);animation:fade .6s ease}
-.pride.out{opacity:0;transition:opacity .8s}
-.pride-msg{display:flex;flex-direction:column;align-items:center;gap:8px;padding:22px 34px;border-radius:20px;background:rgba(0,90,45,.85);color:#fff;
-  box-shadow:0 20px 60px -10px rgba(0,80,40,.6);animation:pop .6s cubic-bezier(.2,.8,.2,1)}
-.pride-ico{font-size:40px;line-height:1}
-.pride-msg b{font-family:var(--font-head);font-size:24px}
 /* hidden words: highlighted like the bold words, clickable */
 .egg-word{cursor:pointer;font-weight:600;color:var(--text);border-radius:4px;padding:0 2px;
   background:linear-gradient(90deg,color-mix(in srgb,var(--blue) 22%,transparent),color-mix(in srgb,var(--violet) 22%,transparent));
@@ -439,8 +416,7 @@ footer .wrap{align-items:center}
 .shard{position:absolute;width:var(--w);height:var(--h);background:linear-gradient(135deg,color-mix(in srgb,var(--blue) 30%,transparent),color-mix(in srgb,var(--text) 12%,transparent));
   border:1px solid color-mix(in srgb,var(--text) 30%,transparent);animation:shard-fall 1.8s cubic-bezier(.5,0,.8,.6) forwards}
 @keyframes shard-fall{to{transform:translate(var(--x),110vh) rotate(var(--r));opacity:.2}}
-@media (prefers-reduced-motion: reduce){.falcon,.walker,.rain-cloud,.shard{display:none}}
-@media (max-width:760px){.falcon{width:84px;height:76px}}
+@media (prefers-reduced-motion: reduce){.walker,.rain-cloud,.shard{display:none}}
 
 /* ---------- smooth language / theme switch (View Transitions) ---------- */
 :root[data-vt]::view-transition-old(root){animation:vt-out .22s ease-in both}
