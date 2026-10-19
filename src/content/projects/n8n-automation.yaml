@@ -4,7 +4,7 @@ year: 2026
 categories: [cloud, ai]
 tags: [Oracle Cloud, Docker Compose, Cloudflare Tunnel, n8n, OpenAI, Bash]
 cover: /media/projects/n8n.webp
-githubSoon: true
+github: https://github.com/Al-Muthana-Al-Ghuraid/n8n-oracle-cloud-automation
 live: ""
 title:
   en: Self-hosted job-hunt automation on Oracle Cloud
