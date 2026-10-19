@@ -364,44 +364,62 @@ function claw() {
   if (clawing) return;
   clawing = true; egg('claw');
   history += `<span class="t-str">${esc(sn().clawIn)}</span>\n`;
-  const targets = shakeTargets();
-  const still = () => targets.forEach((el) => { el.style.translate = ''; el.style.rotate = ''; });
-  let ended = false;
-  const finish = () => {
-    if (ended) return; ended = true;
-    still(); clawing = false;
+  // every block on the page is a little mass on a spring: steps kick it, the roar pushes it around,
+  // and when the sound ends the springs settle it back smoothly instead of snapping
+  const vh = innerHeight;
+  const bodies = shakeTargets().map((el) => {
+    const fixed = getComputedStyle(el).position === 'fixed', r = el.getBoundingClientRect();
+    return { el, x: 0, y: 0, r: 0, vx: 0, vy: 0, vr: 0,
+      depth: fixed ? 0.55 : 1,                                                  // the nav bar / backdrop sway less: feels like depth
+      delay: fixed ? 0 : Math.max(0, Math.min(0.12, (vh - r.top) / vh * 0.06)), // the shock reaches lower blocks first
+      seed: Math.random() * 100, queue: [] as { at: number; ix: number; iy: number }[] };
+  });
+  let ended = false, soundDone = false;
+  const done = () => { // the sound is over: print the message, but let the page keep settling
+    if (soundDone) return; soundDone = true; clawing = false;
     history += `<span class="t-com">${esc(sn().clawOut)}</span>\n`;
     if (mode === 'prompt') render();
   };
+  const noise = (t: number, s: number) => Math.sin(t * 13.1 + s) * 0.5 + Math.sin(t * 23.7 + s * 1.7) * 0.3 + Math.sin(t * 41.3 + s * 2.3) * 0.2;
   const play = (i: number) => {
     const audio = new Audio(CLAW_SRC[i]);
     let map: ClawMap | null = null;
     mapClip(CLAW_SRC[i]).then((m) => (map = m));
-    audio.addEventListener('error', () => (i + 1 < CLAW_SRC.length ? play(i + 1) : finish()), { once: true });
-    audio.addEventListener('ended', finish, { once: true });
+    audio.addEventListener('error', () => (i + 1 < CLAW_SRC.length ? play(i + 1) : (done(), (ended = true))), { once: true });
+    audio.addEventListener('ended', done, { once: true });
     // a missing file also rejects play(); the 'error' handler moves on to the next source,
     // so only give up here when the browser refuses to play sound at all
-    audio.volume = 0.9; audio.play().catch((e) => { if (e?.name === 'NotAllowedError') finish(); });
-    const frame = () => {
+    audio.volume = 0.9; audio.play().catch((e) => { if (e?.name === 'NotAllowedError') { done(); ended = true; } });
+    let lastT = 0, lastNow = performance.now();
+    const frame = (now: number) => {
       if (ended) return;
-      const m = map as ClawMap | null;
-      if (m && !reduce && !audio.paused) {
-        const t = audio.currentTime, e = m.env[Math.min(m.env.length - 1, Math.floor(t / FR))] ?? 0;
-        let step = 0;                                                     // sharp jolt on each footstep, gone in ~0.3 s
-        for (const s of m.steps) if (t >= s.t - 0.02 && t < s.t + 0.6) step = Math.max(step, 34 * s.s * Math.exp(-(t - s.t) / 0.1));
-        const r = m.roars.find(([a, b]) => t >= a && t <= b);
-        const roar = r ? (16 + 44 * e) * Math.min(1, (t - r[0]) / 0.15) : 0;   // the roar hits hardest
-        const idle = e * 2.5;                                             // everything else: a faint tremor
-        const amp = Math.max(step, roar, idle);
-        if (amp < 0.5) still();
-        else targets.forEach((el, k) => {
-          const v = 0.85 + 0.3 * ((k * 7919) % 10) / 10;                    // each block moves a little differently
-          const x = (Math.random() - 0.5) * amp * v * (step > roar ? 0.6 : 1); // steps thump mostly up and down
-          const y = (Math.random() - 0.5) * amp * v * (step > roar ? 1.6 : 1.1);
-          el.style.translate = `${x.toFixed(1)}px ${y.toFixed(1)}px`;
-          el.style.rotate = roar > step && roar > 0 ? `${((Math.random() - 0.5) * amp * 0.05).toFixed(2)}deg` : '';
-        });
+      const dt = Math.min(2, (now - lastNow) / 16.7); lastNow = now;      // in 60 fps frames
+      const m = map as ClawMap | null, playing = !soundDone && !audio.paused && !reduce;
+      const t = audio.currentTime, e = m && playing ? m.env[Math.min(m.env.length - 1, Math.floor(t / FR))] ?? 0 : 0;
+      const roarSpan = m && playing ? m.roars.find(([a, b]) => t >= a && t <= b) : undefined;
+      const roar = roarSpan ? Math.min(1, (t - roarSpan[0]) / 0.25) * (0.5 + e) : 0;
+      if (m && playing) for (const s of m.steps) if (lastT < s.t && t >= s.t) {   // a footstep lands: queue a jolt for every block
+        for (const b of bodies) b.queue.push({ at: now + b.delay * 1000, ix: (Math.random() - 0.5) * 5 * s.s, iy: (7 + 9 * s.s) * s.s });
       }
+      lastT = t;
+      let moving = false;
+      for (const b of bodies) {
+        b.queue = b.queue.filter((q) => (now >= q.at ? ((b.vx += q.ix * b.depth), (b.vy += q.iy * b.depth), false) : true));
+        // roar: a rough, continuous shove (smooth noise, not random jumps); everything else: a faint tremor
+        const push = (roar * 3.2 + e * 0.25) * b.depth;
+        b.vx += noise(now / 1000, b.seed) * push * dt; b.vy += noise(now / 1000, b.seed + 9) * push * 0.8 * dt;
+        b.vr += noise(now / 1000, b.seed + 4) * roar * 0.09 * b.depth * dt;
+        // spring back to rest + damping (lower damping = more wobble before it settles)
+        // after the sound ends a softer, slower spring lets everything glide home instead of snapping back
+        const k = soundDone ? 0.06 : 0.16;
+        b.vx += -b.x * k * dt; b.vy += -b.y * k * dt; b.vr += -b.r * k * 0.75 * dt;
+        const damp = Math.pow(soundDone ? 0.8 : 0.84, dt); b.vx *= damp; b.vy *= damp; b.vr *= Math.pow(soundDone ? 0.8 : 0.86, dt);
+        b.x += b.vx * dt; b.y += b.vy * dt; b.r += b.vr * dt;
+        const still = Math.abs(b.x) + Math.abs(b.y) + Math.abs(b.vx) + Math.abs(b.vy) < 0.08 && Math.abs(b.r) + Math.abs(b.vr) < 0.004 && !b.queue.length;
+        if (still) { b.x = b.y = b.r = b.vx = b.vy = b.vr = 0; b.el.style.translate = ''; b.el.style.rotate = ''; }
+        else { moving = true; b.el.style.translate = `${b.x.toFixed(2)}px ${b.y.toFixed(2)}px`; b.el.style.rotate = Math.abs(b.r) > 0.003 ? `${b.r.toFixed(3)}deg` : ''; }
+      }
+      if (soundDone && !moving) { ended = true; return; }                     // fully settled
       requestAnimationFrame(frame);
     };
     requestAnimationFrame(frame);
