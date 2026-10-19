@@ -24,8 +24,6 @@ const SECRETS: Record<string, [string, string, string]> = {
   magnet: ['🧲', 'Magnetic Personality', 'شخصية جذّابة'],
   dallah: ['☕', 'Ahlan wa Sahlan', 'أهلًا وسهلًا'],
   snake: ['🐍', 'Snake Charmer', 'ساحر الأفاعي'],
-  gahwa: ['☕', 'Coffee Break', 'استراحة قهوة'],
-  weather: ['🌡️', 'Riyadh Summer', 'صيف الرياض'],
   coin: ['🪙', 'Heads or Tails', 'ملك أم كتابة'],
   radio: ['📻', 'Wasteland Radio', 'راديو الأرض القاحلة'],
   radiation: ['☢️', 'Rad Resistant', 'مقاوم للإشعاع'],

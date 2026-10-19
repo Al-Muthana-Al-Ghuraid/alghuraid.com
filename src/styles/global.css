@@ -125,14 +125,26 @@ nav .wrap{display:flex;align-items:center;gap:24px;height:68px}
 
 /* ---------- hero terminal as a green-phosphor CRT (same in both themes) ---------- */
 .terminal.crt{--phos:#41ff7d;--phos-hi:#b8ffcc;--phos-dim:#22a24f;--glass:#031008;
-  padding:16px 16px 10px;border-radius:28px;border:1px solid #3b4034;overflow:visible;
-  background:linear-gradient(160deg,#30352b,#181b13 55%,#0e100a);
-  box-shadow:0 34px 70px -28px rgba(0,0,0,.85),inset 0 2px 0 rgba(255,255,255,.07),inset 0 -4px 8px rgba(0,0,0,.6),0 0 110px -36px rgba(65,255,125,.45)}
-.terminal.crt.focused{border-color:#3b4034}
-.crt-screen{position:relative;border-radius:20px/26px;overflow:hidden;isolation:isolate;color:var(--phos);
+  /* 1950s console TV: walnut cabinet, thick bakelite + chrome around a bulging tube */
+  margin:58px 0 18px;padding:24px 24px 0;border-radius:30px;border:0;overflow:visible;
+  background:linear-gradient(180deg,rgba(255,235,200,.10),transparent 18%,transparent 70%,rgba(0,0,0,.35)),
+    repeating-linear-gradient(91deg,#5b3a21 0 5px,#4d3019 5px 8px,#664328 8px 15px,#52341d 15px 21px,#5f3e24 21px 30px),#563820;
+  box-shadow:0 36px 70px -26px rgba(0,0,0,.9),inset 0 2px 0 rgba(255,225,180,.18),inset 0 -6px 12px rgba(0,0,0,.55),
+    inset 0 0 0 2px rgba(30,18,8,.6),0 0 120px -40px rgba(65,255,125,.45)}
+.terminal.crt.focused{border-color:transparent}
+/* rabbit-ear antenna */
+.terminal.crt::before{content:'';position:absolute;left:50%;top:-56px;width:150px;height:58px;transform:translateX(-50%);pointer-events:none;
+  background:radial-gradient(ellipse 22px 12px at 50% 100%,#2b2620 0 95%,transparent 100%),
+    linear-gradient(to top right,transparent calc(50% - 1.5px),#b8b0a2 calc(50% - 1.5px),#d8d0c2 50%,#8d8577 calc(50% + 1.5px),transparent calc(50% + 1.5px)) 0 0/50% 100% no-repeat,
+    linear-gradient(to top left,transparent calc(50% - 1.5px),#b8b0a2 calc(50% - 1.5px),#d8d0c2 50%,#8d8577 calc(50% + 1.5px),transparent calc(50% + 1.5px)) 100% 0/50% 100% no-repeat}
+/* little tapered legs */
+.terminal.crt::after{content:'';position:absolute;left:12%;right:12%;bottom:-16px;height:18px;pointer-events:none;
+  background:linear-gradient(100deg,transparent 0 2%,#3e2714 2% 7%,transparent 7%) left/50% 100% no-repeat,
+    linear-gradient(80deg,transparent 0 93%,#3e2714 93% 98%,transparent 98%) right/50% 100% no-repeat}
+.crt-screen{position:relative;border-radius:40px/48px;overflow:hidden;isolation:isolate;color:var(--phos);
   background:radial-gradient(ellipse at 50% 45%,#072a12 0%,var(--glass) 62%,#010502 100%);
-  box-shadow:inset 0 0 42px rgba(0,0,0,.95),inset 0 0 10px rgba(65,255,125,.14),0 0 0 3px #0a0c07}
-.crt-screen::before{content:'';position:absolute;inset:0;z-index:4;pointer-events:none;
+  box-shadow:inset 0 0 50px rgba(0,0,0,.95),inset 0 0 12px rgba(65,255,125,.14),
+    0 0 0 9px #17130f,0 0 0 11px #6f685d,0 0 0 13px #d7d0c3,0 0 0 15px #8a8276,0 6px 18px 15px rgba(0,0,0,.45)}.crt-screen::before{content:'';position:absolute;inset:0;z-index:4;pointer-events:none;
   background:repeating-linear-gradient(to bottom,rgba(0,0,0,.3) 0 1px,transparent 1px 3px)}
 .crt-screen::after{content:'';position:absolute;inset:0;z-index:5;pointer-events:none;
   background:linear-gradient(to bottom,transparent,rgba(65,255,125,.07),transparent) 0 -40%/100% 26% no-repeat,
@@ -146,7 +158,7 @@ nav .wrap{display:flex;align-items:center;gap:24px;height:68px}
 .terminal.crt .term-bar{justify-content:center;background:none;border-bottom:1px solid rgba(65,255,125,.22);padding:10px 18px}
 .terminal.crt .term-bar i{display:none}
 .terminal.crt .term-bar span{margin:0 auto;font-family:"VT323",var(--font-mono);font-size:17px;letter-spacing:2px;color:var(--phos);text-shadow:0 0 6px rgba(65,255,125,.6)}
-.terminal.crt .term-body{font-family:"VT323",var(--font-mono);font-size:19.5px;line-height:1.3;min-height:330px;color:var(--phos);
+.terminal.crt .term-body{font-family:"VT323",var(--font-mono);font-size:19.5px;line-height:1.3;height:330px;min-height:0;overflow:hidden;padding:18px 34px 20px;color:var(--phos);
   text-shadow:0 0 6px rgba(65,255,125,.55),0 0 1px currentColor}
 .terminal.crt .t-prompt{color:var(--phos)}.terminal.crt .t-key{color:#8dffad}.terminal.crt .t-str{color:var(--phos-hi)}
 .terminal.crt .t-num{color:#e4ff8a}.terminal.crt .t-com{color:var(--phos-dim)}.terminal.crt .t-help{color:#7dffa3}
@@ -154,10 +166,19 @@ nav .wrap{display:flex;align-items:center;gap:24px;height:68px}
 .terminal.crt .cursor{width:10px;height:19px;background:var(--phos);box-shadow:0 0 8px var(--phos);vertical-align:-4px}
 .terminal.crt .term-body canvas{border-radius:4px}
 .terminal.crt .dpad button{font-family:"VT323",var(--font-mono);font-size:19px;background:rgba(65,255,125,.08);border-color:rgba(65,255,125,.35);color:var(--phos)}
-.crt-foot{display:flex;align-items:center;justify-content:space-between;padding:9px 12px 0;font-family:"VT323",var(--font-mono);font-size:14px;letter-spacing:3px;color:#737a68;direction:ltr}
-.crt-led{width:9px;height:9px;border-radius:50%;background:#123d1f;box-shadow:inset 0 1px 2px rgba(0,0,0,.6);transition:.4s}
-.terminal.crt.on .crt-led{background:var(--phos);box-shadow:0 0 10px var(--phos)}
-.terminal.crt.focused .crt-led{animation:blink 1.2s steps(1) infinite}
+/* control panel under the screen: speaker grille, chrome name plate, two knobs + pilot light */
+.crt-foot{display:flex;align-items:center;gap:16px;margin-top:20px;padding:12px 6px 16px;direction:ltr}
+.tv-grille{flex:1;height:34px;border-radius:6px;box-shadow:inset 0 2px 4px rgba(0,0,0,.6);
+  background:repeating-linear-gradient(90deg,#2a1a0d 0 3px,#8a6a3f 3px 5px),#2a1a0d}
+.tv-plate{font-family:"VT323",var(--font-mono);font-size:15px;letter-spacing:3px;color:#2b2620;padding:3px 10px;border-radius:4px;white-space:nowrap;
+  background:linear-gradient(180deg,#f1ebdf,#b9b2a4 55%,#ddd6c8);box-shadow:0 1px 2px rgba(0,0,0,.6),inset 0 1px 0 #fff}
+.tv-knobs{display:flex;align-items:center;gap:12px}
+.tv-knobs i{width:34px;height:34px;border-radius:50%;position:relative;
+  background:radial-gradient(circle at 35% 30%,#f3eee4,#a49d90 45%,#4a453d 100%);box-shadow:0 3px 6px rgba(0,0,0,.6),inset 0 -2px 3px rgba(0,0,0,.4)}
+.tv-knobs i::after{content:'';position:absolute;left:50%;top:5px;width:3px;height:11px;margin-left:-1.5px;border-radius:2px;background:#3a352e}
+.tv-knobs i:nth-child(2){transform:rotate(-38deg)}
+.crt-led{width:10px;height:10px;border-radius:50%;background:#123d1f;box-shadow:inset 0 1px 2px rgba(0,0,0,.6);transition:.4s}
+.terminal.crt.on .crt-led{background:var(--phos);box-shadow:0 0 10px var(--phos)}.terminal.crt.focused .crt-led{animation:blink 1.2s steps(1) infinite}
 /* boot screen: the mascot pixel-rezzes in beside the boot log */
 .crt-boot{position:absolute;inset:44px 0 0;z-index:2;display:flex;align-items:center;justify-content:center;gap:22px;padding:14px 22px}
 .crt-boot[hidden]{display:none}
@@ -165,7 +186,7 @@ nav .wrap{display:flex;align-items:center;gap:24px;height:68px}
 .crt-boot-text{flex:0 1 auto;min-width:0;font-family:"VT323",var(--font-mono);font-size:19px;line-height:1.35;white-space:pre-wrap;color:var(--phos);text-shadow:0 0 6px rgba(65,255,125,.55)}
 .crt-boot-text b{display:block;margin-top:12px;font-weight:400;font-size:24px;line-height:1.1;color:var(--phos-hi)}
 [dir="rtl"] .crt-boot-text b{font-family:"IBM Plex Sans Arabic",sans-serif;font-size:22px;direction:rtl;text-align:right}
-@media (max-width:560px){.crt-boot{flex-direction:column;justify-content:center;gap:10px}.crt-boot canvas{width:140px;height:210px}.crt-boot-text{flex:none;text-align:center;font-size:0}.crt-boot-text b{margin:0;font-size:22px}}
+@media (max-width:560px){.terminal.crt{padding:16px 16px 0;margin-top:52px}.terminal.crt .term-body{height:300px;font-size:17px;padding:14px 22px 16px}.tv-plate{font-size:12px;letter-spacing:2px}.tv-knobs i{width:26px;height:26px}.crt-foot{gap:10px}.crt-boot{flex-direction:column;justify-content:center;gap:10px}.crt-boot canvas{width:140px;height:210px}.crt-boot-text{flex:none;text-align:center;font-size:0}.crt-boot-text b{margin:0;font-size:22px}}
 @media (prefers-reduced-motion:reduce){.crt-screen::after,.terminal.crt.on .crt-content{animation:none}}
 
 /* ---------- section headings ---------- */
@@ -581,3 +602,4 @@ body{transition:none} /* the view transition handles the cross-fade */
   background:radial-gradient(ellipse at 50% 45%,rgba(65,255,125,.18),rgba(65,255,125,.5) 75%,rgba(20,140,60,.75));
   box-shadow:inset 0 0 160px 40px rgba(65,255,125,.55)}
 [data-theme="light"] .rad-glow{mix-blend-mode:multiply;background:radial-gradient(ellipse at 50% 45%,rgba(120,255,150,.35),rgba(60,200,100,.7))}
+.terminal.crt .dpad{position:absolute;left:0;right:0;bottom:10px;z-index:3;padding:0 18px}

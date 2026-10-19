@@ -5,6 +5,8 @@ const term = document.getElementById('term')!;
 const terminal = document.getElementById('terminal')!;
 const input = document.getElementById('termInput') as HTMLInputElement;
 const termTitle = document.getElementById('termTitle')!;
+// the screen has a fixed size: older lines scroll off the top, the newest stay in view
+const paint = (html: string) => { term.innerHTML = html; term.scrollTop = term.scrollHeight; };
 const profile = JSON.parse(document.getElementById('profileData')!.textContent!);
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -39,18 +41,13 @@ const SN = {
         welcome: 'WELCOME, VISITOR.',
         radioOn: '📻 tuning in… (type fallout again to stop)', radioOff: '# radio off',
         radStart: '☢ geiger counter on… something nearby is hot.', radEnd: "# reading dropped. you'll live (probably).",
-        gahwa: ['☕ pouring Saudi coffee…', '🌴 served with dates. Take a break, then keep exploring.'],
-        weather: ['🌡️ Riyadh: 47°C, sunny, zero clouds…', '☁️ …except the cloud I deploy to.'],
         gravity: ['🍎 disabling gravity…'],
         haboob: ['🌪️ incoming haboob… hold onto your coffee!'],
         help: [
           'available commands:',
           '  help          show this list',
           '  snake         play Snake 🐍',
-          '  gahwa         Saudi coffee break ☕',
-          '  weather       Riyadh forecast 🌡️',
           '  haboob        summon a sandstorm 🌪️',
-          '  gravity       switch gravity off 🍎',
           '  fallout       tune in the wasteland radio 📻',
           '  radiation     run the geiger counter ☢',
           '  reboot        power-cycle this terminal 📺',
@@ -64,18 +61,13 @@ const SN = {
         welcome: 'أهلًا وسهلًا بك.',
         radioOn: '📻 جارٍ ضبط الموجة… (اكتب fallout مرة أخرى للإيقاف)', radioOff: '# أُطفئ الراديو',
         radStart: '☢ عدّاد غايغر يعمل… هناك شيء مشعّ قريب.', radEnd: '# انخفضت القراءة. ستنجو (على الأرجح).',
-        gahwa: ['☕ جارٍ صبّ القهوة السعودية…', '🌴 مع التمر. خذ استراحة ثم واصل الاستكشاف.'],
-        weather: ['🌡️ الرياض: 47° مئوية، مشمس، بلا غيوم…', '☁️ …إلا السحابة التي أنشر عليها.'],
         gravity: ['🍎 جارٍ إيقاف الجاذبية…'],
         haboob: ['🌪️ هبوب قادم… تمسّك بفنجان قهوتك!'],
         help: [
           'الأوامر المتاحة:',
           '  help          عرض هذه القائمة',
           '  snake         العب لعبة الأفعى 🐍',
-          '  gahwa         استراحة قهوة سعودية ☕',
-          '  weather       طقس الرياض 🌡️',
           '  haboob        استدعِ عاصفة رملية 🌪️',
-          '  gravity       أوقف الجاذبية 🍎',
           '  fallout       شغّل راديو الأرض القاحلة 📻',
           '  radiation     شغّل عدّاد غايغر ☢',
           '  reboot        أعد تشغيل الطرفية 📺',
@@ -96,11 +88,11 @@ async function typeAll() {
     if (speed) {
       // keep the prompt markup, type only the command after it
       const pre = html.startsWith(PROMPT) ? PROMPT : '', cmd = strip(html.slice(pre.length));
-      for (let i = 1; i <= cmd.length; i++) { if (bootRun !== run0) return; term.innerHTML = history + pre + esc(cmd.slice(0, i)) + '<span class="cursor"></span>'; await sleep(speed); }
+      for (let i = 1; i <= cmd.length; i++) { if (bootRun !== run0) return; paint(history + pre + esc(cmd.slice(0, i)) + '<span class="cursor"></span>'); await sleep(speed); }
       await sleep(250);
     } else await sleep(70);
     if (bootRun !== run0) return;
-    history += html + '\n'; term.innerHTML = history + '<span class="cursor"></span>';
+    history += html + '\n'; paint(history + '<span class="cursor"></span>');
   }
   history += `<span class="t-help">${esc(sn().helpHint)}</span>\n`;
   mode = 'prompt'; render();
@@ -160,7 +152,7 @@ const booted = (() => { try { return sessionStorage.getItem('crtBooted') === '1'
 const bio = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { bio.disconnect(); boot(!booted); } }, { threshold: 0.3 });
 bio.observe(terminal);
 
-function render() { if (mode === 'prompt') term.innerHTML = history + PROMPT + esc(buf) + '<span class="cursor"></span>'; }
+function render() { if (mode === 'prompt') paint(history + PROMPT + esc(buf) + '<span class="cursor"></span>'); }
 terminal.addEventListener('click', () => { if (mode !== 'game') input.focus({ preventScroll: true }); });
 input.addEventListener('focus', () => terminal.classList.add('focused'));
 input.addEventListener('blur', () => terminal.classList.remove('focused'));
@@ -175,8 +167,6 @@ function run(cmd: string) {
   const s = sn();
   if (c === 'clear') history = '';
   else if (['reboot', 'restart', 'اعادة تشغيل'].includes(c)) { boot(true); return; }
-  else if (['gahwa', 'coffee', 'قهوة', 'قهوه'].includes(c)) { say(s.gahwa); egg('gahwa'); }
-  else if (['weather', 'الطقس', 'طقس'].includes(c)) { say(s.weather); egg('weather'); }
   else if (['gravity', 'الجاذبية'].includes(c)) { say(s.gravity); dispatchEvent(new CustomEvent('egg:gravity')); }
   else if (['help', 'مساعدة', '?'].includes(c)) { history += s.help.map((l, i) => `<span class="${i === 0 ? 't-key' : l.startsWith('#') ? 't-com' : 't-help'}">${esc(l)}</span>`).join('\n') + '\n'; }
   else if (['haboob', 'هبوب'].includes(c)) { say(s.haboob); dispatchEvent(new CustomEvent('egg:haboob')); }
@@ -254,7 +244,7 @@ function radiation() {
 document.getElementById('termHint')!.addEventListener('click', async () => {
   if (mode !== 'prompt') return;
   mode = 'auto';
-  for (const ch of 'help') { buf += ch; term.innerHTML = history + PROMPT + esc(buf) + '<span class="cursor"></span>'; await sleep(110); }
+  for (const ch of 'help') { buf += ch; paint(history + PROMPT + esc(buf) + '<span class="cursor"></span>'); await sleep(110); }
   await sleep(300); mode = 'prompt'; run(buf);
 });
 
@@ -269,7 +259,9 @@ const saveBest = (s: number) => { try { localStorage.setItem('snakeBest', String
 function startSnake() {
   mode = 'game'; input.blur();
   terminal.classList.add('playing'); if (matchMedia('(pointer:coarse)').matches) terminal.classList.add('touch');
-  const w = term.clientWidth - 44, h = Math.min(Math.max(term.clientHeight - 40, 240), 320), cell = 18;
+  // the screen never grows: on touch screens the arrow pad sits inside it, so the board leaves room for it
+  const pad = terminal.classList.contains('touch') ? 62 : 0;
+  const w = term.clientWidth - 44, h = Math.min(Math.max(term.clientHeight - 40 - pad, 150), 320), cell = 18;
   const cols = Math.floor(w / cell), rows = Math.floor(h / cell), dpr = devicePixelRatio || 1;
   const cv = document.createElement('canvas'); cv.width = cols * cell * dpr; cv.height = rows * cell * dpr;
   cv.style.width = `${cols * cell}px`; cv.style.height = `${rows * cell}px`; cv.style.margin = '0 auto';
