@@ -763,13 +763,4 @@ body{transition:none} /* the view transition handles the cross-fade */
 @keyframes roach-leg{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
 @keyframes roach-ant{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
 .roach.squished{width:54px;height:54px;cursor:default;color:#2fbf5c;filter:drop-shadow(0 0 4px rgba(65,255,125,.4))}
-/* `claw`: the page darkens while the beast is close; claw marks rake across the screen on the roar */
-html.beast-near body::after{content:'';position:fixed;inset:0;z-index:94;pointer-events:none;background:radial-gradient(ellipse at center,transparent 40%,rgba(60,0,0,.45));animation:beast-pulse .5s ease-in-out infinite alternate}
-@keyframes beast-pulse{to{opacity:.6}}
-.claw-marks{position:fixed;inset:0;z-index:96;pointer-events:none}
-.claw-marks svg{width:100%;height:100%}
-.claw-marks path{fill:none;stroke:#140303;stroke-width:3.2;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;
-  filter:drop-shadow(0 0 2px rgba(255,60,40,.9)) drop-shadow(0 0 10px rgba(200,20,10,.6));animation:claw-rake .22s cubic-bezier(.3,.7,.3,1) forwards}
-.claw-marks path{stroke-width:14px}
-.claw-marks path:nth-child(2){animation-delay:.04s}.claw-marks path:nth-child(3){animation-delay:.08s}.claw-marks path:nth-child(4){animation-delay:.12s}
-@keyframes claw-rake{to{stroke-dashoffset:0}}
+

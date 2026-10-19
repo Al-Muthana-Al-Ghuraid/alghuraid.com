@@ -316,30 +316,24 @@ function radroach() {
   requestAnimationFrame(step);
 }
 
-/* ---------- `claw`: a beast approaches and roars; the page shakes in time with the sound ----------
-   The shake follows the audio's loudness live (Web Audio analyser), so heavy steps jolt the page and the
-   roar shakes it hard and rakes claw marks across the screen. Default sound is our own synthesized clip;
-   a claw.mp3 in public/media/sounds/ takes priority. */
+/* ---------- `claw`: a beast approaches and roars; the whole page shakes in time with the sound ----------
+   The shake follows the audio live (Web Audio analyser): each footstep lands as a jolt that grows as the
+   beast gets closer, and the roar shakes everything hard. Uses the CSS `translate` / `rotate` properties,
+   so it stacks on top of each element's own transform (the fixed nav bar shakes too, without jumping).
+   Default sound is our own synthesized clip; a claw.mp3 in public/media/sounds/ takes priority. */
 const CLAW_SRC = ['/media/sounds/claw.mp3', '/media/sounds/claw.wav'];
 let clawing = false;
-function shakeTargets() { // everything on the page that isn't fixed (shaking a fixed element would make it jump)
-  return [...document.body.children].filter((el): el is HTMLElement => el instanceof HTMLElement && !/SCRIPT|STYLE/.test(el.tagName) && getComputedStyle(el).position !== 'fixed');
-}
-function clawMarks() {
-  const ov = document.body.appendChild(Object.assign(document.createElement('div'), { className: 'claw-marks' }));
-  ov.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${[0, 1, 2, 3].map((i) => `<path d="M${18 + i * 14} ${8 + i * 3} C ${30 + i * 14} 40, ${44 + i * 13} 62, ${62 + i * 12} ${90 - i * 2}" pathLength="1"/>`).join('')}</svg>`;
-  ov.animate([{ opacity: 1 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], { duration: 2600, easing: 'ease-in' }).finished.then(() => ov.remove());
-}
+const shakeTargets = () => [...document.body.children].filter((el): el is HTMLElement => el instanceof HTMLElement && !/SCRIPT|STYLE|NOSCRIPT/.test(el.tagName));
 function claw() {
   if (clawing) return;
   clawing = true; egg('claw');
   history += `<span class="t-str">${esc(sn().clawIn)}</span>\n`;
   const targets = shakeTargets();
+  const still = () => targets.forEach((el) => { el.style.translate = ''; el.style.rotate = ''; });
   let ended = false;
   const finish = (ac?: AudioContext) => {
     if (ended) return; ended = true;
-    targets.forEach((el) => (el.style.transform = ''));
-    document.documentElement.classList.remove('beast-near');
+    still();
     if (ac && ac.state !== 'closed') ac.close().catch(() => {});
     clawing = false;
     history += `<span class="t-com">${esc(sn().clawOut)}</span>\n`;
@@ -357,20 +351,28 @@ function claw() {
     audio.addEventListener('ended', () => finish(ac), { once: true });
     // a missing file also rejects play(); the 'error' handler above moves on to the next source,
     // so only give up here when the browser refuses to play sound at all
-    audio.volume = 0.85; audio.play().catch((e) => { if (e?.name === 'NotAllowedError') finish(ac); });
+    audio.volume = 0.9; audio.play().catch((e) => { if (e?.name === 'NotAllowedError') finish(ac); });
     const data = new Float32Array(an ? an.fftSize : 0);
-    let level = 0, loudFor = 0, slashed = false, last = performance.now();
+    let level = 0, prev = 0, kick = 0, loudFor = 0, last = performance.now();
     const frame = (now: number) => {
       if (!clawing || ended) return;
       const dt = now - last; last = now;
       let rms = 0;
       if (an) { an.getFloatTimeDomainData(data); for (const v of data) rms += v * v; rms = Math.sqrt(rms / data.length); }
-      level = Math.max(rms, level * 0.86);                                   // fast attack, smooth release
-      const amp = reduce ? 0 : Math.max(0, level - 0.04) * 90;             // quiet = still, loud = violent
-      targets.forEach((el) => (el.style.transform = amp > 0.3 ? `translate(${(Math.random() - 0.5) * amp}px,${(Math.random() - 0.5) * amp}px)` : ''));
-      document.documentElement.classList.toggle('beast-near', level > 0.12);
-      loudFor = level > 0.22 ? loudFor + dt : 0;                             // a sustained loud stretch = the roar
-      if (!slashed && loudFor > 350) { slashed = true; clawMarks(); }
+      // a sudden jump in loudness = a footstep landing: give the page a jolt sized to the hit
+      if (rms > 0.05 && rms > prev * 1.5) kick = Math.max(kick, Math.min(46, rms * 150));
+      prev = rms;
+      level = Math.max(rms, level * 0.88);                                  // fast attack, smooth release
+      kick *= 0.82;                                                          // each jolt dies away quickly
+      loudFor = level > 0.2 ? loudFor + dt : 0;                             // a sustained loud stretch = the roar
+      const roar = Math.min(1, loudFor / 500);
+      const amp = reduce ? 0 : Math.max(kick, Math.max(0, level - 0.03) * (60 + 70 * roar));
+      if (amp < 0.4) still();
+      else targets.forEach((el, k) => {
+        const s = 0.85 + 0.3 * ((k * 7919) % 10) / 10;                      // each block moves a little differently
+        el.style.translate = `${((Math.random() - 0.5) * amp * s).toFixed(1)}px ${((Math.random() - 0.5) * amp * 1.2 * s).toFixed(1)}px`;
+        el.style.rotate = roar > 0.3 ? `${((Math.random() - 0.5) * amp * 0.05 * roar).toFixed(2)}deg` : '';
+      });
       requestAnimationFrame(frame);
     };
     requestAnimationFrame(frame);
