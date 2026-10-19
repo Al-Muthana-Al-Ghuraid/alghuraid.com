@@ -14,7 +14,7 @@ export const ui = {
   'hero.cta1': { en: 'View projects', ar: 'استعرض المشاريع' },
   'hero.cta2': { en: 'Get in touch', ar: 'تواصل معي' },
   'hero.qv': { en: '30-sec summary', ar: 'ملخص في 30 ثانية' },
-  'sn.hint': { en: "psst… whatever you do, <span>don't type <code>snake</code></span>", ar: 'تلميح… مهما فعلت، <span>لا تكتب <code>snake</code></span>' },
+  'sn.hint': { en: 'psst… <span>type <code>help</code> in the terminal</span> 👀', ar: 'تلميح… <span>اكتب <code>help</code> في الطرفية</span> 👀' },
   'about.h': { en: 'About me', ar: 'نبذة عني' },
   'f.edu': { en: 'Education', ar: 'التعليم' },
   'f.loc': { en: 'Location', ar: 'الموقع' },

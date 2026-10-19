@@ -1,5 +1,6 @@
-// Easter eggs: sound, secret counter, falcon flyby, peeking characters, hidden words,
-// gravity mode and Saudi occasions. Loaded lazily (see site.ts); everything is bilingual.
+// Easter eggs: secret counter, falcon flyby (background), highlighted hidden words, gravity mode
+// and the "don't break production" background cracks. Loaded lazily (see site.ts); everything is bilingual.
+// Sounds only ever play in response to something the visitor does.
 const root = document.documentElement;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isAr = () => root.lang === 'ar';
@@ -13,88 +14,48 @@ const el = <K extends keyof HTMLElementTagNameMap>(tag: K, cls: string, html = '
   const e = document.createElement(tag); e.className = cls; e.innerHTML = html; return e;
 };
 
-/* ======================================================= sound */
+/* ======================================================= sound (interaction only) */
 let ctx: AudioContext | null = null;
-const soundOn = () => root.dataset.sound !== 'off';
-function ac() {
-  ctx ??= new AudioContext();
-  if (ctx.state === 'suspended') ctx.resume();
-  return ctx;
+function ac() { ctx ??= new AudioContext(); if (ctx.state === 'suspended') ctx.resume(); return ctx; }
+function noise(dur: number, freq: number, q: number, vol: number, sweepTo?: number) {
+  const a = ac(), t = a.currentTime, n = Math.floor(a.sampleRate * dur), buf = a.createBuffer(1, n, a.sampleRate), d = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 3);
+  const src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
+  src.buffer = buf; f.type = 'bandpass'; f.frequency.setValueAtTime(freq, t); if (sweepTo) f.frequency.exponentialRampToValueAtTime(sweepTo, t + dur); f.Q.value = q;
+  g.gain.value = vol; src.connect(f); f.connect(g); g.connect(a.destination); src.start(t);
 }
-/** Plucked-string tone, a light synth of an oud note. */
-function pluck(freq: number, at = 0, gain = 0.22, len = 1.1) {
-  if (!soundOn()) return;
-  const a = ac(), t = a.currentTime + at;
-  const o = a.createOscillator(), o2 = a.createOscillator(), f = a.createBiquadFilter(), g = a.createGain();
-  o.type = 'sawtooth'; o2.type = 'triangle';
-  o.frequency.setValueAtTime(freq * 1.012, t); o.frequency.exponentialRampToValueAtTime(freq, t + 0.06); // tiny pitch settle
-  o2.frequency.setValueAtTime(freq * 2, t);
-  f.type = 'lowpass'; f.frequency.setValueAtTime(3200, t); f.frequency.exponentialRampToValueAtTime(420, t + len * 0.7); f.Q.value = 6;
-  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain, t + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
-  o.connect(f); o2.connect(f); f.connect(g); g.connect(a.destination);
-  o.start(t); o2.start(t); o.stop(t + len); o2.stop(t + len);
-}
-// Maqam Hijaz on D: D, Eb, F#, G, A
-const HIJAZ = [293.66, 311.13, 369.99, 392.0, 440.0, 587.33];
 const sfx = {
-  secret: () => { pluck(HIJAZ[4], 0); pluck(HIJAZ[5], 0.12, 0.2, 1.5); },
-  phrase: () => [0, 1, 2, 3, 4, 3, 2].forEach((n, i) => pluck(HIJAZ[n], i * 0.16, 0.2, 0.9)),
-  blip: (f = 880, len = 0.07, type: OscillatorType = 'square', vol = 0.06) => {
-    if (!soundOn()) return;
-    const a = ac(), t = a.currentTime, o = a.createOscillator(), g = a.createGain();
-    o.type = type; o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(f * 1.5, t + len);
-    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
-    o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + len);
-  },
-  wind: (dur = 2.6) => {
-    if (!soundOn()) return;
-    const a = ac(), t = a.currentTime, n = a.sampleRate * dur, buf = a.createBuffer(1, n, a.sampleRate), d = buf.getChannelData(0);
-    for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
-    const src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
-    src.buffer = buf; f.type = 'bandpass'; f.frequency.setValueAtTime(400, t); f.frequency.linearRampToValueAtTime(900, t + dur / 2); f.frequency.linearRampToValueAtTime(300, t + dur); f.Q.value = 0.8;
-    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.18, t + 0.5); g.gain.linearRampToValueAtTime(0.0001, t + dur);
-    src.connect(f); f.connect(g); g.connect(a.destination); src.start(t);
-  },
+  crack: () => { noise(0.09, rand(2800, 4200), 2.5, 0.5); noise(0.05, 6500, 6, 0.25); },
+  shatter: () => { for (let i = 0; i < 7; i++) setTimeout(() => noise(rand(0.15, 0.35), rand(2500, 6000), 1.5, 0.35), i * rand(30, 70)); },
+  wind: () => noise(2.6, 500, 0.7, 0.9, 260),
 };
-/** Play a short audio file (first few seconds, faded out); fall back to the oud phrase if it isn't there. */
-const fileCache = new Map<string, AudioBuffer | null>();
-async function playClip(url: string, seconds = 3) {
-  if (!soundOn()) return;
+/** Play the start of an audio file, faded out at the end. Silent if the file isn't there. */
+const clips = new Map<string, AudioBuffer | null>();
+async function playClip(url: string, seconds: number) {
   const a = ac();
-  if (!fileCache.has(url)) {
-    try { const r = await fetch(url); if (!r.ok) throw 0; fileCache.set(url, await a.decodeAudioData(await r.arrayBuffer())); }
-    catch { fileCache.set(url, null); }
+  if (!clips.has(url)) {
+    try { const r = await fetch(url); if (!r.ok) throw 0; clips.set(url, await a.decodeAudioData(await r.arrayBuffer())); }
+    catch { clips.set(url, null); }
   }
-  const buf = fileCache.get(url);
-  if (!buf) { sfx.phrase(); return; }
+  const buf = clips.get(url); if (!buf) return;
   const src = a.createBufferSource(), g = a.createGain(), t = a.currentTime, len = Math.min(seconds, buf.duration);
-  src.buffer = buf; g.gain.setValueAtTime(0.9, t); g.gain.setValueAtTime(0.9, t + len - 0.8); g.gain.linearRampToValueAtTime(0.0001, t + len);
+  src.buffer = buf; g.gain.setValueAtTime(0.9, t); g.gain.setValueAtTime(0.9, t + Math.max(0, len - 1.2)); g.gain.linearRampToValueAtTime(0.0001, t + len);
   src.connect(g); g.connect(a.destination); src.start(t, 0, len);
 }
-const soundBtn = document.getElementById('soundBtn');
-const syncSoundBtn = () => soundBtn?.setAttribute('aria-pressed', String(soundOn()));
-syncSoundBtn();
-soundBtn?.addEventListener('click', () => {
-  if (soundOn()) { root.dataset.sound = 'off'; store.set('sound', 'off'); }
-  else { delete root.dataset.sound; store.set('sound', 'on'); sfx.blip(660, 0.08, 'triangle', 0.08); }
-  syncSoundBtn();
-});
 
 /* ======================================================= secrets + toast */
 const SECRETS: Record<string, [string, string, string]> = {
   falcon: ['🦅', 'Falconer', 'الصقّار'],
-  camel: ['🐪', 'Ship of the Desert', 'سفينة الصحراء'],
-  ghost: ['👾', 'Ghostbuster', 'صائد الأشباح'],
   haboob: ['🌪️', 'Haboob Survivor', 'نجوت من الهبوب'],
   robot: ['🤖', 'Automation Unleashed', 'الأتمتة طليقة'],
   clouds: ['☁️', 'Head in the Clouds', 'رأسي في السحاب'],
   gravity: ['🍎', 'Newton Was Right', 'نيوتن كان محقًا'],
+  prod: ['💥', 'You Broke Production', 'أوقفت بيئة الإنتاج'],
   snake: ['🐍', 'Snake Charmer', 'ساحر الأفاعي'],
   gahwa: ['☕', 'Coffee Break', 'استراحة قهوة'],
   weather: ['🌡️', 'Riyadh Summer', 'صيف الرياض'],
   kenobi: ['👋', 'General Kenobi', 'الجنرال كينوبي'],
-  terminator: ['🤖', "I'll Be Back", 'سأعود'],
-  national: ['💚', 'Green Day', 'اليوم الأخضر'],
+  terminator: ['🦾', "I'll Be Back", 'سأعود'],
 };
 const TOTAL = Object.keys(SECRETS).length;
 const found = new Set<string>((store.get('secrets') ?? '').split(',').filter((k) => k in SECRETS));
@@ -105,127 +66,93 @@ function toast(html: string, ms = 3400) {
   requestAnimationFrame(() => t.classList.add('show'));
   setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, ms);
 }
-export function unlock(id: string) {
-  const s = SECRETS[id]; if (!s) return;
-  if (found.has(id)) return;
+function unlock(id: string) {
+  const s = SECRETS[id]; if (!s || found.has(id)) return;
   found.add(id); store.set('secrets', [...found].join(','));
-  sfx.secret();
   toast(`<span class="egg-ico">${s[0]}</span><span><small>${tr('Secret found', 'اكتشفت سرًّا')} · ${tr(`${found.size} / ${TOTAL}`, `${found.size} من ${TOTAL}`)}</small><b>${tr(s[1], s[2])}</b></span>`);
-  if (found.size === TOTAL) setTimeout(() => {
-    toast(`<span class="egg-ico">🏆</span><span><small>${tr('All secrets found', 'وجدت كل الأسرار')}</small><b>${tr('You explored everything. Respect! Now hire me 😄', 'استكشفت كل شيء، احترامي! والآن وظّفني 😄')}</b></span>`, 6000);
-    fireworks(2600);
-  }, 1200);
+  if (found.size === TOTAL) setTimeout(() => toast(`<span class="egg-ico">🏆</span><span><small>${tr('All secrets found', 'وجدت كل الأسرار')}</small><b>${tr('You explored everything. Respect! Now hire me 😄', 'استكشفت كل شيء، احترامي! والآن وظّفني 😄')}</b></span>`, 6000), 1200);
 }
 addEventListener('egg:unlock', (e) => unlock((e as CustomEvent).detail));
-addEventListener('egg:sfx', (e) => {
-  const k = (e as CustomEvent).detail;
-  if (k === 'eat') sfx.blip(660 + Math.random() * 200); else if (k === 'over') sfx.blip(180, 0.35, 'sawtooth', 0.07);
-});
 
-/* ======================================================= falcon flyby */
-const FALCON = `<svg viewBox="0 0 120 60" aria-hidden="true"><g class="wing wl"><path d="M58 30 C44 14 24 6 2 8 C20 14 34 22 46 34Z"/></g><g class="wing wr"><path d="M62 30 C76 14 96 6 118 8 C100 14 86 22 74 34Z"/></g><path d="M48 32 C52 26 68 26 72 32 C70 40 64 46 60 52 C56 46 50 40 48 32Z"/><path d="M56 26 C57 20 63 20 64 26 C62 28 58 28 56 26Z"/><path d="M60 22 l3 2 -3 1Z" class="beak"/></svg>`;
+/* ======================================================= falcon (background layer) */
+// Top view, heading right: long pointed swept-back wings with a bent wrist, rounded tail, hooked beak.
+const FALCON = `<svg viewBox="0 -12 160 144" aria-hidden="true">
+  <path class="wing up" d="M108 52 C109 40 107 28 102 20 C96 10 86 0 68 -10 C75 0 78 7 78 12 C73 8 67 5 60 4 C69 13 74 23 75 32 C75 40 74 46 72 53 Z"/>
+  <path class="wing down" d="M108 68 C109 80 107 92 102 100 C96 110 86 120 68 130 C75 120 78 113 78 108 C73 112 67 115 60 116 C69 107 74 97 75 88 C75 80 74 74 72 67 Z"/>
+  <path d="M60 55 L36 50 Q28 60 36 70 L60 65 Z"/>
+  <path d="M128 60 C127 53 119 49 108 49 C92 49 74 53 58 55 L58 65 C74 67 92 71 108 71 C119 71 127 67 128 60 Z"/>
+  <circle cx="127" cy="60" r="7"/><path class="beak" d="M132 56.5 Q140 57.5 139.5 61 Q139 63.5 136.5 62.5 Q135.5 61 132.5 62.5 Z"/><circle class="eye" cx="129" cy="57.5" r="1.3"/>
+</svg>`;
 function falconFlyby() {
-  if (document.hidden || document.querySelector('.falcon')) return;
-  const f = el('button', 'falcon', FALCON);
-  f.setAttribute('aria-label', tr('A falcon! Click it', 'صقر! انقر عليه'));
+  if (document.hidden || document.querySelector('.falcon') || root.classList.contains('gravity-on')) return;
+  const f = el('div', 'falcon', FALCON);
   const ltr = Math.random() > 0.5;
-  f.style.top = `${rand(9, 30)}vh`;
-  f.style.setProperty('--dir', ltr ? '1' : '-1'); // flips the drawing to face the flight direction
   if (!ltr) f.classList.add('to-left');
-  f.style.animationDuration = `${rand(7, 10)}s`;
+  f.style.top = `${rand(14, 40)}vh`;
+  f.style.animationDuration = `${rand(11, 15)}s`;
   document.body.appendChild(f);
-  f.addEventListener('animationend', () => f.remove());
-  f.addEventListener('click', () => { f.classList.add('caught'); saudiPride(); unlock('falcon'); setTimeout(() => f.remove(), 900); });
+  f.addEventListener('animationend', (e) => { if (e.target === f) f.remove(); });
+}
+function catchFalcon(f: HTMLElement) {
+  f.classList.add('caught'); unlock('falcon'); saudiPride();
+  setTimeout(() => f.remove(), 1000);
 }
 function saudiPride() {
-  playClip('/media/sfx/anthem-intro.mp3', 3);
-  const o = document.body.appendChild(el('div', 'pride', `<div class="pride-msg"><span class="pride-flag">💚</span><b>${tr('Proud to be Saudi', 'فخور بسعوديتي')}</b></div>`));
-  setTimeout(() => o.classList.add('out'), 3200);
-  setTimeout(() => o.remove(), 4000);
+  playClip('/media/sfx/anthem.mp3', ANTHEM_SECONDS);
+  const o = document.body.appendChild(el('div', 'pride', `<div class="pride-msg"><span class="pride-ico">💚</span><b>${tr('Proud to be Saudi', 'فخور بسعوديتي')}</b></div>`));
+  setTimeout(() => o.classList.add('out'), ANTHEM_SECONDS * 1000);
+  setTimeout(() => o.remove(), ANTHEM_SECONDS * 1000 + 900);
 }
+const ANTHEM_SECONDS = 5;
 
-/* ======================================================= peeking characters */
-const PEEKERS: [string, string][] = [['camel', '🐪'], ['ghost', '👾']];
-function peek() {
-  if (document.hidden || document.querySelector('.peeker') || document.querySelector('.gravity-on')) return;
-  const [id, emoji] = PEEKERS[Math.floor(Math.random() * PEEKERS.length)];
-  const side = Math.random() > 0.5 ? 'left' : 'right';
-  const p = el('button', `peeker ${side}`, `<span>${emoji}</span>`);
-  p.setAttribute('aria-label', tr('Something is peeking… click it', 'شيء ما يختلس النظر… انقر عليه'));
-  p.style.top = `${rand(35, 78)}vh`;
-  document.body.appendChild(p);
-  requestAnimationFrame(() => p.classList.add('in'));
-  const hide = setTimeout(() => { p.classList.remove('in'); setTimeout(() => p.remove(), 600); }, 4200);
-  p.addEventListener('click', () => {
-    clearTimeout(hide); p.classList.add('caught'); sfx.blip(990, 0.12, 'triangle', 0.08); unlock(id);
-    setTimeout(() => p.remove(), 700);
-  });
-}
-
-/* ======================================================= hidden words */
-const WORDS: { egg: string; scope: string; en: RegExp; ar: RegExp; hover?: number }[] = [
-  { egg: 'haboob', scope: '.eyebrow, .fact, .meta-list', en: /Riyadh/, ar: /الرياض/ },
+/* ======================================================= hidden words (one each, highlighted, click) */
+const WORDS: { egg: string; scope: string; en: RegExp; ar: RegExp }[] = [
+  { egg: 'haboob', scope: '.hero .eyebrow', en: /Riyadh/, ar: /الرياض/ },
+  { egg: 'clouds', scope: '.hero .role', en: /Cloud/, ar: /سحابي/ },
   { egg: 'robot', scope: '.about-text', en: /automation/, ar: /الأتمتة/ },
-  { egg: 'clouds', scope: '.hero .role', en: /Cloud/, ar: /سحابي/, hover: 3 },
 ];
 function wrapWords() {
   for (const w of WORDS) {
-    document.querySelectorAll<HTMLElement>(w.scope).forEach((scope) => {
-      if (scope.querySelector(`.egg-word[data-egg="${w.egg}"]`)) return;
-      const re = isAr() ? w.ar : w.en;
-      const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT);
-      while (walker.nextNode()) {
-        const t = walker.currentNode as Text, m = t.nodeValue!.match(re);
-        if (!m || m.index === undefined) continue;
-        const word = t.splitText(m.index); word.splitText(m[0].length);
-        const span = el('span', 'egg-word'); span.dataset.egg = w.egg; if (w.hover) span.dataset.hover = String(w.hover);
-        word.replaceWith(span); span.appendChild(word);
-        break;
-      }
-    });
+    const scope = document.querySelector<HTMLElement>(w.scope);
+    if (!scope || scope.querySelector('.egg-word')) continue;
+    const re = isAr() ? w.ar : w.en;
+    const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+      const t = walker.currentNode as Text, m = t.nodeValue!.match(re);
+      if (!m || m.index === undefined) continue;
+      const word = t.splitText(m.index); word.splitText(m[0].length);
+      const span = el('span', 'egg-word'); span.dataset.egg = w.egg; span.tabIndex = 0; span.setAttribute('role', 'button');
+      word.replaceWith(span); span.appendChild(word);
+      break;
+    }
   }
 }
-const hoverCounts = new Map<string, number>();
-function bump(w: HTMLElement) { // "hover N times" words; on touch screens each tap counts
-  const n = (hoverCounts.get(w.dataset.egg!) ?? 0) + 1; hoverCounts.set(w.dataset.egg!, n);
-  if (n >= Number(w.dataset.hover)) { hoverCounts.set(w.dataset.egg!, 0); cloudRain(); }
-}
-document.addEventListener('click', (e) => {
-  const w = (e.target as HTMLElement).closest<HTMLElement>('.egg-word');
-  if (!w) return;
-  if (w.dataset.hover) { if (matchMedia('(hover: none)').matches) bump(w); return; }
-  if (w.dataset.egg === 'haboob') haboob(); else if (w.dataset.egg === 'robot') robot();
-});
-document.addEventListener('mouseover', (e) => {
-  const w = (e.target as HTMLElement).closest<HTMLElement>('.egg-word[data-hover]');
-  const from = (e.relatedTarget as Element | null)?.closest?.('.egg-word');
-  if (w && from !== w) bump(w);
-});
+const fire = (egg: string) => (egg === 'haboob' ? haboob() : egg === 'robot' ? robot() : egg === 'clouds' ? cloudRain() : null);
+document.addEventListener('click', (e) => { const w = (e.target as HTMLElement).closest<HTMLElement>('.egg-word'); if (w) fire(w.dataset.egg!); });
+document.addEventListener('keydown', (e) => { const w = (e.target as HTMLElement).closest?.('.egg-word') as HTMLElement | null; if (w && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); fire(w.dataset.egg!); } });
+addEventListener('egg:haboob', haboob);
 
 function haboob() {
   if (document.querySelector('.haboob')) return;
-  unlock('haboob'); sfx.wind(2.8);
+  unlock('haboob'); sfx.wind();
   const box = document.body.appendChild(el('div', 'haboob'));
   const c = box.appendChild(document.createElement('canvas')), x = c.getContext('2d')!;
-  const W = (c.width = innerWidth), H = (c.height = innerHeight);
-  const dir = isAr() ? 1 : -1;
+  const W = (c.width = innerWidth), H = (c.height = innerHeight), dir = isAr() ? 1 : -1;
   const grains = Array.from({ length: reduce ? 60 : 420 }, () => ({ x: dir < 0 ? W + rand(0, W) : -rand(0, W), y: rand(0, H), v: rand(8, 22), s: rand(1, 3.2), a: rand(0.3, 0.9) }));
   const t0 = performance.now();
   (function frame(t: number) {
-    const p = (t - t0) / 2800;
     x.clearRect(0, 0, W, H);
     for (const g of grains) { g.x += g.v * dir; g.y += Math.sin((g.x + t) / 90) * 0.8; x.fillStyle = `rgba(214,170,110,${g.a})`; x.fillRect(g.x, g.y, g.s * 2.2, g.s); }
-    if (p < 1) requestAnimationFrame(frame); else { box.classList.add('out'); setTimeout(() => box.remove(), 500); }
+    if (t - t0 < 2800) requestAnimationFrame(frame); else { box.classList.add('out'); setTimeout(() => box.remove(), 500); }
   })(t0);
-  toast(`<span class="egg-ico">🌪️</span><span><b>${tr('Haboob! Classic Riyadh afternoon.', 'هبوب! عصرية رياضية معتادة.')}</b></span>`, 2600);
+  toast(`<span class="egg-ico">🌪️</span><span><b>${tr('Haboob! A classic Riyadh afternoon.', 'هبوب! عصرية رياضية معتادة.')}</b></span>`, 2600);
 }
 function robot() {
   if (document.querySelector('.walker')) return;
   unlock('robot');
   const r = document.body.appendChild(el('div', 'walker', '<span>🤖</span>'));
   r.style.setProperty('--dir', isAr() ? '-1' : '1');
-  let beeps = 0; const iv = setInterval(() => { sfx.blip(520 + (beeps++ % 2) * 260, 0.05, 'square', 0.04); }, 450);
-  r.addEventListener('animationend', () => { clearInterval(iv); r.remove(); });
+  r.addEventListener('animationend', (e) => { if (e.target === r) r.remove(); });
 }
 function cloudRain() {
   unlock('clouds');
@@ -236,7 +163,6 @@ function cloudRain() {
     c.style.setProperty('--drift', `${rand(-60, 60)}px`);
     c.addEventListener('animationend', () => c.remove());
   }
-  sfx.blip(784, 0.2, 'sine', 0.05);
 }
 
 /* ======================================================= gravity mode */
@@ -254,7 +180,7 @@ function gravityOn() {
   bodies = cards.map((c) => {
     const r = c.getBoundingClientRect();
     const ph = el('div', 'gravity-ph'); ph.style.width = `${r.width}px`; ph.style.height = `${r.height}px`;
-    ph.style.display = getComputedStyle(c).display === 'inline-flex' || c.classList.contains('chip') ? 'inline-block' : 'block';
+    ph.style.display = getComputedStyle(c).display.startsWith('inline') || c.classList.contains('chip') ? 'inline-block' : 'block';
     c.before(ph);
     Object.assign(c.style, { position: 'fixed', left: '0', top: '0', width: `${r.width}px`, height: `${r.height}px`, margin: '0', zIndex: '60', transition: 'none', transform: `translate(${r.left}px,${r.top}px)` });
     c.classList.add('gravity-body');
@@ -268,7 +194,6 @@ function gravityOn() {
     c.addEventListener('pointerup', () => { b.drag = undefined; b.vr = b.vx * 0.6; });
     return b;
   });
-  sfx.blip(300, 0.4, 'sine', 0.08);
   restoreBtn = document.body.appendChild(el('button', 'btn btn-primary gravity-restore', `↺ ${tr('Restore gravity', 'إعادة الجاذبية')}`));
   restoreBtn.addEventListener('click', gravityOff);
   const step = () => {
@@ -301,7 +226,6 @@ function gravityOff() {
   }, 720);
 }
 addEventListener('egg:gravity', gravityOn);
-// typing "gravity" anywhere on the page (outside inputs) also works
 let typed = '';
 addEventListener('keydown', (e) => {
   const tgt = e.target;
@@ -310,82 +234,65 @@ addEventListener('keydown', (e) => {
   if (typed === 'gravity') gravityOn();
 });
 
-/* ======================================================= Saudi occasions + fireworks */
-function fireworks(ms = 3000) {
-  if (reduce) return;
-  const c = document.body.appendChild(el('canvas', 'fireworks')) as HTMLCanvasElement, x = c.getContext('2d')!;
-  const W = (c.width = innerWidth), H = (c.height = innerHeight);
-  const colors = root.dataset.occasion ? ['#22c55e', '#ffffff', '#16a34a', '#86efac'] : ['#4f8cff', '#8b5cf6', '#22d3ee', '#fbbf24', '#f472b6'];
-  type P = { x: number; y: number; vx: number; vy: number; life: number; c: string };
-  let ps: P[] = [];
-  const burst = () => { const cx = rand(W * 0.15, W * 0.85), cy = rand(H * 0.12, H * 0.45), col = colors[Math.floor(Math.random() * colors.length)];
-    for (let i = 0; i < 70; i++) { const a = rand(0, Math.PI * 2), s = rand(1.5, 5.5); ps.push({ x: cx, y: cy, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 1, c: col }); } sfx.blip(rand(120, 200), 0.25, 'sine', 0.05); };
-  const t0 = performance.now(); let last = 0;
-  (function frame(t: number) {
-    if (t - last > 420 && t - t0 < ms) { burst(); last = t; }
-    x.clearRect(0, 0, W, H);
-    ps = ps.filter((p) => p.life > 0);
-    for (const p of ps) { p.vy += 0.05; p.x += p.vx; p.y += p.vy; p.life -= 0.012; x.globalAlpha = Math.max(0, p.life); x.fillStyle = p.c; x.fillRect(p.x, p.y, 2.6, 2.6); }
-    if (t - t0 < ms + 1800) requestAnimationFrame(frame); else c.remove();
-  })(t0);
+/* ======================================================= background clicks: falcon + cracks */
+// Anything that is content (text, cards, controls) is ignored; only clicks on empty background count.
+const CONTENT = 'a,button,input,textarea,label,select,nav,.card,.terminal,.chip,.btn,.filters,.term-hint,h1,h2,h3,h4,p,li,small,figure,img,svg,.egg-word,.eyebrow,.role,.sec-label,.stat,.modal,.gravity-restore,.egg-toasts,footer span';
+let cracks = 0, crackLayer: HTMLElement | null = null, shattering = false;
+document.addEventListener('click', (e) => {
+  if (root.classList.contains('gravity-on') || shattering) return;
+  const target = e.target as HTMLElement;
+  if (target.closest(CONTENT)) return;
+  const f = document.querySelector<HTMLElement>('.falcon:not(.caught)');
+  if (f) { const r = f.getBoundingClientRect(); if (e.clientX >= r.left - 12 && e.clientX <= r.right + 12 && e.clientY >= r.top - 12 && e.clientY <= r.bottom + 12) { catchFalcon(f); return; } }
+  crack(e.clientX, e.clientY);
+});
+function crack(x: number, y: number) {
+  crackLayer ??= document.body.appendChild(el('div', 'crack-layer'));
+  const n = 5 + Math.floor(Math.random() * 4), paths: string[] = [];
+  for (let i = 0; i < n; i++) {
+    let a = (i / n) * Math.PI * 2 + rand(-0.3, 0.3), px = 0, py = 0, d = `M0 0`;
+    const len = rand(40, 110), seg = 4 + Math.floor(Math.random() * 3);
+    for (let s = 0; s < seg; s++) { a += rand(-0.45, 0.45); px += Math.cos(a) * (len / seg); py += Math.sin(a) * (len / seg); d += ` L${px.toFixed(1)} ${py.toFixed(1)}`; }
+    paths.push(`<path d="${d}"/>`);
+    if (Math.random() > 0.5) paths.push(`<path class="thin" d="M${(px * 0.5).toFixed(1)} ${(py * 0.5).toFixed(1)} l${rand(-25, 25).toFixed(1)} ${rand(-25, 25).toFixed(1)}"/>`);
+  }
+  const svg = el('div', 'crack', `<svg viewBox="-120 -120 240 240" aria-hidden="true">${paths.join('')}<circle r="3"/></svg>`);
+  svg.style.left = `${x}px`; svg.style.top = `${y}px`; svg.style.setProperty('--rot', `${rand(0, 360)}deg`);
+  crackLayer.appendChild(svg);
+  sfx.crack();
+  setTimeout(() => svg.classList.add('heal'), 5000);
+  setTimeout(() => { svg.remove(); cracks = Math.max(0, cracks - 1); }, 6200);
+  if (++cracks >= 6) shatter();
 }
-function riyadhParts() {
-  const now = new Date();
-  const g = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Riyadh', month: 'numeric', day: 'numeric' }).formatToParts(now);
-  const h = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', { timeZone: 'Asia/Riyadh', month: 'numeric', day: 'numeric' }).formatToParts(now);
-  const num = (p: Intl.DateTimeFormatPart[], t: string) => Number(p.find((x) => x.type === t)?.value);
-  return { m: num(g, 'month'), d: num(g, 'day'), hm: num(h, 'month'), hd: num(h, 'day') };
+function shatter() {
+  shattering = true; cracks = 0; sfx.shatter();
+  const layer = crackLayer!;
+  layer.classList.add('shatter');
+  const shards = document.body.appendChild(el('div', 'shards'));
+  for (let i = 0; i < (reduce ? 0 : 26); i++) {
+    const s = shards.appendChild(el('i', 'shard'));
+    s.style.left = `${rand(0, 100)}vw`; s.style.top = `${rand(0, 70)}vh`;
+    s.style.setProperty('--w', `${rand(30, 110)}px`); s.style.setProperty('--h', `${rand(20, 80)}px`);
+    s.style.setProperty('--r', `${rand(-540, 540)}deg`); s.style.setProperty('--x', `${rand(-120, 120)}px`);
+    s.style.animationDelay = `${rand(0, 0.25)}s`;
+    s.style.clipPath = `polygon(${rand(0, 40)}% 0, 100% ${rand(0, 40)}%, ${rand(60, 100)}% 100%, 0 ${rand(50, 100)}%)`;
+  }
+  unlock('prod');
+  toast(`<span class="egg-ico">💥</span><span><small>${tr('incident #500', 'حادثة رقم 500')}</small><b>${tr('You broke production! 😅 Rolling back…', 'أوقفت بيئة الإنتاج! 😅 جارٍ التراجع…')}</b></span>`, 3200);
+  setTimeout(() => {
+    layer.innerHTML = ''; layer.classList.remove('shatter'); shards.remove();
+    toast(`<span class="egg-ico">✅</span><span><b>${tr('Rollback complete. All systems operational.', 'اكتمل التراجع. جميع الأنظمة تعمل.')}</b></span>`, 2600);
+    shattering = false;
+  }, 2600);
 }
-const OCCASIONS: Record<string, { en: string; ar: string; fireworks: boolean; lanterns?: boolean }> = {
-  national: { en: '💚 Happy Saudi National Day!', ar: '💚 كل عام والوطن بخير، اليوم الوطني السعودي', fireworks: true },
-  founding: { en: '💚 Happy Saudi Founding Day!', ar: '💚 يوم التأسيس، يوم بدينا', fireworks: true },
-  ramadan: { en: '🌙 Ramadan Kareem', ar: '🌙 رمضان كريم', fireworks: false, lanterns: true },
-  eid: { en: '🎉 Eid Mubarak!', ar: '🎉 عيدكم مبارك!', fireworks: true },
-};
-function detectOccasion() {
-  const forced = new URLSearchParams(location.search).get('occasion');
-  if (forced && forced in OCCASIONS) return forced;
-  const { m, d, hm, hd } = riyadhParts();
-  if (m === 9 && d === 23) return 'national';
-  if (m === 2 && d === 22) return 'founding';
-  if (hm === 9) return 'ramadan';
-  if ((hm === 10 && hd <= 3) || (hm === 12 && hd >= 10 && hd <= 13)) return 'eid';
-  return null;
-}
-let banner: HTMLElement | null = null;
-function startOccasion(id: string, celebrate = true) {
-  const o = OCCASIONS[id];
-  root.dataset.occasion = id === 'ramadan' ? 'ramadan' : 'green';
-  banner?.remove();
-  banner = document.body.appendChild(el('div', 'occasion-banner'));
-  const paint = () => { if (banner) banner.textContent = tr(o.en, o.ar); };
-  paint(); addEventListener('langchange', paint);
-  if (o.lanterns) lanterns();
-  if (o.fireworks && celebrate) setTimeout(() => fireworks(3200), 600);
-}
-function lanterns() {
-  if (document.querySelector('.lanterns')) return;
-  const box = document.body.appendChild(el('div', 'lanterns'));
-  [8, 22, 78, 92].forEach((left, i) => {
-    const l = box.appendChild(el('div', 'lantern', '<i></i><span>🏮</span>'));
-    l.style.left = `${left}%`; l.style.setProperty('--len', `${[40, 70, 55, 35][i]}px`); l.style.animationDelay = `${i * -0.7}s`;
-  });
-}
-const occ = detectOccasion();
-if (occ) startOccasion(occ);
-addEventListener('egg:national', () => { unlock('national'); startOccasion('national'); });
 
 /* ======================================================= schedule + lang */
 wrapWords();
 addEventListener('langchange', () => wrapWords());
 if (!reduce) {
-  const loop = (fn: () => void, first: [number, number], every: [number, number]) => {
-    const next = (range: [number, number]) => setTimeout(() => { fn(); next(every); }, rand(range[0], range[1]) * 1000);
-    next(first);
-  };
-  loop(falconFlyby, [14, 24], [55, 95]);
-  loop(peek, [30, 45], [45, 80]);
+  const next = (range: [number, number]) => setTimeout(() => { falconFlyby(); next([180, 300]); }, rand(range[0], range[1]) * 1000);
+  next([40, 70]); // first visit after ~1 minute, then every 3–5 minutes
 }
-// handy for the preview: ?egg=falcon|peek|haboob|robot|clouds|gravity
+// handy for the preview: ?egg=falcon|haboob|robot|clouds|gravity
 const demo = new URLSearchParams(location.search).get('egg');
-if (demo) setTimeout(() => ({ falcon: falconFlyby, peek, haboob, robot, clouds: cloudRain, gravity: gravityOn } as Record<string, () => void>)[demo]?.(), 1200);
+if (demo) setTimeout(() => ({ falcon: falconFlyby, haboob, robot, clouds: cloudRain, gravity: gravityOn } as Record<string, () => void>)[demo]?.(), 1200);

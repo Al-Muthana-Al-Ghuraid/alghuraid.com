@@ -32,7 +32,7 @@ const lines: [string, number][] = [
 
 /* ---------- strings (EN / AR) ---------- */
 const SN = {
-  en: { notFound: "# hint: there is exactly one command you shouldn't type…", title: (s: number, b: number) => `snake.py — score ${s} · best ${b}`,
+  en: { notFound: "# type 'help' to see what I can do", helpHint: "# new here? type 'help' to see what I can do", title: (s: number, b: number) => `snake.py — score ${s} · best ${b}`,
         startKeys: 'press ← ↑ ↓ → to start  ·  esc to quit', startTouch: 'swipe or use the buttons to start',
         crash: 'Segmentation fault (snake dumped)', score: (s: number) => `score: ${s}`, retry: 'enter / tap: retry  ·  esc: exit',
         exited: (s: number, b: number) => `# snake exited · score ${s} · best ${b}`, font: '"JetBrains Mono",monospace',
@@ -41,8 +41,21 @@ const SN = {
         kenobi: ['General Kenobi! 👋'],
         back: ["I'll be back."],
         gravity: ['🍎 disabling gravity…'],
-        national: ['💚 celebrating Saudi National Day!'] },
-  ar: { notFound: '# تلميح: هناك أمر واحد فقط يجب ألّا تكتبه…', title: (s: number, b: number) => `snake.py — النتيجة ${s} · الأفضل ${b}`,
+        haboob: ['🌪️ incoming haboob… hold onto your coffee!'],
+        help: [
+          'available commands:',
+          '  help          show this list',
+          '  snake         play Snake 🐍',
+          '  gahwa         Saudi coffee break ☕',
+          '  weather       Riyadh forecast 🌡️',
+          '  haboob        summon a sandstorm 🌪️',
+          '  gravity       switch gravity off 🍎',
+          '  hello there   …you know the reply',
+          "  i'll be back  a classic exit 🦾",
+          '  clear         clear the screen',
+          '# psst: more secrets are hiding outside the terminal 👀',
+        ] },
+  ar: { notFound: "# اكتب 'help' لترى ما يمكنني فعله", helpHint: "# جديد هنا؟ اكتب 'help' لترى ما يمكنني فعله", title: (s: number, b: number) => `snake.py — النتيجة ${s} · الأفضل ${b}`,
         startKeys: 'اضغط ← ↑ ↓ → للبدء  ·  Esc للخروج', startTouch: 'اسحب أو استخدم الأزرار للبدء',
         crash: 'اصطدمت الأفعى! (Segmentation fault)', score: (s: number) => `النتيجة: ${s}`, retry: 'Enter أو نقرة: إعادة  ·  Esc: خروج',
         exited: (s: number, b: number) => `# انتهت اللعبة · النتيجة ${s} · الأفضل ${b}`, font: '"IBM Plex Sans Arabic",sans-serif',
@@ -51,7 +64,20 @@ const SN = {
         kenobi: ['الجنرال كينوبي! 👋'],
         back: ['سأعود.'],
         gravity: ['🍎 جارٍ إيقاف الجاذبية…'],
-        national: ['💚 احتفالًا باليوم الوطني السعودي!'] },
+        haboob: ['🌪️ هبوب قادم… تمسّك بفنجان قهوتك!'],
+        help: [
+          'الأوامر المتاحة:',
+          '  help          عرض هذه القائمة',
+          '  snake         العب لعبة الأفعى 🐍',
+          '  gahwa         استراحة قهوة سعودية ☕',
+          '  weather       طقس الرياض 🌡️',
+          '  haboob        استدعِ عاصفة رملية 🌪️',
+          '  gravity       أوقف الجاذبية 🍎',
+          '  hello there   …تعرف الرد',
+          "  i'll be back  خروج كلاسيكي 🦾",
+          '  clear         مسح الشاشة',
+          '# تلميح: أسرار أخرى مخبّأة خارج الطرفية 👀',
+        ] },
 };
 const sn = () => SN[root.lang === 'ar' ? 'ar' : 'en'];
 
@@ -70,6 +96,7 @@ async function typeAll() {
     } else await sleep(70);
     history += html + '\n'; term.innerHTML = history + '<span class="cursor"></span>';
   }
+  history += `<span class="t-help">${esc(sn().helpHint)}</span>\n`;
   mode = 'prompt'; render();
 }
 setTimeout(typeAll, 600);
@@ -93,7 +120,8 @@ function run(cmd: string) {
   else if (c === 'hello there') { say(s.kenobi); egg('kenobi'); }
   else if (['ill be back', 'i will be back', 'سأعود'].includes(c)) { say(s.back); egg('terminator'); return shutdown(); }
   else if (['gravity', 'الجاذبية'].includes(c)) { say(s.gravity); dispatchEvent(new CustomEvent('egg:gravity')); }
-  else if (['national day', 'saudi', 'ksa', 'اليوم الوطني', 'السعودية'].includes(c)) { say(s.national); dispatchEvent(new CustomEvent('egg:national')); }
+  else if (['help', 'مساعدة', '?'].includes(c)) { history += s.help.map((l, i) => `<span class="${i === 0 ? 't-key' : l.startsWith('#') ? 't-com' : 't-help'}">${esc(l)}</span>`).join('\n') + '\n'; }
+  else if (['haboob', 'هبوب'].includes(c)) { say(s.haboob); dispatchEvent(new CustomEvent('egg:haboob')); }
   else if (c) history += `<span class="t-err">zsh: command not found: ${esc(cmd)}</span>\n<span class="t-com">${s.notFound}</span>\n`;
   const ls = history.split('\n'); if (ls.length > 16) history = ls.slice(-16).join('\n');
   render();
@@ -111,7 +139,7 @@ function shutdown() {
 document.getElementById('termHint')!.addEventListener('click', async () => {
   if (mode !== 'prompt') return;
   mode = 'auto';
-  for (const ch of 'snake') { buf += ch; term.innerHTML = history + PROMPT + esc(buf) + '<span class="cursor"></span>'; await sleep(110); }
+  for (const ch of 'help') { buf += ch; term.innerHTML = history + PROMPT + esc(buf) + '<span class="cursor"></span>'; await sleep(110); }
   await sleep(300); mode = 'prompt'; run(buf);
 });
 
@@ -147,10 +175,10 @@ function tick() {
   const g = G; if (!g || g.over) return;
   g.dir = g.next;
   const head = { x: g.snake[0].x + g.dir.x, y: g.snake[0].y + g.dir.y };
-  if (head.x < 0 || head.y < 0 || head.x >= g.cols || head.y >= g.rows || g.snake.some((s) => s.x === head.x && s.y === head.y)) { g.over = true; draw(); dispatchEvent(new CustomEvent('egg:sfx', { detail: 'over' })); return; }
+  if (head.x < 0 || head.y < 0 || head.x >= g.cols || head.y >= g.rows || g.snake.some((s) => s.x === head.x && s.y === head.y)) { g.over = true; draw(); return; }
   g.snake.unshift(head);
   if (head.x === g.food.x && head.y === g.food.y) {
-    g.score++; g.speed = Math.max(60, g.speed - 4); dispatchEvent(new CustomEvent('egg:sfx', { detail: 'eat' }));
+    g.score++; g.speed = Math.max(60, g.speed - 4);
     if (g.score > g.best) { g.best = g.score; saveBest(g.best); }
     placeFood(); updateTitle();
   } else g.snake.pop();

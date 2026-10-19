@@ -40,9 +40,7 @@ const h = home ? '' : '/';
       const q = new URLSearchParams(location.search).get('lang');
       const d = document.documentElement, t = localStorage.getItem('theme'), l = q || localStorage.getItem('lang');
       if (t) d.dataset.theme = t;
-      if (l === 'ar') { d.lang = 'ar'; d.dir = 'rtl'; }
-      if (localStorage.getItem('sound') === 'off') d.dataset.sound = 'off';
-    } catch (e) {}
+      if (l === 'ar') { d.lang = 'ar'; d.dir = 'rtl'; }    } catch (e) {}
   </script>
 </head>
 <body>
@@ -61,7 +59,6 @@ const h = home ? '' : '/';
       </div>
       <div class="nav-tools">
         <button class="icon-btn lang-btn" id="langBtn" aria-label="Switch language / تغيير اللغة"><span class="on">EN</span>|<span>ع</span></button>
-        <button class="icon-btn" id="soundBtn" aria-label="Sound on/off / تشغيل الصوت أو إيقافه" aria-pressed="true"><Icon name="sound" class="ico-sound" /><Icon name="mute" class="ico-mute" /></button>
         <button class="icon-btn" id="themeBtn" aria-label="Toggle theme"><Icon name="sun" class="ico-sun" /><Icon name="moon" class="ico-moon" /></button>
         <a href={settings.links.cv} class="btn btn-primary btn-sm nav-cv" download><Icon name="download" /><T k="nav.cv" /></a>
         <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu"><Icon name="menu" /></button>
