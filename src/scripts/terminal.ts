@@ -396,8 +396,17 @@ function claw() {
   const dpr = devicePixelRatio || 1; dustCv.width = vw * dpr; dustCv.height = vh * dpr;
   const dx = dustCv.getContext('2d')!; dx.scale(dpr, dpr);
   const dustRGB = root.dataset.theme === 'light' ? '90,78,60' : '205,196,172';
-  const dust: { x: number; y: number; vx: number; vy: number; s: number; a: number; life: number }[] = [];
-  const spawnDust = (n: number) => { for (let i = 0; i < n && dust.length < 400; i++) dust.push({ x: Math.random() * vw, y: -10 + Math.random() * vh * 0.22, vx: (Math.random() - 0.5) * 0.6, vy: 0.3 + Math.random() * 1.4, s: 0.6 + Math.random() * 1.9, a: 0.35 + Math.random() * 0.5, life: 1 }); };
+  // dust clouds, not specks: soft puffs that grow, drift and thin out. Some sift down from the top
+  // (shaken loose from the ceiling), some billow up and out along the floor (kicked up by the step).
+  const dust: { x: number; y: number; vx: number; vy: number; r: number; grow: number; a: number; life: number; fade: number }[] = [];
+  let haze = 0;                                                                 // faint overall dustiness, builds with the roar
+  const puff = (x: number, y: number, vx: number, vy: number, r: number, grow: number, a: number, fade: number) => { if (dust.length < 90) dust.push({ x, y, vx, vy, r, grow, a, life: 1, fade }); };
+  const spawnDust = (strength: number) => {
+    const fall = Math.round(2 + 4 * strength), floor = Math.round(3 + 5 * strength);
+    for (let i = 0; i < fall; i++) puff(Math.random() * vw, -30 + Math.random() * 50, (Math.random() - 0.5) * 0.3, 0.35 + Math.random() * 0.6, 30 + Math.random() * 50, 0.35 + Math.random() * 0.4, 0.1 + 0.12 * strength, 0.0045);
+    for (let i = 0; i < floor; i++) { const x = Math.random() * vw; puff(x, vh + 30, (x < vw / 2 ? -1 : 1) * (0.4 + Math.random() * 1.2), -(0.3 + Math.random() * 0.7), 40 + Math.random() * 60, 0.6 + Math.random() * 0.8, 0.12 + 0.14 * strength, 0.006); }
+    haze = Math.min(0.14, haze + 0.03 * strength);
+  };
 
   // CRT flicker / glitch
   const flicker = (strength: number) => content.animate(
@@ -441,7 +450,7 @@ function claw() {
               iy: (rattle ? (Math.random() - 0.3) * 12 : (6 + 8 * s.s) * (0.7 + 0.6 * Math.random())) * s.s, ir: rattle ? (Math.random() - 0.5) * 6 * s.s : 0 });
           }
           cam.vy += (5 + 9 * s.s) * s.s;                                       // the whole view dips with the impact
-          spawnDust(Math.round(22 * s.s));
+          spawnDust(s.s);
           flicker(s.s);
           buzz(Math.round(40 + 90 * s.s));
         }
@@ -449,7 +458,8 @@ function claw() {
       }
       if (roar > 0) {
         if (!roarBuzzed) { roarBuzzed = true; buzz([350, 60, 450, 60, 700]); }
-        spawnDust(Math.random() < roar * 0.8 ? 2 : 0);
+        if (Math.random() < roar * 0.06 * dt) spawnDust(0.5);                 // the roar keeps shaking dust loose
+        haze = Math.min(0.2, haze + 0.0015 * roar * dt);
         if (now - lastGlitch > 120 + Math.random() * 260) { lastGlitch = now; glitch(); }
       }
       lastT = t;
@@ -482,17 +492,21 @@ function claw() {
         if (settled) { b.x = b.y = b.r = b.vx = b.vy = b.vr = b.jit = b.jx = b.jy = 0; b.el.style.translate = ''; b.el.style.rotate = ''; }
         else { moving = true; b.el.style.translate = `${(b.x + b.jx).toFixed(2)}px ${(b.y + b.jy + camY).toFixed(2)}px`; b.el.style.rotate = Math.abs(b.r) > 0.003 ? `${b.r.toFixed(3)}deg` : ''; }
       }
-      // dust: drifts down, sways, fades
+      // dust clouds: each puff swells, drifts, slows down and thins out; a faint haze hangs over everything
       dx.clearRect(0, 0, vw, vh);
+      haze *= Math.pow(soundDone ? 0.97 : 0.995, dt);
+      if (haze > 0.004) { dx.fillStyle = `rgba(${dustRGB},${haze.toFixed(3)})`; dx.fillRect(0, 0, vw, vh); }
       for (let k = dust.length - 1; k >= 0; k--) {
         const p = dust[k];
-        p.vy += 0.035 * dt; p.vx += Math.sin(now / 400 + p.x) * 0.01 * dt; p.vx *= 0.99; p.vy *= 0.985;
-        p.x += p.vx * dt; p.y += p.vy * dt; p.life -= 0.006 * dt;
-        if (p.life <= 0 || p.y > vh + 10) { dust.splice(k, 1); continue; }
-        dx.fillStyle = `rgba(${dustRGB},${(p.a * Math.min(1, p.life * 2)).toFixed(3)})`;
-        dx.beginPath(); dx.arc(p.x, p.y, p.s, 0, Math.PI * 2); dx.fill();
+        p.vx *= Math.pow(0.985, dt); p.vy *= Math.pow(0.99, dt); p.vx += Math.sin(now / 900 + p.r) * 0.01 * dt;
+        p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.grow * dt; p.grow *= Math.pow(0.992, dt); p.life -= p.fade * dt;
+        if (p.life <= 0) { dust.splice(k, 1); continue; }
+        const alpha = p.a * Math.min(1, (1 - p.life) * 6) * p.life;            // fades in quickly, thins out slowly
+        const g = dx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+        g.addColorStop(0, `rgba(${dustRGB},${alpha.toFixed(3)})`); g.addColorStop(0.55, `rgba(${dustRGB},${(alpha * 0.5).toFixed(3)})`); g.addColorStop(1, `rgba(${dustRGB},0)`);
+        dx.fillStyle = g; dx.beginPath(); dx.arc(p.x, p.y, p.r, 0, Math.PI * 2); dx.fill();
       }
-      if (dust.length) moving = true;
+      if (dust.length || haze > 0.004) moving = true;
       if (soundDone && !moving) { ended = true; cam.y = 0; dustCv.remove(); return; } // fully settled
       requestAnimationFrame(frame);
     };
