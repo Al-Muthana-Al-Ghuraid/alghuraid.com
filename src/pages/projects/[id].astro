@@ -20,7 +20,7 @@ const Diagram = cs && cs.diagram !== 'none' ? diagrams[cs.diagram] : null;
 const others = site.projects.filter((x) => x.id !== p.id).slice(0, 2);
 let n = 0; const num = () => String(++n).padStart(2, '0');
 ---
-<Base title={d.title.en} description={d.summary.en} image={d.cover}>
+<Base title={d.title.en} description={d.summary.en} image={d.cover && !d.cover.endsWith('.webp') ? d.cover : undefined}>
   <main class="cs-page">
     <div class="wrap">
       <a href="/#projects" class="back reveal"><T k="cs.back" /></a>
