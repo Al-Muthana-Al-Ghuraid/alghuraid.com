@@ -34,45 +34,45 @@ const lines: [string, number][] = [
 
 /* ---------- strings (EN / AR) ---------- */
 const SN = {
-  en: { notFound: "# type 'help' to see what I can do", helpHint: "# new here? type 'help' to see what I can do", title: (s: number, b: number) => `snake.py — score ${s} · best ${b}`,
+  en: { notFound: "# try 'help'", helpHint: "# new here? type 'help'", title: (s: number, b: number) => `snake.py — score ${s} · best ${b}`,
         startKeys: 'press ← ↑ ↓ → to start  ·  esc to quit', startTouch: 'swipe or use the buttons to start',
         crash: 'Segmentation fault (snake dumped)', score: (s: number) => `score: ${s}`, retry: 'enter / tap: retry  ·  esc: exit',
         exited: (s: number, b: number) => `# snake exited · score ${s} · best ${b}`, font: '"JetBrains Mono",monospace',
         welcome: 'WELCOME, VISITOR.',
-        radioOn: '📻 tuning in… (type fallout again to stop)', radioOff: '# radio off',
-        radStart: '☢ geiger counter on… something nearby is hot.', radEnd: "# reading dropped. you'll live (probably).",
+        radioOn: '📻 tuning in… (again to stop)', radioOff: '# radio off',
+        radStart: '☢ geiger counter on…', radEnd: "# reading dropped. you'll live.",
         gravity: ['🍎 disabling gravity…'],
-        haboob: ['🌪️ incoming haboob… hold onto your coffee!'],
+        haboob: ['🌪️ incoming haboob… hold on!'],
         help: [
           'available commands:',
           '  help          show this list',
           '  snake         play Snake 🐍',
           '  haboob        summon a sandstorm 🌪️',
-          '  fallout       tune in the wasteland radio 📻',
-          '  radiation     run the geiger counter ☢',
-          '  reboot        power-cycle this terminal 📺',
+          '  fallout       wasteland radio 📻',
+          '  radiation     geiger counter ☢',
+          '  reboot        restart terminal 📺',
           '  clear         clear the screen',
-          '# psst: more secrets are hiding outside the terminal 👀',
+          '# more secrets hide outside 👀',
         ] },
-  ar: { notFound: "# اكتب 'help' لترى ما يمكنني فعله", helpHint: "# جديد هنا؟ اكتب 'help' لترى ما يمكنني فعله", title: (s: number, b: number) => `snake.py — النتيجة ${s} · الأفضل ${b}`,
+  ar: { notFound: "# جرّب 'help'", helpHint: "# جديد هنا؟ اكتب 'help'", title: (s: number, b: number) => `snake.py — النتيجة ${s} · الأفضل ${b}`,
         startKeys: 'اضغط ← ↑ ↓ → للبدء  ·  Esc للخروج', startTouch: 'اسحب أو استخدم الأزرار للبدء',
         crash: 'اصطدمت الأفعى! (Segmentation fault)', score: (s: number) => `النتيجة: ${s}`, retry: 'Enter أو نقرة: إعادة  ·  Esc: خروج',
         exited: (s: number, b: number) => `# انتهت اللعبة · النتيجة ${s} · الأفضل ${b}`, font: '"IBM Plex Sans Arabic",sans-serif',
         welcome: 'أهلًا وسهلًا بك.',
-        radioOn: '📻 جارٍ ضبط الموجة… (اكتب fallout مرة أخرى للإيقاف)', radioOff: '# أُطفئ الراديو',
-        radStart: '☢ عدّاد غايغر يعمل… هناك شيء مشعّ قريب.', radEnd: '# انخفضت القراءة. ستنجو (على الأرجح).',
+        radioOn: '📻 جارٍ ضبط الموجة… (أعده للإيقاف)', radioOff: '# أُطفئ الراديو',
+        radStart: '☢ عدّاد غايغر يعمل…', radEnd: '# انخفضت القراءة. ستنجو.',
         gravity: ['🍎 جارٍ إيقاف الجاذبية…'],
-        haboob: ['🌪️ هبوب قادم… تمسّك بفنجان قهوتك!'],
+        haboob: ['🌪️ هبوب قادم… تمسّك!'],
         help: [
           'الأوامر المتاحة:',
           '  help          عرض هذه القائمة',
           '  snake         العب لعبة الأفعى 🐍',
           '  haboob        استدعِ عاصفة رملية 🌪️',
-          '  fallout       شغّل راديو الأرض القاحلة 📻',
-          '  radiation     شغّل عدّاد غايغر ☢',
+          '  fallout       راديو القفار 📻',
+          '  radiation     عدّاد غايغر ☢',
           '  reboot        أعد تشغيل الطرفية 📺',
           '  clear         مسح الشاشة',
-          '# تلميح: أسرار أخرى مخبّأة خارج الطرفية 👀',
+          '# أسرار أخرى في الخارج 👀',
         ] },
 };
 const sn = () => SN[root.lang === 'ar' ? 'ar' : 'en'];
@@ -203,7 +203,7 @@ function radio() {
 let irradiating = false;
 function radiation() {
   if (irradiating) return;
-  irradiating = true; egg('radiation');
+  irradiating = true; egg('radiation'); terminal.classList.add('rad'); // the gauge needle kicks
   const DUR = 5.2;
   history += `<span class="t-str">${esc(sn().radStart)}</span>\n<span class="t-num" data-rad>☢ 0.00 µSv/h  ▯▯▯▯▯▯▯▯▯▯</span>\n`;
   // sound: render all clicks into one buffer, the rate climbs steeply then cuts out
@@ -232,7 +232,7 @@ function radiation() {
     if (meter) { const n = Math.round(Math.min(1, p / 0.9) * 10); meter.textContent = `☢ ${(level * 9.81).toFixed(2)} µSv/h  ${'▮'.repeat(n)}${'▯'.repeat(10 - n)}`; }
     if (p < 1) requestAnimationFrame(tick);
     else {
-      glow.remove(); irradiating = false;
+      glow.remove(); irradiating = false; terminal.classList.remove('rad');
       history = history.replace(/<span class="t-num" data-rad>[^<]*<\/span>/, `<span class="t-num">☢ peak 9.81 µSv/h  ${'▮'.repeat(10)}</span>`);
       history += `<span class="t-com">${esc(sn().radEnd)}</span>\n`;
       if (mode === 'prompt') { render(); setTimeout(() => { if (mode === 'prompt') boot(true); }, 1200); } // the terminal power-cycles after the exposure

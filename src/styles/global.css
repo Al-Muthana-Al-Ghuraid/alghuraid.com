@@ -701,3 +701,54 @@ body{transition:none} /* the view transition handles the cross-fade */
   .tv-plate{font-size:10px;letter-spacing:1px;padding:5px 6px 5px 15px}.tv-plate small{font-size:9px}
   .tv-row b{height:8px}.tv-row{gap:2px}.tv-keys{gap:2px;padding:5px}
 }
+/* ---------- wider screen so every line fits; control deck with gauge, buttons, toggles, dials ---------- */
+@media (min-width:961px){.hero .wrap{grid-template-columns:1fr 1.08fr;gap:44px}}
+.terminal.crt .term-body{font-size:18.5px;padding:18px 26px 20px}
+.crt-foot{gap:12px;position:relative;isolation:isolate}
+/* the deck gets the same rust and grime as the housing */
+.crt-foot::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;mix-blend-mode:multiply;z-index:2;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.045' numOctaves='4' seed='31'/%3E%3CfeColorMatrix values='0 0 0 0 .6 0 0 0 0 .27 0 0 0 0 .08 0 0 0 3.6 -1.75'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23r)'/%3E%3C/svg%3E") 0 0/300px 300px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .1 0 0 0 2.3 -.95'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/200px 200px,
+    linear-gradient(180deg,rgba(150,62,14,.7),transparent) 22% 0/7px 60% no-repeat,
+    linear-gradient(180deg,rgba(150,62,14,.6),transparent) 71% 0/5px 50% no-repeat,
+    radial-gradient(ellipse at 0 100%,rgba(60,36,14,.75),transparent 45%),
+    radial-gradient(ellipse at 100% 100%,rgba(60,36,14,.7),transparent 42%),
+    linear-gradient(0deg,rgba(50,32,12,.55),transparent 55%)}
+/* chipped edges on the deck */
+.crt-foot::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;mix-blend-mode:screen;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.1' numOctaves='4' seed='8'/%3E%3CfeColorMatrix values='0 0 0 0 .8 0 0 0 0 .8 0 0 0 0 .75 0 0 0 4 -2.1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E") 0 0/220px 220px;
+  -webkit-mask:linear-gradient(90deg,#000 0 14px,transparent 28px calc(100% - 28px),#000 calc(100% - 14px)),linear-gradient(180deg,#000 0 8px,transparent 18px);
+  mask:linear-gradient(90deg,#000 0 14px,transparent 28px calc(100% - 28px),#000 calc(100% - 14px)),linear-gradient(180deg,#000 0 8px,transparent 18px)}
+.crt-foot>*{position:relative;z-index:1}
+/* analog gauge */
+.tv-gauge{flex:none;width:58px;height:40px;border-radius:6px 6px 4px 4px;position:relative;overflow:hidden;
+  background:radial-gradient(circle at 50% 100%,transparent 0 6px,#1d1f17 6px 7px,transparent 7px),
+    repeating-conic-gradient(from -60deg at 50% 100%,#2a2c24 0 1.2deg,transparent 1.2deg 12deg) 0 0/100% 100%,
+    radial-gradient(ellipse at 50% 120%,#efe6c8,#cdbf95 70%,#9c8c62);
+  box-shadow:inset 0 0 0 3px #2b2d30,inset 0 0 8px rgba(60,40,10,.6),0 1px 0 rgba(255,255,255,.3)}
+.tv-gauge::after{content:'';position:absolute;left:4px;right:4px;bottom:4px;height:6px;background:linear-gradient(90deg,transparent 70%,rgba(190,40,20,.7) 70%)}
+.tv-gauge i{position:absolute;left:50%;bottom:3px;width:2px;height:30px;margin-left:-1px;background:#1b1b1b;border-radius:1px;transform-origin:50% 100%;
+  transform:rotate(-38deg);animation:needle-idle 3.4s ease-in-out infinite alternate}
+@keyframes needle-idle{to{transform:rotate(-30deg)}}
+.terminal.rad .tv-gauge i{animation:needle-rad .09s linear infinite alternate}
+@keyframes needle-rad{from{transform:rotate(30deg)}to{transform:rotate(46deg)}}
+/* chunky worn push buttons */
+.tv-buttons{display:flex;gap:6px;flex:1;justify-content:center}
+.tv-buttons b{width:20px;height:20px;border-radius:3px;background:linear-gradient(#e5dfcf,#b4ad98);box-shadow:0 3px 0 #5c574a,0 4px 5px rgba(0,0,0,.45),inset 0 1px 0 #fff}
+.tv-buttons b:nth-child(2){transform:translateY(2px);box-shadow:0 1px 0 #5c574a,0 2px 3px rgba(0,0,0,.45),inset 0 1px 0 #fff}
+.tv-buttons b.hot{background:linear-gradient(#d6513a,#9e2b1b);box-shadow:0 3px 0 #5a160c,0 4px 5px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.4)}
+/* toggle switches */
+.tv-toggles{display:flex;gap:7px}
+.tv-toggles i{width:14px;height:26px;border-radius:7px;position:relative;background:linear-gradient(#24262a,#3a3d41);box-shadow:inset 0 1px 3px rgba(0,0,0,.8)}
+.tv-toggles i::after{content:'';position:absolute;left:3px;width:8px;height:12px;border-radius:4px;bottom:2px;background:linear-gradient(90deg,#8d9196,#e4e6e8,#7c8085)}
+.tv-toggles i.up::after{bottom:auto;top:2px}
+.tv-knobs{flex-direction:row;gap:8px}
+.tv-knobs i{width:28px;height:28px}
+@media (max-width:560px){
+  .terminal.crt .term-body{font-size:15px;padding:14px 16px 16px}
+  .tv-gauge{width:44px;height:32px}.tv-gauge i{height:23px}
+  .tv-buttons b{width:15px;height:15px}.tv-buttons{gap:4px}
+  .tv-toggles{display:none}.tv-knobs i{width:22px;height:22px}
+  .crt-foot{gap:8px}
+}
