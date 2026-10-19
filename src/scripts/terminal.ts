@@ -38,8 +38,6 @@ const SN = {
         exited: (s: number, b: number) => `# snake exited · score ${s} · best ${b}`, font: '"JetBrains Mono",monospace',
         gahwa: ['☕ pouring Saudi coffee…', '🌴 served with dates. Take a break, then keep exploring.'],
         weather: ['🌡️ Riyadh: 47°C, sunny, zero clouds…', '☁️ …except the cloud I deploy to.'],
-        kenobi: ['General Kenobi! 👋'],
-        back: ["I'll be back."],
         gravity: ['🍎 disabling gravity…'],
         haboob: ['🌪️ incoming haboob… hold onto your coffee!'],
         help: [
@@ -50,8 +48,6 @@ const SN = {
           '  weather       Riyadh forecast 🌡️',
           '  haboob        summon a sandstorm 🌪️',
           '  gravity       switch gravity off 🍎',
-          '  hello there   …you know the reply',
-          "  i'll be back  a classic exit 🦾",
           '  clear         clear the screen',
           '# psst: more secrets are hiding outside the terminal 👀',
         ] },
@@ -61,8 +57,6 @@ const SN = {
         exited: (s: number, b: number) => `# انتهت اللعبة · النتيجة ${s} · الأفضل ${b}`, font: '"IBM Plex Sans Arabic",sans-serif',
         gahwa: ['☕ جارٍ صبّ القهوة السعودية…', '🌴 مع التمر. خذ استراحة ثم واصل الاستكشاف.'],
         weather: ['🌡️ الرياض: 47° مئوية، مشمس، بلا غيوم…', '☁️ …إلا السحابة التي أنشر عليها.'],
-        kenobi: ['الجنرال كينوبي! 👋'],
-        back: ['سأعود.'],
         gravity: ['🍎 جارٍ إيقاف الجاذبية…'],
         haboob: ['🌪️ هبوب قادم… تمسّك بفنجان قهوتك!'],
         help: [
@@ -73,8 +67,6 @@ const SN = {
           '  weather       طقس الرياض 🌡️',
           '  haboob        استدعِ عاصفة رملية 🌪️',
           '  gravity       أوقف الجاذبية 🍎',
-          '  hello there   …تعرف الرد',
-          "  i'll be back  خروج كلاسيكي 🦾",
           '  clear         مسح الشاشة',
           '# تلميح: أسرار أخرى مخبّأة خارج الطرفية 👀',
         ] },
@@ -117,8 +109,6 @@ function run(cmd: string) {
   if (c === 'clear') history = '';
   else if (['gahwa', 'coffee', 'قهوة', 'قهوه'].includes(c)) { say(s.gahwa); egg('gahwa'); }
   else if (['weather', 'الطقس', 'طقس'].includes(c)) { say(s.weather); egg('weather'); }
-  else if (c === 'hello there') { say(s.kenobi); egg('kenobi'); }
-  else if (['ill be back', 'i will be back', 'سأعود'].includes(c)) { say(s.back); egg('terminator'); return shutdown(); }
   else if (['gravity', 'الجاذبية'].includes(c)) { say(s.gravity); dispatchEvent(new CustomEvent('egg:gravity')); }
   else if (['help', 'مساعدة', '?'].includes(c)) { history += s.help.map((l, i) => `<span class="${i === 0 ? 't-key' : l.startsWith('#') ? 't-com' : 't-help'}">${esc(l)}</span>`).join('\n') + '\n'; }
   else if (['haboob', 'هبوب'].includes(c)) { say(s.haboob); dispatchEvent(new CustomEvent('egg:haboob')); }
@@ -128,13 +118,6 @@ function run(cmd: string) {
 }
 
 const egg = (id: string) => dispatchEvent(new CustomEvent('egg:unlock', { detail: id }));
-/** "I'll be back": the terminal powers off like an old CRT, then boots up again. */
-function shutdown() {
-  mode = 'auto'; term.innerHTML = history + '<span class="cursor"></span>';
-  setTimeout(() => terminal.classList.add('crt-off'), 700);
-  setTimeout(() => { history = ''; term.innerHTML = ''; terminal.classList.remove('crt-off'); terminal.classList.add('crt-on'); mode = 'intro'; typeAll(); }, 2200);
-  setTimeout(() => terminal.classList.remove('crt-on'), 3000);
-}
 
 document.getElementById('termHint')!.addEventListener('click', async () => {
   if (mode !== 'prompt') return;

@@ -26,8 +26,6 @@ const SECRETS: Record<string, [string, string, string]> = {
   snake: ['🐍', 'Snake Charmer', 'ساحر الأفاعي'],
   gahwa: ['☕', 'Coffee Break', 'استراحة قهوة'],
   weather: ['🌡️', 'Riyadh Summer', 'صيف الرياض'],
-  kenobi: ['👋', 'General Kenobi', 'الجنرال كينوبي'],
-  terminator: ['🦾', "I'll Be Back", 'سأعود'],
 };
 const TOTAL = Object.keys(SECRETS).length;
 const found = new Set<string>((store.get('secrets') ?? '').split(',').filter((k) => k in SECRETS));
@@ -319,34 +317,73 @@ function shatter() {
   }, 2600);
 }
 
-/* ======================================================= magnetic name (press and hold) */
-// English splits into letters; Arabic into words (splitting Arabic letters would break how they join).
-let magnet: { el: HTMLElement; html: string; lang: string } | null = null;
+/* ======================================================= magnetic name (press, drag, release) */
+// Press on the name: letters get magnetized (closest first), swarm around the cursor and follow it while held.
+// Release: each letter springs back home with an elastic bounce. English splits into letters,
+// Arabic into words (splitting Arabic letters would break how they join).
+type Mag = { s: HTMLElement; rx: number; ry: number; x: number; y: number; vx: number; vy: number; delay: number; ang: number; rad: number };
+let mag: { el: HTMLElement; html: string; lang: string; parts: Mag[]; held: boolean; cx: number; cy: number; t0: number } | null = null;
+let magRaf = 0;
+const escHtml = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]!);
 document.addEventListener('pointerdown', (e) => {
-  const name = (e.target instanceof Element ? e.target : document.body).closest<HTMLElement>('.hero h1 .grad');
-  if (!name || e.button !== 0 || magnet || root.classList.contains('gravity-on')) return;
+  const name = e.target instanceof Element ? e.target.closest<HTMLElement>('.hero h1 .grad') : null;
+  if (!name || e.button !== 0 || root.classList.contains('gravity-on')) return;
   e.preventDefault();
-  magnet = { el: name, html: name.innerHTML, lang: root.lang };
-  const text = name.textContent ?? '';
-  const parts = isAr() ? text.split(/(\s+)/) : [...text];
-  name.innerHTML = parts.map((p) => (/^\s+$/.test(p) ? p : `<span class="mag">${p.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]!)}</span>`)).join('');
-  name.classList.add('magnet-on');
-  const spans = [...name.querySelectorAll<HTMLElement>('.mag')];
-  requestAnimationFrame(() => spans.forEach((s) => {
-    const a = rand(0, Math.PI * 2), d = rand(40, 150);
-    s.style.transform = `translate(${Math.cos(a) * d}px,${Math.sin(a) * d * 0.7}px) rotate(${rand(-60, 60)}deg) scale(${rand(0.8, 1.3)})`;
-  }));
+  if (mag) { // grabbed again while letters are still flying home
+    Object.assign(mag, { held: true, cx: e.clientX, cy: e.clientY, t0: performance.now() });
+    mag.el.classList.add('magnet-held'); return;
+  }
+  const html = name.innerHTML, text = name.textContent ?? '';
+  const pieces = isAr() ? text.split(/(\s+)/) : [...text];
+  name.innerHTML = pieces.map((p) => (/^\s+$/.test(p) ? p : `<span class="mag">${escHtml(p)}</span>`)).join('');
+  name.classList.add('magnet-on', 'magnet-held');
+  const box = name.getBoundingClientRect(), spans = [...name.querySelectorAll<HTMLElement>('.mag')];
+  const parts: Mag[] = spans.map((s, i) => {
+    const r = s.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    return { s, rx: cx - box.left, ry: cy - box.top, x: 0, y: 0, vx: 0, vy: 0,
+      delay: Math.hypot(cx - e.clientX, cy - e.clientY) * 1.3, // nearest letters are collected first
+      ang: (i / spans.length) * Math.PI * 2, rad: 16 + spans.length * 1.1 + rand(-6, 6) };
+  });
+  mag = { el: name, html, lang: root.lang, parts, held: true, cx: e.clientX, cy: e.clientY, t0: performance.now() };
   unlock('magnet');
+  cancelAnimationFrame(magRaf); magRaf = requestAnimationFrame(magFrame);
 });
-function releaseMagnet() {
-  if (!magnet) return;
-  const m = magnet; magnet = null;
-  m.el.querySelectorAll<HTMLElement>('.mag').forEach((s, i) => { s.style.transitionDelay = `${i * 12}ms`; s.style.transform = 'none'; });
-  setTimeout(() => { m.el.classList.remove('magnet-on'); if (root.lang === m.lang) m.el.innerHTML = m.html; }, 700);
+addEventListener('pointermove', (e) => { if (mag?.held) { mag.cx = e.clientX; mag.cy = e.clientY; } });
+function magRelease() {
+  if (!mag?.held) return;
+  mag.held = false; mag.el.classList.remove('magnet-held');
 }
-addEventListener('pointerup', releaseMagnet);
-addEventListener('pointercancel', releaseMagnet);
-addEventListener('blur', releaseMagnet);
+addEventListener('pointerup', magRelease);
+addEventListener('pointercancel', magRelease);
+addEventListener('blur', magRelease);
+function magFrame(t: number) {
+  const m = mag; if (!m) return;
+  const box = m.el.getBoundingClientRect(); // homes follow the page if it scrolls
+  let moving = false;
+  for (const p of m.parts) {
+    const hx = box.left + p.rx, hy = box.top + p.ry;
+    let tx = 0, ty = 0;
+    if (m.held && t - m.t0 > p.delay) {
+      const a = p.ang + t * 0.0025, r = p.rad * (0.85 + 0.15 * Math.sin(t * 0.004 + p.ang * 3));
+      tx = m.cx + Math.cos(a) * r - hx; ty = m.cy + Math.sin(a) * r * 0.75 - hy;
+    }
+    const k = m.held ? 0.09 : 0.13, damp = m.held ? 0.76 : 0.8; // softer pull while held, springy return
+    p.vx = (p.vx + (tx - p.x) * k) * damp; p.vy = (p.vy + (ty - p.y) * k) * damp;
+    p.x += p.vx; p.y += p.vy;
+    const speed = Math.hypot(p.vx, p.vy);
+    const rot = Math.max(-35, Math.min(35, p.vx * 1.6));
+    const sc = m.held && t - m.t0 > p.delay ? 1.12 + Math.min(speed / 60, 0.25) : 1 + Math.min(speed / 80, 0.2);
+    p.s.style.transform = `translate(${p.x.toFixed(2)}px,${p.y.toFixed(2)}px) rotate(${rot.toFixed(1)}deg) scale(${sc.toFixed(3)})`;
+    if (m.held || Math.abs(p.x) > 0.4 || Math.abs(p.y) > 0.4 || speed > 0.3) moving = true;
+  }
+  if (moving) { magRaf = requestAnimationFrame(magFrame); return; }
+  // everyone is home: small landing ripple, then restore the original markup
+  const b = m.el.getBoundingClientRect();
+  ripples.push({ x: b.left + b.width / 2, y: b.top + b.height / 2, t0: performance.now() }); fxCanvas();
+  m.el.classList.remove('magnet-on');
+  if (root.lang === m.lang) m.el.innerHTML = m.html;
+  mag = null;
+}
 
 /* ======================================================= dallah (Arabic coffee) in the footer */
 const DALLAH = `<svg viewBox="0 0 48 48" aria-hidden="true"><g class="pot">

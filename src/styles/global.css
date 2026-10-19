@@ -344,10 +344,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 @media (max-width:760px){.contact-panel,.contact-form{padding:20px}}
 
 /* ---------- Easter eggs ---------- */
-.terminal.crt-off .term-body{animation:crt-off .55s ease-in forwards}
-.terminal.crt-on .term-body{animation:crt-on .5s ease-out}
-@keyframes crt-off{60%{transform:scaleY(.02);filter:brightness(3)}100%{transform:scale(0,.02);opacity:0}}
-@keyframes crt-on{from{transform:scaleY(.02);filter:brightness(3);opacity:.4}}
 .t-help{color:var(--cyan)}
 /* secret toasts */
 .egg-toasts{position:fixed;bottom:18px;inset-inline-start:18px;z-index:200;display:grid;gap:10px;pointer-events:none}
@@ -385,8 +381,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 /* magnetic name */
 .hero h1 .grad.magnet-on{cursor:grabbing}
 .hero h1 .grad{cursor:grab;touch-action:none}
-.mag{display:inline-block;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
-  transition:transform .55s cubic-bezier(.34,1.56,.64,1)}
+.mag{display:inline-block;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;will-change:transform;
+  position:relative;z-index:5;transition:filter .3s}
+.magnet-held .mag{filter:drop-shadow(0 0 10px color-mix(in srgb,var(--blue) 75%,transparent)) drop-shadow(0 0 2px color-mix(in srgb,var(--violet) 80%,transparent))}
+.hero h1 .grad.magnet-held{cursor:grabbing}
 /* dallah (Arabic coffee pot) */
 footer .wrap{align-items:center}
 .dallah{display:inline-flex;align-items:center;gap:6px;background:none;border:0;cursor:pointer;color:#b8893e;padding:4px 8px;border-radius:10px;transition:background .2s}
