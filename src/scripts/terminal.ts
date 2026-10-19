@@ -364,13 +364,19 @@ function claw() {
   if (clawing) return;
   clawing = true; egg('claw');
   history += `<span class="t-str">${esc(sn().clawIn)}</span>\n`;
-  // every block on the page is a little mass on a spring: steps kick it, the roar pushes it around,
-  // and when the sound ends the springs settle it back smoothly instead of snapping
+  // Each part of the page shakes on its own: page blocks plus the hero's pieces (name, buttons, terminal…),
+  // with independent jitter while the beast is active. Underneath, every part also sits on a spring, so
+  // when the sound ends the jitter fades out gently and the springs glide everything back into place.
   const vh = innerHeight;
-  const bodies = shakeTargets().map((el) => {
+  const parts = [
+    ...shakeTargets().map((el) => ({ el, w: 1 })),
+    ...[...document.querySelectorAll<HTMLElement>('.hero .eyebrow, .hero h1, .hero .role, .hero .lead, .hero .ctas, .hero .socials, #terminal, .sec-head, .card')]
+      .map((el) => ({ el, w: 0.5 })),                                           // inner pieces wobble on top of their block
+  ];
+  const bodies = parts.map(({ el, w }) => {
     const fixed = getComputedStyle(el).position === 'fixed', r = el.getBoundingClientRect();
-    return { el, x: 0, y: 0, r: 0, vx: 0, vy: 0, vr: 0,
-      depth: fixed ? 0.55 : 1,                                                  // the nav bar / backdrop sway less: feels like depth
+    return { el, x: 0, y: 0, r: 0, vx: 0, vy: 0, vr: 0, jit: 0, jx: 0, jy: 0,
+      depth: (fixed ? 0.55 : 1) * w,                                            // the nav bar / backdrop sway less: feels like depth
       delay: fixed ? 0 : Math.max(0, Math.min(0.12, (vh - r.top) / vh * 0.06)), // the shock reaches lower blocks first
       seed: Math.random() * 100, queue: [] as { at: number; ix: number; iy: number }[] };
   });
@@ -398,26 +404,37 @@ function claw() {
       const t = audio.currentTime, e = m && playing ? m.env[Math.min(m.env.length - 1, Math.floor(t / FR))] ?? 0 : 0;
       const roarSpan = m && playing ? m.roars.find(([a, b]) => t >= a && t <= b) : undefined;
       const roar = roarSpan ? Math.min(1, (t - roarSpan[0]) / 0.25) * (0.5 + e) : 0;
-      if (m && playing) for (const s of m.steps) if (lastT < s.t && t >= s.t) {   // a footstep lands: queue a jolt for every block
-        for (const b of bodies) b.queue.push({ at: now + b.delay * 1000, ix: (Math.random() - 0.5) * 5 * s.s, iy: (7 + 9 * s.s) * s.s });
+      let stepEnv = 0;                                                         // how hard the latest footstep is still ringing
+      if (m && playing) for (const s of m.steps) {
+        if (lastT < s.t && t >= s.t)                                           // a footstep lands: every part gets its own jolt
+          for (const b of bodies) b.queue.push({ at: now + b.delay * 1000, ix: (Math.random() - 0.5) * 6 * s.s, iy: (6 + 8 * s.s) * s.s * (0.7 + 0.6 * Math.random()) });
+        if (t >= s.t && t < s.t + 0.6) stepEnv = Math.max(stepEnv, s.s * Math.exp(-(t - s.t) / 0.12));
       }
       lastT = t;
+      const activity = playing ? Math.max(stepEnv * 16, roar * 15, e * 1.5) : 0; // target jitter size in px
       let moving = false;
       for (const b of bodies) {
         b.queue = b.queue.filter((q) => (now >= q.at ? ((b.vx += q.ix * b.depth), (b.vy += q.iy * b.depth), false) : true));
-        // roar: a rough, continuous shove (smooth noise, not random jumps); everything else: a faint tremor
-        const push = (roar * 3.2 + e * 0.25) * b.depth;
+        // independent jitter: jumps in fast, fades out slowly (that slow fade is what makes the ending smooth)
+        b.jit += (activity - b.jit) * (activity > b.jit ? 0.6 : 0.045 * dt);
+        // roar also shoves each part around with smooth noise; the springs pull everything back to rest
+        const push = roar * 2.2 * b.depth;
         b.vx += noise(now / 1000, b.seed) * push * dt; b.vy += noise(now / 1000, b.seed + 9) * push * 0.8 * dt;
         b.vr += noise(now / 1000, b.seed + 4) * roar * 0.09 * b.depth * dt;
-        // spring back to rest + damping (lower damping = more wobble before it settles)
         // after the sound ends a softer, slower spring lets everything glide home instead of snapping back
         const k = soundDone ? 0.06 : 0.16;
         b.vx += -b.x * k * dt; b.vy += -b.y * k * dt; b.vr += -b.r * k * 0.75 * dt;
         const damp = Math.pow(soundDone ? 0.8 : 0.84, dt); b.vx *= damp; b.vy *= damp; b.vr *= Math.pow(soundDone ? 0.8 : 0.86, dt);
         b.x += b.vx * dt; b.y += b.vy * dt; b.r += b.vr * dt;
-        const still = Math.abs(b.x) + Math.abs(b.y) + Math.abs(b.vx) + Math.abs(b.vy) < 0.08 && Math.abs(b.r) + Math.abs(b.vr) < 0.004 && !b.queue.length;
-        if (still) { b.x = b.y = b.r = b.vx = b.vy = b.vr = 0; b.el.style.translate = ''; b.el.style.rotate = ''; }
-        else { moving = true; b.el.style.translate = `${b.x.toFixed(2)}px ${b.y.toFixed(2)}px`; b.el.style.rotate = Math.abs(b.r) > 0.003 ? `${b.r.toFixed(3)}deg` : ''; }
+        // while the beast is loud the jitter is crisp (a new spot every frame); as it calms down each part
+        // glides toward its next spot instead of jumping, so the wind-down is smooth
+        const crisp = activity > 2 ? 1 : 0.18;
+        b.jx += ((Math.random() - 0.5) * b.jit * b.depth - b.jx) * crisp;
+        b.jy += ((Math.random() - 0.5) * b.jit * b.depth * 1.2 - b.jy) * crisp;
+        const jx = b.jx, jy = b.jy;
+        const still = Math.abs(b.x) + Math.abs(b.y) + Math.abs(b.vx) + Math.abs(b.vy) < 0.08 && Math.abs(b.r) + Math.abs(b.vr) < 0.004 && b.jit < 0.08 && Math.abs(b.jx) + Math.abs(b.jy) < 0.08 && !b.queue.length;
+        if (still) { b.x = b.y = b.r = b.vx = b.vy = b.vr = b.jit = b.jx = b.jy = 0; b.el.style.translate = ''; b.el.style.rotate = ''; }
+        else { moving = true; b.el.style.translate = `${(b.x + jx).toFixed(2)}px ${(b.y + jy).toFixed(2)}px`; b.el.style.rotate = Math.abs(b.r) > 0.003 ? `${b.r.toFixed(3)}deg` : ''; }
       }
       if (soundDone && !moving) { ended = true; return; }                     // fully settled
       requestAnimationFrame(frame);
