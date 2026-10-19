@@ -531,7 +531,8 @@ document.addEventListener('pointerdown', (e) => {
   e.preventDefault();
   const c = coinOf(t); cancelAnimationFrame(c.raf);
   Object.assign(c, { drag: true, x: e.clientX, y: e.clientY, t: performance.now(), moved: 0, v: 0 });
-  t.setPointerCapture(e.pointerId); t.classList.add('spinning');
+  try { t.setPointerCapture(e.pointerId); } catch {} // the pointer may already be gone
+  t.classList.add('spinning');
 });
 document.addEventListener('pointermove', (e) => {
   const t = e.target instanceof Element ? e.target.closest<HTMLElement>('[data-coin]') : null;
