@@ -447,13 +447,13 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .egg-toast small{display:block;font-family:var(--font-mono);font-size:11px;color:var(--cyan);text-transform:uppercase;letter-spacing:.06em}
 [dir="rtl"] .egg-toast small{font-family:var(--font-body);letter-spacing:0}
 .egg-toast b{font-weight:600;font-size:14.5px}
-/* hidden words: highlighted like the bold words, clickable */
-.egg-word{cursor:pointer;font-weight:600;color:var(--text);border-radius:4px;padding:0 2px;
-  background:linear-gradient(90deg,color-mix(in srgb,var(--blue) 22%,transparent),color-mix(in srgb,var(--violet) 22%,transparent));
-  -webkit-tap-highlight-color:transparent;transition:background .25s,box-shadow .25s,transform .2s}
-/* full fill only where a real hover exists (on touch screens :hover sticks after a tap) */
-@media (hover:hover){.egg-word:hover{background:var(--grad);color:var(--on-acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 25%,transparent)}}
-.egg-word:focus-visible{background:var(--grad);color:var(--on-acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 25%,transparent);outline:none}
+/* hidden words: plain text with a green underline, clickable (no background fill) */
+.egg-word{cursor:pointer;font-weight:600;color:var(--text);background:none;
+  text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--blue) 75%,transparent);text-decoration-thickness:2px;text-underline-offset:4px;
+  -webkit-tap-highlight-color:transparent;transition:text-decoration-color .25s,text-shadow .25s,transform .2s}
+/* hover only where a real hover exists (on touch screens :hover sticks after a tap): the underline lights up */
+@media (hover:hover){.egg-word:hover{text-decoration-color:var(--blue);text-shadow:0 0 12px color-mix(in srgb,var(--blue) 45%,transparent)}}
+.egg-word:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:3px}
 .egg-word:active{transform:scale(.96)}
 .hero .role .egg-word{font-weight:inherit}
 .haboob{position:fixed;inset:0;width:100vw;height:100vh;z-index:-1;pointer-events:none} /* dust storm sits in the background layer */
