@@ -613,3 +613,42 @@ body{transition:none} /* the view transition handles the cross-fade */
   box-shadow:inset 0 0 160px 40px rgba(65,255,125,.55)}
 [data-theme="light"] .rad-glow{mix-blend-mode:multiply;background:radial-gradient(ellipse at 50% 45%,rgba(120,255,150,.35),rgba(60,200,100,.7))}
 .terminal.crt .dpad{position:absolute;left:0;right:0;bottom:10px;z-index:3;padding:0 18px}
+/* ---------- wear and tear on the terminal housing ---------- */
+.tv-grime{position:absolute;inset:0;border-radius:16px;pointer-events:none;mix-blend-mode:multiply;opacity:.95;
+  background:
+    /* rust streaks bleeding down from the rivets */
+    linear-gradient(180deg,rgba(150,62,14,.85),rgba(140,60,16,.4) 45%,transparent) 8px 14px/9px 110px no-repeat,linear-gradient(180deg,rgba(150,62,14,.5),transparent) 15px 20px/3px 70px no-repeat,
+    linear-gradient(180deg,rgba(150,62,14,.8),rgba(140,60,16,.35) 50%,transparent) calc(100% - 8px) 14px/8px 86px no-repeat,
+    linear-gradient(180deg,rgba(150,62,14,.7),transparent) 9px calc(100% - 10px)/7px 22px no-repeat,linear-gradient(180deg,rgba(150,62,14,.6),transparent) calc(100% - 9px) calc(100% - 10px)/6px 18px no-repeat,
+    /* dirt collected in the corners and along the bottom */
+    radial-gradient(ellipse at 0 100%,rgba(42,30,12,.8),transparent 38%),
+    radial-gradient(ellipse at 100% 100%,rgba(42,30,12,.75),transparent 36%),radial-gradient(ellipse at 0 0,rgba(42,30,12,.45),transparent 26%),
+    radial-gradient(ellipse at 100% 0,rgba(48,36,18,.35),transparent 25%),
+    linear-gradient(0deg,rgba(40,28,12,.55),transparent 22%),
+    /* big water stains + fine grime speckle (procedural noise) */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .22 0 0 0 0 .17 0 0 0 0 .08 0 0 0 3.2 -1.45'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E") 0 0/400px 400px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' seed='9'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .16 0 0 0 0 .09 0 0 0 2.2 -.92'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/220px 220px}
+/* chipped paint: bare steel showing through along the edges, plus scratches */
+.tv-grime::before{content:'';position:absolute;inset:0;border-radius:16px;mix-blend-mode:screen;
+  background:
+    linear-gradient(31deg,transparent 49.6%,rgba(230,230,210,.6) 49.8% 50.2%,transparent 50.3%) 62% 14%/130px 46px no-repeat,
+    linear-gradient(-18deg,transparent 49.5%,rgba(230,230,210,.55) 49.7% 50.1%,transparent 50.2%) 18% 62%/90px 30px no-repeat,
+    linear-gradient(8deg,transparent 49.5%,rgba(230,230,210,.5) 49.7% 50.1%,transparent 50.2%) 80% 86%/110px 24px no-repeat,
+    linear-gradient(64deg,transparent 49.4%,rgba(230,230,210,.5) 49.6% 50%,transparent 50.1%) 92% 40%/40px 70px no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.09' numOctaves='4' seed='2'/%3E%3CfeColorMatrix values='0 0 0 0 .78 0 0 0 0 .78 0 0 0 0 .72 0 0 0 4 -2.05'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E") 0 0/260px 260px;
+  -webkit-mask:linear-gradient(90deg,#000 0 20px,transparent 40px calc(100% - 40px),#000 calc(100% - 20px)),linear-gradient(180deg,#000 0 18px,transparent 34px calc(100% - 34px),#000 calc(100% - 18px)),
+    linear-gradient(31deg,#000,#000) 62% 14%/130px 46px no-repeat,linear-gradient(#000,#000) 18% 62%/90px 30px no-repeat,linear-gradient(#000,#000) 80% 86%/110px 24px no-repeat,linear-gradient(#000,#000) 92% 40%/40px 70px no-repeat;
+  mask:linear-gradient(90deg,#000 0 20px,transparent 40px calc(100% - 40px),#000 calc(100% - 20px)),linear-gradient(180deg,#000 0 18px,transparent 34px calc(100% - 34px),#000 calc(100% - 18px)),
+    linear-gradient(#000,#000) 62% 14%/130px 46px no-repeat,linear-gradient(#000,#000) 18% 62%/90px 30px no-repeat,linear-gradient(#000,#000) 80% 86%/110px 24px no-repeat,linear-gradient(#000,#000) 92% 40%/40px 70px no-repeat}
+/* the controls sit above the dirt layer but get their own wear */
+.crt-foot{position:relative}
+.tv-plate{background:radial-gradient(ellipse at 85% 70%,rgba(70,50,20,.35),transparent 55%),radial-gradient(ellipse at 10% 20%,rgba(70,50,20,.25),transparent 40%),linear-gradient(180deg,#cfcbb5,#9f9b86)}
+.tv-knobs i{filter:sepia(.25) brightness(.92)}
+/* fingerprints, dust and a dull film on the screen glass */
+.tv-glass{position:absolute;inset:0;z-index:6;pointer-events:none;border-radius:inherit;
+  background:
+    radial-gradient(ellipse 60px 42px at 82% 78%,rgba(220,255,230,.06),transparent 70%),
+    radial-gradient(ellipse 46px 34px at 14% 70%,rgba(220,255,230,.05),transparent 70%),
+    radial-gradient(ellipse 120px 26px at 30% 12%,rgba(230,255,235,.07),transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.6' numOctaves='2' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 .8 0 0 0 0 .85 0 0 0 0 .75 0 0 0 1.8 -1.25'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23d)'/%3E%3C/svg%3E") 0 0/200px 200px;
+  opacity:.55}
