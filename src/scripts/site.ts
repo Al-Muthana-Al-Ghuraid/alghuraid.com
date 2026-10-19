@@ -68,6 +68,8 @@ function smooth(kind: string, change: () => void) {
   vt.ready.catch(() => {}); vt.updateCallbackDone.catch(() => {}); // a skipped transition is fine
   vt.finished.catch(() => {}).finally(() => delete root.dataset.vt);
 }
+// remember every element's original English markup up front (before any Easter egg rearranges it)
+i18nEls().forEach((el) => { if (el.dataset.en === undefined) el.dataset.en = el.innerHTML; });
 if (root.lang === 'ar') setLang('ar', false);
 $('#langBtn')?.addEventListener('click', () => smooth('lang', () => setLang(root.lang === 'ar' ? 'en' : 'ar')));
 

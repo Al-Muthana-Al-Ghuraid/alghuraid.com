@@ -355,15 +355,28 @@ function shatter() {
 type Mag = { s: HTMLElement; rx: number; ry: number; x: number; y: number; vx: number; vy: number; rot: number; sc: number; delay: number; ang: number; rad: number; anim?: Animation };
 let mag: { el: HTMLElement; html: string; lang: string; parts: Mag[]; held: boolean; cx: number; cy: number; t0: number; homeTimer?: number } | null = null;
 let magRaf = 0;
+let magOriginal: { el: HTMLElement; html: string } | null = null;
+/** Put the name back to its original markup (only on resize / language change, never right after landing). */
+function magReset() {
+  if (mag || !magOriginal) return;
+  if (magOriginal.el.querySelector('.mag')) magOriginal.el.innerHTML = magOriginal.html;
+  magOriginal = null;
+}
+addEventListener('resize', magReset);
+addEventListener('langchange', () => { magOriginal = null; }); // the language switch rewrites the name itself
 const escHtml = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]!);
 document.addEventListener('pointerdown', (e) => {
   const name = e.target instanceof Element ? e.target.closest<HTMLElement>('.hero h1 .grad') : null;
   if (!name || e.button !== 0 || root.classList.contains('gravity-on')) return;
   e.preventDefault();
   if (mag) { regrab(e.clientX, e.clientY); return; } // caught again while flying home
-  const html = name.innerHTML, text = name.textContent ?? '';
-  const pieces = isAr() ? text.split(/(\s+)/) : [...text];
-  name.innerHTML = pieces.map((p) => (/^\s+$/.test(p) ? p : `<span class="mag">${escHtml(p)}</span>`)).join('');
+  // split once; the letters then stay split (an identical-looking word), so nothing is swapped after landing
+  if (!name.querySelector('.mag')) {
+    magOriginal = { el: name, html: name.innerHTML };
+    const text = name.textContent ?? '', pieces = isAr() ? text.split(/(\s+)/) : [...text];
+    name.innerHTML = pieces.map((p) => (/^\s+$/.test(p) ? p : `<span class="mag">${escHtml(p)}</span>`)).join('');
+  }
+  const html = magOriginal!.html;
   const box = name.getBoundingClientRect(), spans = [...name.querySelectorAll<HTMLElement>('.mag')];
   // gradient slices: measure every fragment (letters and spaces) along the text flow
   let run = 0; const offsets = new Map<HTMLElement, number>();
@@ -423,17 +436,15 @@ function magRelease() {
   m.parts.forEach((p, i) => {
     const dist = Math.hypot(p.x, p.y), dur = Math.min(900, 420 + dist * 0.9), delay = i * 14;
     longest = Math.max(longest, dur + delay);
-    p.anim = p.s.animate(
-      [{ transform: p.s.style.transform || 'none' }, { transform: 'translate(0px,0px) rotate(0deg) scale(1)' }],
-      { duration: dur, delay, easing: 'cubic-bezier(.34,1.42,.5,1)', fill: 'forwards' },
-    );
-    p.s.style.transform = '';
+    const from = p.s.style.transform || 'none';
+    p.s.style.transform = ''; // the resting state is "no transform"; the animation flies from `from` to it
+    p.anim = p.s.animate([{ transform: from }, { transform: 'none' }], { duration: dur, delay, easing: 'cubic-bezier(.34,1.42,.5,1)', fill: 'backwards' });
+    p.anim.onfinish = () => { p.anim = undefined; };
   });
-  m.homeTimer = window.setTimeout(() => { // all letters are home: landing ripple, then restore the word
+  m.homeTimer = window.setTimeout(() => { // all letters are home: landing ripple; the word stays as it is (no swap)
     const b = m.el.getBoundingClientRect();
     ripples.push({ x: b.left + b.width / 2, y: b.top + b.height / 2, t0: performance.now() }); fxCanvas();
     m.el.classList.remove('magnet-on');
-    if (root.lang === m.lang) m.el.innerHTML = m.html;
     mag = null;
   }, longest + 30);
 }

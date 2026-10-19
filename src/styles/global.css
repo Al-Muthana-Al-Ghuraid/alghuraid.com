@@ -381,7 +381,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .hero h1 .grad.magnet-on{cursor:grabbing}
 .hero h1 .grad{cursor:grab;touch-action:none}
 .mag{display:inline-block;background-image:var(--grad);background-repeat:no-repeat;-webkit-background-clip:text;background-clip:text;color:transparent;
-  will-change:transform;position:relative;z-index:5}
+  position:relative;z-index:5} /* no will-change: GPU layers + gradient text can render blank in Chrome */
 /* glow only while held; switched off instantly on release (animating a filter on 20 moving letters stutters) */
 .magnet-held .mag{filter:drop-shadow(0 0 8px color-mix(in srgb,var(--blue) 70%,transparent))}
 .hero h1 .grad.magnet-held{cursor:grabbing}
