@@ -46,7 +46,7 @@ caseStudy:
     - { value: "~1,000", label: { en: posts processed / day, ar: إعلان يُعالَج يوميًا } }
     - { value: "~80", label: { en: shortlisted / day, ar: وظيفة مرشّحة يوميًا } }
     - { value: "0", label: { en: open inbound ports, ar: منافذ واردة مفتوحة } }
-    - { value: "24/7", label: { en: automated, unattended, ar: أتمتة متواصلة دون تدخل } }
+    - { value: "24/7", label: { en: "automated, unattended", ar: أتمتة متواصلة دون تدخل } }
   screenshots:
     - src: /media/projects/n8n.webp
       caption: { en: The daily job-applications pipeline in n8n, ar: خط معالجة طلبات الوظائف اليومي في n8n }
