@@ -16,10 +16,11 @@ content:
       template: "project-{year}{month}{day}.yaml"  # rename on create: the name becomes the page URL
       field: create
     view:
-      primary: order
-      sort: order
-      order: asc
-      fields: [order, year, featured, hidden]
+      primary: title.en
+      fields: [title.en, year, featured, hidden, order]
+      search: [title.en, title.ar, tags]
+      sort: [order, year]
+      default: { sort: order, order: asc }
     fields:
       - { name: title, label: Title, type: object, required: true, fields: [
           { name: en, label: English, type: string, required: true },
@@ -80,9 +81,9 @@ content:
       field: create
     view:
       primary: name
-      sort: order
-      order: asc
-      fields: [name, status, order]
+      fields: [name, status, order, hidden]
+      sort: [order, name]
+      default: { sort: order, order: asc }
     fields:
       - { name: name, label: Certification name, type: string, required: true }
       - { name: issuer, label: Issuer, type: string, required: true }
@@ -109,9 +110,9 @@ content:
       field: create
     view:
       primary: name
-      sort: order
-      order: asc
-      fields: [name, provider, hours, order]
+      fields: [name, provider, hours, order, hidden]
+      sort: [order, name]
+      default: { sort: order, order: asc }
     fields:
       - { name: name, label: Program name, type: string, required: true }
       - { name: provider, label: Provider, type: string, required: true }
@@ -142,8 +143,9 @@ content:
       field: create
     view:
       primary: company
-      sort: order
-      order: asc
+      fields: [company, role.en, start, end, hidden]
+      sort: [order, start]
+      default: { sort: start, order: desc }
     fields:
       - { name: role, label: Job title, type: object, required: true, fields: [
           { name: en, label: English, type: string, required: true },
