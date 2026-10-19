@@ -316,12 +316,48 @@ function radroach() {
   requestAnimationFrame(step);
 }
 
-/* ---------- `claw`: a beast approaches and roars; the whole page shakes in time with the sound ----------
-   The shake follows the audio live (Web Audio analyser): each footstep lands as a jolt that grows as the
-   beast gets closer, and the roar shakes everything hard. Uses the CSS `translate` / `rotate` properties,
-   so it stacks on top of each element's own transform (the fixed nav bar shakes too, without jumping).
-   Default sound is our own synthesized clip; a claw.mp3 in public/media/sounds/ takes priority. */
+/* ---------- `claw`: a beast approaches and roars; the whole page shakes in sync with the clip ----------
+   Before it plays, the clip is decoded and scanned: sharp loudness spikes become footstep jolts, a long
+   loud stretch becomes the roar. During playback the shake is read from that timeline at the audio's
+   exact position, so steps land on the beat, the bits in between barely move and the roar hits hardest.
+   Uses the CSS `translate` / `rotate` properties so it stacks on each element's own transform (the
+   fixed nav bar shakes too, without jumping). claw.mp3 in public/media/sounds/ wins over our claw.wav. */
 const CLAW_SRC = ['/media/sounds/claw.mp3', '/media/sounds/claw.wav'];
+const FR = 0.02; // analysis frame, seconds
+type ClawMap = { env: Float32Array; steps: { t: number; s: number }[]; roars: [number, number][] };
+async function mapClip(src: string): Promise<ClawMap | null> {
+  try {
+    const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const ac = new AC(), ab = await ac.decodeAudioData(await (await fetch(src)).arrayBuffer()); ac.close().catch(() => {});
+    const d = ab.getChannelData(0), hop = Math.floor(ab.sampleRate * FR), n = Math.floor(d.length / hop), env = new Float32Array(n);
+    for (let i = 0; i < n; i++) { let s = 0; for (let k = i * hop; k < (i + 1) * hop; k++) s += d[k] * d[k]; env[i] = Math.sqrt(s / hop); }
+    let peak = 0; for (const v of env) peak = Math.max(peak, v); for (let i = 0; i < n; i++) env[i] /= peak || 1;
+    // roar: the smoothed level stays high for at least a second
+    const W = Math.round(0.4 / FR), sm = new Float32Array(n);
+    for (let i = 0; i < n; i++) { let s = 0, c = 0; for (let k = Math.max(0, i - W / 2); k < Math.min(n, i + W / 2); k++) { s += env[k]; c++; } sm[i] = s / c; }
+    const roars: [number, number][] = [];
+    for (let i = 0; i < n;) {
+      if (sm[i] >= 0.42) {
+        let j = i; while (j < n && sm[j] >= 0.3) j++;
+        let s0 = i; while (s0 > 0 && sm[s0 - 1] >= 0.25) s0--;                // back up to where the roar actually starts
+        if ((j - s0) * FR >= 1) roars.push([s0 * FR, j * FR]); i = j;
+      } else i++;
+    }
+    const inRoar = (t: number) => roars.some(([a, b]) => t >= a - 0.2 && t <= b);
+    // steps: a sharp spike that rises well above what came just before it
+    const steps: { t: number; s: number }[] = [];
+    for (let i = 8; i < n - 5; i++) {
+      const t = i * FR; if (inRoar(t)) continue;
+      let isMax = true; for (let k = i - 5; k <= i + 5; k++) if (env[k] > env[i]) isMax = false;
+      let floor = 1; for (let k = i - 8; k < i; k++) floor = Math.min(floor, env[k]);
+      if (!isMax || env[i] < 0.5 || env[i] - floor < 0.2) continue;                 // only real thumps, not breathing
+      const prev = steps[steps.length - 1];
+      if (prev && t - prev.t < 0.3) { if (env[i] > prev.s) Object.assign(prev, { t, s: env[i] }); }
+      else steps.push({ t, s: env[i] });
+    }
+    return { env, steps, roars };
+  } catch { return null; }
+}
 let clawing = false;
 const shakeTargets = () => [...document.body.children].filter((el): el is HTMLElement => el instanceof HTMLElement && !/SCRIPT|STYLE|NOSCRIPT/.test(el.tagName));
 function claw() {
@@ -331,48 +367,41 @@ function claw() {
   const targets = shakeTargets();
   const still = () => targets.forEach((el) => { el.style.translate = ''; el.style.rotate = ''; });
   let ended = false;
-  const finish = (ac?: AudioContext) => {
+  const finish = () => {
     if (ended) return; ended = true;
-    still();
-    if (ac && ac.state !== 'closed') ac.close().catch(() => {});
-    clawing = false;
+    still(); clawing = false;
     history += `<span class="t-com">${esc(sn().clawOut)}</span>\n`;
     if (mode === 'prompt') render();
   };
   const play = (i: number) => {
-    const audio = new Audio(CLAW_SRC[i]); audio.crossOrigin = 'anonymous';
-    let ac: AudioContext | undefined, an: AnalyserNode | undefined;
-    try {
-      const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      ac = new AC(); an = ac.createAnalyser(); an.fftSize = 1024;
-      ac.createMediaElementSource(audio).connect(an).connect(ac.destination);
-    } catch { ac = undefined; an = undefined; }
-    audio.addEventListener('error', () => { if (ac && ac.state !== 'closed') ac.close().catch(() => {}); if (i + 1 < CLAW_SRC.length) play(i + 1); else finish(); }, { once: true });
-    audio.addEventListener('ended', () => finish(ac), { once: true });
-    // a missing file also rejects play(); the 'error' handler above moves on to the next source,
+    const audio = new Audio(CLAW_SRC[i]);
+    let map: ClawMap | null = null;
+    mapClip(CLAW_SRC[i]).then((m) => (map = m));
+    audio.addEventListener('error', () => (i + 1 < CLAW_SRC.length ? play(i + 1) : finish()), { once: true });
+    audio.addEventListener('ended', finish, { once: true });
+    // a missing file also rejects play(); the 'error' handler moves on to the next source,
     // so only give up here when the browser refuses to play sound at all
-    audio.volume = 0.9; audio.play().catch((e) => { if (e?.name === 'NotAllowedError') finish(ac); });
-    const data = new Float32Array(an ? an.fftSize : 0);
-    let level = 0, prev = 0, kick = 0, loudFor = 0, last = performance.now();
-    const frame = (now: number) => {
-      if (!clawing || ended) return;
-      const dt = now - last; last = now;
-      let rms = 0;
-      if (an) { an.getFloatTimeDomainData(data); for (const v of data) rms += v * v; rms = Math.sqrt(rms / data.length); }
-      // a sudden jump in loudness = a footstep landing: give the page a jolt sized to the hit
-      if (rms > 0.05 && rms > prev * 1.5) kick = Math.max(kick, Math.min(46, rms * 150));
-      prev = rms;
-      level = Math.max(rms, level * 0.88);                                  // fast attack, smooth release
-      kick *= 0.82;                                                          // each jolt dies away quickly
-      loudFor = level > 0.2 ? loudFor + dt : 0;                             // a sustained loud stretch = the roar
-      const roar = Math.min(1, loudFor / 500);
-      const amp = reduce ? 0 : Math.max(kick, Math.max(0, level - 0.03) * (60 + 70 * roar));
-      if (amp < 0.4) still();
-      else targets.forEach((el, k) => {
-        const s = 0.85 + 0.3 * ((k * 7919) % 10) / 10;                      // each block moves a little differently
-        el.style.translate = `${((Math.random() - 0.5) * amp * s).toFixed(1)}px ${((Math.random() - 0.5) * amp * 1.2 * s).toFixed(1)}px`;
-        el.style.rotate = roar > 0.3 ? `${((Math.random() - 0.5) * amp * 0.05 * roar).toFixed(2)}deg` : '';
-      });
+    audio.volume = 0.9; audio.play().catch((e) => { if (e?.name === 'NotAllowedError') finish(); });
+    const frame = () => {
+      if (ended) return;
+      const m = map as ClawMap | null;
+      if (m && !reduce && !audio.paused) {
+        const t = audio.currentTime, e = m.env[Math.min(m.env.length - 1, Math.floor(t / FR))] ?? 0;
+        let step = 0;                                                     // sharp jolt on each footstep, gone in ~0.3 s
+        for (const s of m.steps) if (t >= s.t - 0.02 && t < s.t + 0.6) step = Math.max(step, 34 * s.s * Math.exp(-(t - s.t) / 0.1));
+        const r = m.roars.find(([a, b]) => t >= a && t <= b);
+        const roar = r ? (16 + 44 * e) * Math.min(1, (t - r[0]) / 0.15) : 0;   // the roar hits hardest
+        const idle = e * 2.5;                                             // everything else: a faint tremor
+        const amp = Math.max(step, roar, idle);
+        if (amp < 0.5) still();
+        else targets.forEach((el, k) => {
+          const v = 0.85 + 0.3 * ((k * 7919) % 10) / 10;                    // each block moves a little differently
+          const x = (Math.random() - 0.5) * amp * v * (step > roar ? 0.6 : 1); // steps thump mostly up and down
+          const y = (Math.random() - 0.5) * amp * v * (step > roar ? 1.6 : 1.1);
+          el.style.translate = `${x.toFixed(1)}px ${y.toFixed(1)}px`;
+          el.style.rotate = roar > step && roar > 0 ? `${((Math.random() - 0.5) * amp * 0.05).toFixed(2)}deg` : '';
+        });
+      }
       requestAnimationFrame(frame);
     };
     requestAnimationFrame(frame);
