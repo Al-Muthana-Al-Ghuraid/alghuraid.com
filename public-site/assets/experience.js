@@ -8,6 +8,7 @@ const loadingTargets=Array.from(document.querySelectorAll('body>header,body>main
 let dismissed=false;function dismiss(){if(dismissed)return;dismissed=true;loader?.classList.add('finished');document.body.classList.remove('page-loading');loadingTargets.forEach(el=>el.inert=false);setTimeout(()=>loader?.remove(),350);}
 addEventListener('portfolio-scene-ready',dismiss,{once:true});
 if(root.dataset.sceneReady==='true')dismiss();
+if(new URLSearchParams(location.search).get('motion')==='studio' && location.pathname.startsWith('/projects/')){const arrived=Number(sessionStorage.getItem('portfolio-motion-arrival'));sessionStorage.removeItem('portfolio-motion-arrival');if(arrived&&Date.now()-arrived<15000)dismiss();}
 const skip=document.getElementById('skip-loading');skip?.addEventListener('click',dismiss);
 addEventListener('portfolio-scene-failed',()=>{root.dataset.sceneFallback='true';dismiss();},{once:true});
 setTimeout(()=>{if(!dismissed){root.dataset.sceneFallback='true';dismiss();}},10000);
@@ -23,4 +24,4 @@ import './interactions-prototype.js?v=chalk-a-integrated-1';
 
 
 
-if(new URLSearchParams(location.search).get('skills')==='mesh') import('./skills-mesh-prototype.js?v=1');
+if(new URLSearchParams(location.search).get('motion')==='studio') import('./content-motion-prototype.js?v=1');
