@@ -31,3 +31,6 @@
 .chalk-stop-ring{fill:none;stroke:#fff1ca;stroke-width:5}.chalk-stop-dot{fill:#fff1ca;stroke:none}.chalk-journey .chalk-web{stroke-width:3;stroke-dasharray:5 4}
 @media(max-width:1023px){.chalk-journey,.chalk-journey.visible,.chalk-review-switcher{display:none!important}}
 @media(max-width:800px){.interaction-preview .content-study .content{width:calc(100% - 24px);margin-left:auto;margin-right:auto}}
+/* Selected material A replaces the two-option experiment. */
+.chalk-journey .chalk-a-mark,.chalk-journey .chalk-a-checkpoint{fill:#fff;stroke:none}
+@media(min-width:1024px){.interaction-preview .content-study .content{width:min(1440px,calc(100% - 160px));margin-left:auto;margin-right:auto}}

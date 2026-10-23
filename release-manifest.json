@@ -46,8 +46,8 @@
   },
   {
     "path": "assets/chalk-journey-prototype.js",
-    "bytes": 7586,
-    "sha256": "4e3b65a3c43ef6fa47debebb7e373c09198894d6d2982c121dd8cd808cd662fd"
+    "bytes": 7415,
+    "sha256": "d3e4a3513ad52413c2793fbf8b4ebac05d60b60eb4639e0b2b48040a1a9e002e"
   },
   {
     "path": "assets/city.js",
@@ -61,18 +61,18 @@
   },
   {
     "path": "assets/experience.js",
-    "bytes": 2337,
-    "sha256": "4508d27c14fc612bf13b30c48b6fb3a1f661149ecb290d0aac0b2dca4a63e5c4"
+    "bytes": 2345,
+    "sha256": "2451ed7dd57ee0eaa547b3a729a3d5579651d52aa9f65ffdf65b00d8e2f90237"
   },
   {
     "path": "assets/interactions-prototype.css",
-    "bytes": 6098,
-    "sha256": "6b2d27401f233e9d444ed83d02caa8d1519a4c821c2b20debcd2854e3827d2f1"
+    "bytes": 6392,
+    "sha256": "4ee6bf4293debea7cfc0a5623055d2e5c2f43e61a154b9e18b29aa05173e6b2e"
   },
   {
     "path": "assets/interactions-prototype.js",
-    "bytes": 3870,
-    "sha256": "82493ccfcc46053b0fa564a468c8cb5be16dfdfbff961eb48da759b2acd2544e"
+    "bytes": 3884,
+    "sha256": "14ab57b8947528e7b47e097883d4d3b0817e850047a12c6d626a1825b6b5bc5d"
   },
   {
     "path": "assets/language.js",
@@ -235,6 +235,16 @@
     "sha256": "ff1e99bf7e38992234c1d583a54d6d659a8766be743cdbff2b4bb406593e861f"
   },
   {
+    "path": "chalk-a-refined-prototype.html",
+    "bytes": 8754,
+    "sha256": "682cccbd3b6c0c1d69a02d37a9ed414a5f7f89d8ce225044e19d42990a7c7af2"
+  },
+  {
+    "path": "chalk-material-prototype.html",
+    "bytes": 6974,
+    "sha256": "ae09c281a0ee58cc5a90678ca86cfcd1cd3ef4c73cbd95a0ea47a88f3f6f40c4"
+  },
+  {
     "path": "cv/Al-Muthana_Al-Ghuraid_CV.pdf",
     "bytes": 53272,
     "sha256": "cae33f50a05320b41cf206098edac46c8bb721a73b24c7377f664c902b5f7ca5"
@@ -301,8 +311,8 @@
   },
   {
     "path": "index.html",
-    "bytes": 19955,
-    "sha256": "6ff1d3455a4f583d8b0a76607199df7e9cbfd98dbf20964f9ff01969ad393383"
+    "bytes": 19963,
+    "sha256": "c29b5c22fae422fed0f1507a6b808081d53b7d569eadf5a603044b06950d114b"
   },
   {
     "path": "projects/django-ecommerce/index.html",

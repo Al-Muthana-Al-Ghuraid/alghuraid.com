@@ -1,60 +1,50 @@
-// PROVISIONAL: A loops/knots versus B section webs. Same page; ?variant=A or B.
+// Selected chalk A integrated into the local page for review. Desktop only.
 const root=document.documentElement,nav=document.querySelector('.section-nav');
 if(nav){
  nav.classList.add('journey-original');
  const ns='http://www.w3.org/2000/svg',sections=[...nav.querySelectorAll('a')].map(a=>document.querySelector(a.hash));
- const el=(tag,attrs,parent)=>{const n=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,v);parent?.append(n);return n;};
- const host=document.createElement('aside');host.className='chalk-journey';host.setAttribute('aria-hidden','true');document.body.append(host);
- const svg=el('svg',{},host),defs=el('defs',{},svg),gradient=el('linearGradient',{id:'chalk-fade',gradientUnits:'userSpaceOnUse',x1:0,x2:0},defs);
- for(const [offset,opacity] of [[0,0],[.25,.5],[.6,.9],[1,1]])el('stop',{offset,'stop-color':'white','stop-opacity':opacity},gradient);
- const mask=el('mask',{id:'chalk-window',maskUnits:'userSpaceOnUse'},defs),maskRect=el('rect',{x:0,y:0,fill:'url(#chalk-fade)'},mask);
- // Repeating pigment holes make actual transparent specks, not a solid painted line.
- const pigment=el('pattern',{id:'chalk-pigment',width:37,height:43,patternUnits:'userSpaceOnUse'},defs);
- el('rect',{width:37,height:43,fill:'white'},pigment);
- for(let i=0;i<30;i++)el('circle',{cx:(i*13.71)%37,cy:(i*17.39)%43,r:.35+(i%5)*.26,fill:'black',opacity:.3+(i%4)*.2},pigment);
- for(let i=0;i<5;i++)el('path',{d:`M ${(i*11)%37} ${i*8+3} l ${2+i%3} ${i%2?1:-1}`,stroke:'black','stroke-width':.7,opacity:.7},pigment);
- const wear=el('mask',{id:'chalk-wear',maskUnits:'userSpaceOnUse',x:-10,y:0,width:200,height:30000},defs);el('rect',{x:-10,y:0,width:200,height:30000,fill:'url(#chalk-pigment)'},wear);
- const clip=el('clipPath',{id:'chalk-front',clipPathUnits:'userSpaceOnUse'},defs),front=el('rect',{x:-10,y:0,width:200,height:0},clip);
- const group=el('g',{mask:'url(#chalk-window)','clip-path':'url(#chalk-front)'},svg),ink=el('g',{mask:'url(#chalk-wear)'},group),webs=el('g',{mask:'url(#chalk-wear)'},group),markers=el('g',{mask:'url(#chalk-wear)'},group);
- const strokes=[el('path',{class:'chalk-under'},ink),el('path',{class:'chalk-core'},ink),el('path',{class:'chalk-grain'},ink)];
- let variant=new URLSearchParams(location.search).get('variant')==='B'?'B':'A',start=0,length=0,height=0,width=0,draw=0,target=0,last=0;
- const reduced=matchMedia('(prefers-reduced-motion: reduce)');
- const bar=document.createElement('div');bar.className='chalk-review-switcher';bar.innerHTML='<button type="button" class="chalk-prev">‹</button><span></span><button type="button" class="chalk-next">›</button>';document.body.append(bar);
- function label(){const ar=root.lang==='ar';bar.querySelector('span').textContent=ar?(variant==='A'?'تجربة A · حلقات وعُقد':'تجربة B · شبكات متفرعة'):(variant==='A'?'Experiment A · Loops & knots':'Experiment B · Branching webs');bar.querySelector('.chalk-prev').setAttribute('aria-label',ar?'التجربة السابقة':'Previous experiment');bar.querySelector('.chalk-next').setAttribute('aria-label',ar?'التجربة التالية':'Next experiment');}
- function choose(){variant=variant==='A'?'B':'A';const u=new URL(location.href);u.searchParams.set('variant',variant);history.replaceState(null,'',u);label();layout();}
- bar.querySelectorAll('button').forEach(b=>b.addEventListener('click',choose));
- addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight'].includes(e.key)&&!e.target.closest('input,textarea,select,[contenteditable]')){e.preventDefault();choose();}});
- function atY(y){let lo=0,hi=length;for(let i=0;i<22;i++){const mid=(lo+hi)/2;if(strokes[0].getPointAtLength(mid).y<y)lo=mid;else hi=mid;}return(lo+hi)/2;}
+ const E=(tag,attrs,parent)=>{const n=document.createElementNS(ns,tag);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,v);parent?.append(n);return n;};
+ const host=document.createElement('aside');host.className='chalk-journey';host.setAttribute('aria-hidden','true');host.dataset.material='refined-a';document.body.append(host);
+ const svg=E('svg',{},host),defs=E('defs',{},svg),fade=E('linearGradient',{id:'chalk-fade',gradientUnits:'userSpaceOnUse',x1:0,x2:0},defs);
+ for(const[o,a]of [[0,0],[.25,.5],[.6,.9],[1,1]])E('stop',{offset:o,'stop-color':'white','stop-opacity':a},fade);
+ // Texture is rendered in a small repeating tile, rather than a page-sized noise filter.
+ const grain=E('pattern',{id:'chalk-grain-a',width:103,height:97,patternUnits:'userSpaceOnUse'},defs);
+ const dry=E('filter',{id:'chalk-dry-a',x:0,y:0,width:1,height:1,'color-interpolation-filters':'sRGB'},defs);
+ E('feTurbulence',{type:'fractalNoise',baseFrequency:'.055 .065',numOctaves:4,seed:14,result:'noise'},dry);E('feColorMatrix',{in:'noise',type:'saturate',values:0,result:'gray'},dry);
+ const transfer=E('feComponentTransfer',{in:'gray',result:'coverage'},dry);for(const c of ['R','G','B'])E('feFunc'+c,{type:'linear',slope:2.4,intercept:-.5},transfer);
+ E('feTurbulence',{type:'fractalNoise',baseFrequency:'.014 .023',numOctaves:2,seed:27,result:'pressure'},dry);E('feColorMatrix',{in:'pressure',type:'saturate',values:0,result:'pressure-gray'},dry);
+ const pressure=E('feComponentTransfer',{in:'pressure-gray',result:'pressure-soft'},dry);for(const c of ['R','G','B'])E('feFunc'+c,{type:'linear',slope:.7,intercept:.48},pressure);
+ E('feBlend',{in:'coverage',in2:'pressure-soft',mode:'multiply'},dry);E('rect',{width:103,height:97,fill:'white',filter:'url(#chalk-dry-a)'},grain);
+ let seed=73;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
+ for(let i=0;i<300;i++)E('ellipse',{cx:random()*103,cy:random()*97,rx:.15+random()*.65,ry:.1+random()*.4,fill:'black',opacity:.2+random()*.8},grain);
+ for(let i=0;i<20;i++)E('path',{d:`M${random()*103} ${random()*97} l${2+random()*5} ${random()*2-1}`,stroke:'black','stroke-width':.4+random()*.7,opacity:.65},grain);
+ const texture=E('mask',{id:'chalk-texture-a',maskUnits:'userSpaceOnUse',x:0,y:0,width:200,height:30000},defs);E('rect',{width:200,height:30000,fill:'url(#chalk-grain-a)'},texture);
+ const mask=E('mask',{id:'chalk-window',maskUnits:'userSpaceOnUse'},defs),maskRect=E('rect',{x:0,y:0,fill:'url(#chalk-fade)'},mask);
+ const clip=E('clipPath',{id:'chalk-front'},defs),front=E('rect',{x:0,y:0,width:200,height:0},clip);
+ const group=E('g',{mask:'url(#chalk-window)','clip-path':'url(#chalk-front)'},svg),painted=E('g',{mask:'url(#chalk-texture-a)'},group),path=E('path',{fill:'none',stroke:'none'},svg);
+ let start=0,height=0,length=0,draw=0,target=0,last=0;const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ function atY(y){let lo=0,hi=length;for(let i=0;i<22;i++){const mid=(lo+hi)/2;if(path.getPointAtLength(mid).y<y)lo=mid;else hi=mid;}return(lo+hi)/2;}
+ function geometry(at){const p=path.getPointAtLength(at),q=path.getPointAtLength(Math.min(length,at+1));const tangent=Math.atan2(q.y-p.y,q.x-p.x),angle=(tangent+Math.PI/2)+(tangent-Math.PI/2)*.12;return{p,angle};}
  function layout(){
-  if(innerWidth<1024){host.classList.remove('visible');return;}
-  if(!sections[0])return;start=sections[0].getBoundingClientRect().top+scrollY-70;height=sections.at(-1).getBoundingClientRect().bottom+scrollY-start-40;
-  width=Math.max(24,Math.min(110,document.querySelector('.content').getBoundingClientRect().left-9));Object.assign(host.style,{top:start+'px',height:height+'px',width:width+'px'});svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.setAttribute('preserveAspectRatio','none');mask.setAttribute('width',width);mask.setAttribute('height',height);maskRect.setAttribute('width',width);maskRect.setAttribute('height',height);
-  const cx=width*.48,knots=sections.map(s=>s.getBoundingClientRect().top+scrollY-start+42);
-  let d=`M ${cx} 10`,y=10;
-  for(let i=0;i<knots.length;i++){
-   const end=knots[i],side=i%2?width*.84:width*.15;
-   const steps=Math.max(1,Math.ceil((end-y)/220)),step=(end-y)/steps;
-   for(let j=0;j<steps;j++){const x=j%2?width*.8:side;d+=` C ${x} ${y+step*.3} ${x+Math.sin(j+i)*3} ${y+step*.72} ${cx} ${y+step}`;y+=step;}
-   if(variant==='A'){const r=Math.min(22,width*.31);d+=` C ${cx+r} ${y-9} ${cx+r} ${y+25} ${cx} ${y+27} C ${cx-r} ${y+29} ${cx-r} ${y+3} ${cx+2} ${y+12} C ${cx+r*.4} ${y+20} ${cx-r*.25} ${y+36} ${cx} ${y+45}`;y+=45;}
+  if(innerWidth<1024){host.classList.remove('visible');return;}if(!sections[0])return;seed=73;
+  start=sections[0].getBoundingClientRect().top+scrollY-70;height=sections.at(-1).getBoundingClientRect().bottom+scrollY-start-40;
+  const width=Math.min(110,Math.max(65,document.querySelector('.content').getBoundingClientRect().left-10));Object.assign(host.style,{top:start+'px',height:height+'px',width:width+'px'});svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.setAttribute('preserveAspectRatio','none');mask.setAttribute('width',width);mask.setAttribute('height',height);maskRect.setAttribute('width',width);maskRect.setAttribute('height',height);
+  const margin=25,points=[{x:width*.5,y:10}],count=Math.ceil((height-20)/190);
+  for(let i=1;i<=count;i++)points.push({x:margin+random()*(width-margin*2),y:10+(height-20)*i/count});
+  let d=`M${points[0].x} ${points[0].y}`;for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i],dy=b.y-a.y,lean=(random()-.5)*width*.65;d+=` C${Math.max(margin,Math.min(width-margin,a.x+lean))} ${a.y+dy*.33} ${Math.max(margin,Math.min(width-margin,b.x-lean))} ${a.y+dy*.67} ${b.x} ${b.y}`;}path.setAttribute('d',d);length=path.getTotalLength();painted.replaceChildren();
+  const stops=sections.map(s=>atY(s.getBoundingClientRect().top+scrollY-start+44));
+  // Solve actual rectangle-to-circle edge clearance, rather than rounding to the dash grid.
+  function clearance(at,stop){const {p,angle}=geometry(at),c=path.getPointAtLength(stop),dx=c.x-p.x,dy=c.y-p.y,u=Math.abs(dx*Math.cos(angle)+dy*Math.sin(angle)),v=Math.abs(-dx*Math.sin(angle)+dy*Math.cos(angle));return Math.hypot(Math.max(0,u-21),Math.max(0,v-6))-19;}
+  const neighbours=stops.flatMap(stop=>[-1,1].map(sign=>{let lo=0,hi=65;for(let i=0;i<20;i++){const m=(lo+hi)/2;if(clearance(Math.max(0,Math.min(length,stop+sign*m)),stop)<3)lo=m;else hi=m;}return Math.max(0,Math.min(length,stop+sign*(lo+hi)/2));}));
+  const positions=[];for(let at=0;at<length;at+=21)if(!stops.some(c=>clearance(at,c)<3)&&!neighbours.some(n=>Math.abs(at-n)<19))positions.push(at);positions.push(...neighbours);positions.sort((a,b)=>a-b);
+  for(const at of positions){const {p,angle}=geometry(at),g=E('g',{transform:`translate(${p.x} ${p.y}) rotate(${angle*180/Math.PI})`,opacity:.88+random()*.12},painted);const l=21,w=6;
+   E('path',{class:'chalk-a-mark',d:`M${-l} ${-w+.6} L${-l*.4} ${-w-.4} L${l*.3} ${-w+.5} L${l} ${-w} L${l-.5} ${w-.5} L${l*.2} ${w+.4} L${-l*.5} ${w-.3} L${-l} ${w} Z`,fill:'white'},g);
   }
-  d+=` C ${width*.8} ${y+90} ${width*.15} ${height-40} ${cx} ${height-10}`;
-  strokes.forEach(p=>p.setAttribute('d',d));length=strokes[0].getTotalLength();webs.replaceChildren();markers.replaceChildren();
-  knots.forEach((y,i)=>{const point=strokes[0].getPointAtLength(atY(y+24)),g=el('g',{class:'chalk-stop'},markers);g.dataset.y=point.y;el('circle',{cx:point.x,cy:point.y,r:Math.min(10,width*.19),class:'chalk-stop-ring'},g);el('circle',{cx:point.x,cy:point.y,r:2.1,class:'chalk-stop-dot'},g);});
-  if(variant==='B')knots.forEach((y,i)=>{const r=width*.33,c=cx;const paths=[`M ${c} ${y-25} L ${c+r} ${y} L ${c} ${y+28} L ${c-r} ${y} Z`,`M ${c} ${y-25} L ${c} ${y+28} M ${c-r} ${y} L ${c+r} ${y}`,`M ${c-r*.5} ${y-12} L ${c+r*.5} ${y-12} L ${c+r*.5} ${y+14} L ${c-r*.5} ${y+14} Z`,`M ${c+r} ${y} Q ${width*.96} ${y+10} ${width-1} ${y+7}`];paths.forEach(d=>{const p=el('path',{d,class:'chalk-web'},webs);p.dataset.y=y;});});
+  for(const stop of stops){const p=path.getPointAtLength(stop);let outline='';for(let i=0;i<=44;i++){const a=i/44*Math.PI*2,r=19+(random()-.5)*1.1;outline+=(i?' L':'M')+(p.x+Math.cos(a)*r)+' '+(p.y+Math.sin(a)*r);}E('path',{class:'chalk-a-checkpoint',d:outline+' Z',fill:'white'},painted);}
   draw=target=atY(Math.max(10,scrollY+innerHeight*.66-start));update();paint();
  }
  function update(){target=atY(Math.max(10,scrollY+innerHeight*.66-start));host.classList.toggle('visible',innerWidth>=1024&&scrollY>100);}
- function paint(){
-  const head=strokes[0].getPointAtLength(draw),tail=head.y-innerHeight*.64;
-  gradient.setAttribute('y1',tail);gradient.setAttribute('y2',head.y);host.dataset.headY=head.y.toFixed(1);host.dataset.tailY=tail.toFixed(1);
-  front.setAttribute('height',Math.max(0,head.y));
-  strokes.forEach((p,i)=>{p.style.strokeDasharray=i===2?'1 22':'13 11';});
-  for(const g of markers.children)g.style.opacity=String(Math.max(0,Math.min(1,(head.y-Number(g.dataset.y)+10)/22)));
-
-  // Each web is individually drawn when the chalk front reaches that section.
-  for(const p of webs.children){const plen=p.getTotalLength(),amount=Math.max(0,Math.min(1,(head.y-Number(p.dataset.y)+25)/65));p.style.opacity=amount>0?.9:0;p.style.strokeDasharray=`${plen*amount} ${plen+1}`;}
- }
+ function paint(){const head=path.getPointAtLength(draw),tail=head.y-innerHeight*.64;fade.setAttribute('y1',tail);fade.setAttribute('y2',head.y);front.setAttribute('height',Math.max(0,head.y));host.dataset.headY=head.y.toFixed(1);host.dataset.tailY=tail.toFixed(1);}
  function frame(time){const dt=Math.min(50,time-last||16);last=time;if(innerWidth>=1024&&Math.abs(target-draw)>.05){draw=reduced.matches?target:draw+(target-draw)*(1-Math.exp(-dt/95));paint();}requestAnimationFrame(frame);}
- label();layout();requestAnimationFrame(frame);addEventListener('scroll',update,{passive:true});addEventListener('resize',layout);new ResizeObserver(layout).observe(document.querySelector('main'));new MutationObserver(()=>{label();requestAnimationFrame(layout);}).observe(root,{attributes:true,attributeFilter:['lang']});
+ layout();requestAnimationFrame(frame);addEventListener('scroll',update,{passive:true});addEventListener('resize',layout);new ResizeObserver(layout).observe(document.querySelector('main'));new MutationObserver(()=>requestAnimationFrame(layout)).observe(root,{attributes:true,attributeFilter:['lang']});
 }
-
