@@ -61,13 +61,13 @@
   },
   {
     "path": "assets/interactions-prototype.css",
-    "bytes": 2916,
-    "sha256": "d992718e5f9a4b3c90c5920694a81c10201bc4aa41f1447fcb1568c318c0d0c1"
+    "bytes": 3932,
+    "sha256": "8dd27ccb6f206f0a2da8c43e31a47b610651af845bbf3faef15bb534ae0094d3"
   },
   {
     "path": "assets/interactions-prototype.js",
-    "bytes": 7256,
-    "sha256": "15815b05d7fefed8498049f171bdd34d6b64f03f5f61a7dc521854943b4eb7c2"
+    "bytes": 8287,
+    "sha256": "49cf8ab7d8f7b5b541ddf7095cbf61251db42231a46ff932da35cb1672231994"
   },
   {
     "path": "assets/language.js",
