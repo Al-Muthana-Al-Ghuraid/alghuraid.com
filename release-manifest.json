@@ -6,8 +6,8 @@
   },
   {
     "path": "index.html",
-    "bytes": 17626,
-    "sha256": "1551b8869d26300e10ba8b4377fc22ba823da0f9467e224b63f408219e0d1825"
+    "bytes": 19936,
+    "sha256": "157656c956afcd8d87389beeb66606df8c49530bc2c535829aba403058e2212c"
   },
   {
     "path": "robots.txt",
@@ -63,6 +63,16 @@
     "path": "assets/city.js",
     "bytes": 4420,
     "sha256": "54fb082284e546accb32950e1187bbb691afba489ec94796abcc3c897a563e9f"
+  },
+  {
+    "path": "assets/experience.css",
+    "bytes": 8557,
+    "sha256": "b6077695381195412020a76a13e1ff94c9240f4628c5c97c358540e02c84cd66"
+  },
+  {
+    "path": "assets/experience.js",
+    "bytes": 2278,
+    "sha256": "7cee2561c1857a94b56fbab6386ac89a145cf068b7793d5b05f7fe4fd65d2d56"
   },
   {
     "path": "assets/language.js",
@@ -130,6 +140,11 @@
     "sha256": "ba783cd0a01a919e335f6e853f2b218b7b89ce865a6ae1744bc95b36565fe5fc"
   },
   {
+    "path": "assets/scene.js",
+    "bytes": 3538,
+    "sha256": "b208bd06c15bf7bcd2184b4d3e1fd9fe8a547e842eea066faaf7c7a147417058"
+  },
+  {
     "path": "assets/scroll.css",
     "bytes": 2179,
     "sha256": "5b173c23b1d68883eff3df9477f4a7474c637ab290cc283d3ebbd4cb131c9c33"
@@ -146,8 +161,8 @@
   },
   {
     "path": "assets/sky.js",
-    "bytes": 865311,
-    "sha256": "7a7c58e5766b209f330bf545d87956b6be9df61ae201c2e5bfd2ae4d50886e76"
+    "bytes": 865320,
+    "sha256": "6ed664c895877b26c2e06a7221b59286b3c8ce66e61fe870626c4f22ed309556"
   },
   {
     "path": "assets/trackflow-screenshot_01.png",
@@ -161,8 +176,8 @@
   },
   {
     "path": "assets/translations.json",
-    "bytes": 18029,
-    "sha256": "40db45e1d9ebcb84201128b866300efabe3f8db4bb8810e1ca6b5147a65cd8a7"
+    "bytes": 18259,
+    "sha256": "ff1e99bf7e38992234c1d583a54d6d659a8766be743cdbff2b4bb406593e861f"
   },
   {
     "path": "cv/Al-Muthana_Al-Ghuraid_CV.pdf",
@@ -286,52 +301,52 @@
   },
   {
     "path": "projects/django-ecommerce/index.html",
-    "bytes": 40197,
-    "sha256": "b44b9b2c2b25b131230ee30e1dcbeb1df04045e7a7b5790effb634aafeaf9634"
+    "bytes": 43069,
+    "sha256": "007c8283ab917229c1627702893311ad14c282c7be61b2b58b0129da2c50ed28"
   },
   {
     "path": "projects/n8n-automation/index.html",
-    "bytes": 16695,
-    "sha256": "1be7156ea8adce02734b6863044c5ec17a8822baacbb44ba29f13a967b5c171d"
+    "bytes": 19545,
+    "sha256": "9a468ec6f5ff77acc7952ec961368e80142e80332233d6f67b58cc289303a41e"
   },
   {
     "path": "projects/rag-chatbot/index.html",
-    "bytes": 29714,
-    "sha256": "f7872ea4d09da2c6d7641bbea5d70050e1488a539dea492a6e4dba6a07bbe450"
+    "bytes": 32573,
+    "sha256": "938eeab610567bc2dd378a86c0048160bbaf17bb0bf0e5ea2551fd816ebed013"
   },
   {
     "path": "projects/trackflow/index.html",
-    "bytes": 23952,
-    "sha256": "e5542681a2144d46cdf3fe215bc5347e89550ddb0987224fb8f7f54eb5ebeaa7"
+    "bytes": 26826,
+    "sha256": "7edd9b750a56f8226e4a93a5170dc1da78ce75cc58a09e2a45e6ac3ee9be8172"
   },
   {
     "path": "training/bio/index.html",
-    "bytes": 16021,
-    "sha256": "7b7cf31ece2aa2a176a727ac9a0c2b2840e14d0c9518082ccbc68172d60384fa"
+    "bytes": 17410,
+    "sha256": "6cf6fbbca10255b83bef3b659e54b25e3641882c99c0659d6e8f44d7ac2c90ac"
   },
   {
     "path": "training/cloud/index.html",
-    "bytes": 15433,
-    "sha256": "813f9298acab58e6b958e272829a20017cb2b865d890a5c4dd5f1ad81573de9d"
+    "bytes": 17307,
+    "sha256": "f33faa47b74ddaece7860e70c60d308fb8885ee2908e6d82ccc539cb9c2d691d"
   },
   {
     "path": "training/django/index.html",
-    "bytes": 13078,
-    "sha256": "58ffe15b97557ea16494d2fa52063e3fed0b1466db4831324df2708dd9ca99d8"
+    "bytes": 14961,
+    "sha256": "7781976fc0dac75cddb0a7aac375c75dd757c129af37e878acf1e432d6da2051"
   },
   {
     "path": "training/misk/index.html",
-    "bytes": 12288,
-    "sha256": "cff63224034b0d499e732e88294b33fcee3e3c4c504533dbab89e2d9827faaee"
+    "bytes": 13677,
+    "sha256": "b0f22a102a126f029a58cba486f9cee86cbf78ec6b5c8adfe4579635ddd839e2"
   },
   {
     "path": "training/python/index.html",
-    "bytes": 15527,
-    "sha256": "104bc9dfcc55c042c171c0920fbfc3fdac57776bdd83be645ea411b7ca5070f3"
+    "bytes": 17411,
+    "sha256": "4c3da06f20d9726621f1ee1b474133f1499a5812b8b03da218830eb99b849369"
   },
   {
     "path": "training/sql/index.html",
-    "bytes": 13281,
-    "sha256": "3971787d0b821d172eead18714169e6b6a1f51cf167c216720d672ea808f5048"
+    "bytes": 14670,
+    "sha256": "76fe37fe6303715b4841f94414e81ad40a86e38a065f282060702dcfda6ea42a"
   }
 ]
