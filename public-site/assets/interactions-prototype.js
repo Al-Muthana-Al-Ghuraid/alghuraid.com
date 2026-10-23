@@ -1,5 +1,5 @@
-// PROVISIONAL: visible-word gathering and travelling route. Local opt-in only.
-if(new URLSearchParams(location.search).get('interactions')==='preview'){
+// Initial live interaction trial; ?interactions=off retains the baseline.
+if(document.querySelector('#language-toggle') && new URLSearchParams(location.search).get('interactions')!=='off'){
  const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/interactions-prototype.css';document.head.append(css);
  const root=document.documentElement,reduced=matchMedia('(prefers-reduced-motion: reduce)');root.classList.add('interaction-preview');
  const button=document.querySelector('#language-toggle');let busy=false;
@@ -48,3 +48,4 @@ if(new URLSearchParams(location.search).get('interactions')==='preview'){
 
  import('./chalk-journey-prototype.js');
 }
+
