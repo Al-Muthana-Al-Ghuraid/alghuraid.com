@@ -61,8 +61,8 @@
   },
   {
     "path": "assets/experience.js",
-    "bytes": 2345,
-    "sha256": "2451ed7dd57ee0eaa547b3a729a3d5579651d52aa9f65ffdf65b00d8e2f90237"
+    "bytes": 2453,
+    "sha256": "f4d69bef957bea437d8354a50726b96dd057ca2b39f2eb463399d9187b79f319"
   },
   {
     "path": "assets/interactions-prototype.css",
@@ -153,6 +153,16 @@
     "path": "assets/scroll.js",
     "bytes": 2473,
     "sha256": "d783d1106e227e094cacb79fea4e839ecbd471ef21e127353ca5b7ba61e12419"
+  },
+  {
+    "path": "assets/skills-mesh-prototype.css",
+    "bytes": 4059,
+    "sha256": "353ae3b37db39c6805afd4d3198f9d8813c503703678a27a767f704a46cf9916"
+  },
+  {
+    "path": "assets/skills-mesh-prototype.js",
+    "bytes": 7125,
+    "sha256": "7bcb84744e0201610ee76cddff6640b9ef30d1fc9928c915c5cba43989ed2bff"
   },
   {
     "path": "assets/sky.css",
@@ -311,8 +321,8 @@
   },
   {
     "path": "index.html",
-    "bytes": 19963,
-    "sha256": "c29b5c22fae422fed0f1507a6b808081d53b7d569eadf5a603044b06950d114b"
+    "bytes": 19958,
+    "sha256": "8e62368fa46c756f0331ea0c52a738096368a8a28dd426b6040bfb1833d28638"
   },
   {
     "path": "projects/django-ecommerce/index.html",

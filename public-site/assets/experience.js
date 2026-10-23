@@ -22,3 +22,5 @@ dialog?.addEventListener('close',()=>opener?.focus());
 import './interactions-prototype.js?v=chalk-a-integrated-1';
 
 
+
+if(new URLSearchParams(location.search).get('skills')==='mesh') import('./skills-mesh-prototype.js?v=1');
