@@ -45,6 +45,11 @@
     "sha256": "71c0f17672b4c095440485de1518eb1869df297097fbab2ffbafaf61fe46b69a"
   },
   {
+    "path": "assets/chalk-journey-prototype.js",
+    "bytes": 6071,
+    "sha256": "3f39c4d5755355d88c7c40a5e282795cf9fce48db8d85392fee3c836bb5eaac9"
+  },
+  {
     "path": "assets/city.js",
     "bytes": 4420,
     "sha256": "54fb082284e546accb32950e1187bbb691afba489ec94796abcc3c897a563e9f"
@@ -61,13 +66,13 @@
   },
   {
     "path": "assets/interactions-prototype.css",
-    "bytes": 3932,
-    "sha256": "8dd27ccb6f206f0a2da8c43e31a47b610651af845bbf3faef15bb534ae0094d3"
+    "bytes": 5333,
+    "sha256": "6881a6915a25144e96e01214d312ca1528f5a238b1771b1ab8aec98e54217a25"
   },
   {
     "path": "assets/interactions-prototype.js",
-    "bytes": 8287,
-    "sha256": "49cf8ab7d8f7b5b541ddf7095cbf61251db42231a46ff932da35cb1672231994"
+    "bytes": 3795,
+    "sha256": "e4fdf2a06840d895d5c571c7f0dd2f5897723c7d61e9e125fb2837554d68e3ed"
   },
   {
     "path": "assets/language.js",
