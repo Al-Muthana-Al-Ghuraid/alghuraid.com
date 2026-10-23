@@ -18,7 +18,7 @@ if(section){
  section.querySelectorAll('.readable-skills .tags span').forEach((span,i)=>{const b=document.createElement('button');b.type='button';b.className='skill-inline-choice';b.dataset.skill=keys[i];b.textContent=span.textContent;b.addEventListener('click',()=>{selected=selected===keys[i]?null:keys[i];update();});span.replaceWith(b);buttons.push(b);});
  function update(){const ar=document.documentElement.lang==='ar';let related=selected?[...new Set(stacks.filter(s=>s.includes(selected)).flat())].filter(k=>k!==selected):[];if(preferred[selected])related=preferred[selected];if(selected&&keys.indexOf(selected)>=23)related=keys.slice(23).filter(k=>k!==selected);related=related.slice(0,7);buttons.forEach(b=>{b.textContent=ar?(catalog[b.dataset.skill]||b.dataset.skill):b.dataset.skill;b.classList.toggle('is-related',related.includes(b.dataset.skill));b.setAttribute('aria-pressed',String(selected===b.dataset.skill));});hint.textContent=ar?'اختر مهارة لإبراز الأدوات المرتبطة بها. اخترها مرة أخرى لإلغاء التحديد.':'Select a skill to highlight related tools. Select it again to clear.';}
  new MutationObserver(update).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});update();
- const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){play(e.target);observer.unobserve(e.target);}}),{threshold:.35});cards.forEach(c=>observer.observe(c));
+ const observer=new IntersectionObserver(entries=>entries.forEach(e=>{e.target.classList.toggle('skill-art-visible',e.isIntersecting);}),{threshold:.35});cards.forEach(c=>observer.observe(c));
 }
 // Draw the actual cover diagrams, rather than adding another decorative layer.
 const covers=[...document.querySelectorAll('.animated-project-cover')];

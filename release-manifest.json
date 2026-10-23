@@ -56,18 +56,18 @@
   },
   {
     "path": "assets/content-motion-prototype.css",
-    "bytes": 3966,
-    "sha256": "910d4a8a6688116d1091fb25aa3288051311b7f5856221f6c57268239f5cfb31"
+    "bytes": 8383,
+    "sha256": "962a5df798fd3f46c67dac47c6683ffe06d7c03509f13f97769146cc14bf2605"
   },
   {
     "path": "assets/content-motion-prototype.js",
-    "bytes": 6906,
-    "sha256": "e8d76744db24b338c21c36ac7bb6eb02656a491460fe5c8cc2db5fb2f70d07ac"
+    "bytes": 6936,
+    "sha256": "f431a8504d23971be9346bc8574fa739a2d9b685346be194da333e1218a71969"
   },
   {
     "path": "assets/content-motion-shell.js",
-    "bytes": 2013,
-    "sha256": "59e41f7e1c3612d9773fad5f88eb665bac37d20177c38dedff57dd5a1567abf6"
+    "bytes": 3531,
+    "sha256": "43a6aa4d0b0a6e0c46bea128ee6a9bd708279aa87861deb64aa3002a9840a382"
   },
   {
     "path": "assets/experience.css",
@@ -76,8 +76,8 @@
   },
   {
     "path": "assets/experience.js",
-    "bytes": 2749,
-    "sha256": "2b4937bef6d7ec7fa6a5185fdfa5bfd200661705e22861af5c54733493993b86"
+    "bytes": 3416,
+    "sha256": "32da5f99445aabeb62de3515ef4735b32e56a7d5f9e6fafacb8df8016edcc2ba"
   },
   {
     "path": "assets/interactions-prototype.css",
@@ -337,27 +337,27 @@
   {
     "path": "index.html",
     "bytes": 20022,
-    "sha256": "6db182a4afdee1734fa42357a5866e67c26e144e75747700dfa9f36b6eddca24"
+    "sha256": "fe5b4abfe1fd3ec9d8984fee0c92c86e88ccd62f3b3dcacb5478738bb5c89561"
   },
   {
     "path": "projects/django-ecommerce/index.html",
     "bytes": 43147,
-    "sha256": "092f1cfb871e054cb7bc0fc5f0f6f98ebbf63b80836ba3c143435219eb10b1f8"
+    "sha256": "f57bbd3dfd31afd4d9844db018af1472fb794d34f094bc4e543f895d52659ea8"
   },
   {
     "path": "projects/n8n-automation/index.html",
     "bytes": 19623,
-    "sha256": "4bfa1820153a66e2c957aefde8a330880200108d2f104630454d00e3d162131d"
+    "sha256": "cca94e05e6a31d06dd192c9fcb4f65aed5aade4f0f7e83bd8488a15e89224651"
   },
   {
     "path": "projects/rag-chatbot/index.html",
     "bytes": 32651,
-    "sha256": "dcca84c461c3ee34f76199f53297ee3c414e20eb2cf7e7310c14073a89ef7c0d"
+    "sha256": "fa4b96d17257b9bddd07e58bbdd1cb23791d2e96b33fbd5d417e50d8207f8912"
   },
   {
     "path": "projects/trackflow/index.html",
     "bytes": 26904,
-    "sha256": "7d4895a15ff3ba1035c34e0549c44540c19345b2a3ce6302c5cbd30ec36a82db"
+    "sha256": "60b4d9d44e42844c23ac8efe54a456ae2515d0e12c50b4407961142dd318dea5"
   },
   {
     "path": "robots.txt",
@@ -372,31 +372,31 @@
   {
     "path": "training/bio/index.html",
     "bytes": 17488,
-    "sha256": "8c8e87ef7ae1708bf4540bfca53625f6f4355b7f90ae1ceea0b785aa7a0c3682"
+    "sha256": "c79e4bc0307fbe89cfcd6ec28d12b3eb46dec6aff68e8d17ea61f5a1c652408c"
   },
   {
     "path": "training/cloud/index.html",
     "bytes": 17385,
-    "sha256": "76cf54b8dc835769425d084f77923d8a7894c1e58aa7e5ef2c02e7831131014d"
+    "sha256": "e12bfc89e88735e6c4d5d95e26ff47fcf8b612ff6416e24fed5f8ca3814afe94"
   },
   {
     "path": "training/django/index.html",
     "bytes": 15039,
-    "sha256": "d28e5f680edf7131c8dc8f8de171eb94a9167cd5cdc54831b43cf9c9450243c0"
+    "sha256": "1c72f5850c5159b448a357e0a6e69eded51275255cf8f544bfdd812d9596f411"
   },
   {
     "path": "training/misk/index.html",
     "bytes": 13755,
-    "sha256": "b6d9649c071f393f0ec35e2022824aec4e99c4f4ebc077ccb6acd600b822933b"
+    "sha256": "ec924cc39a0d457c6babbe3dc6393e12e0f200d1dff3841e9cb6e494e5becfc5"
   },
   {
     "path": "training/python/index.html",
     "bytes": 17489,
-    "sha256": "ac3d899ff25a672e4adbaf8eff8a8d059895ca68e7518186f60a6de526c7baf6"
+    "sha256": "47ef843e1c7f8867935f3f31e3a75b0c5044f0be819acc234acfd6cce35d5493"
   },
   {
     "path": "training/sql/index.html",
     "bytes": 14748,
-    "sha256": "7e69fd6abf0079a40065e8be35ca7b22649d69fe9a1aa93fc489d3d1e61118a6"
+    "sha256": "6ce823a6cbd54256ab2ed6b1a280bc02680ed3fa66f26af113ba713e0bf27c1a"
   }
 ]

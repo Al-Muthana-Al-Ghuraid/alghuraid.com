@@ -5,13 +5,15 @@ function translateShared(){document.querySelectorAll('[data-copy-en]').forEach(e
 new MutationObserver(translateShared).observe(root,{attributes:true,attributeFilter:['lang']});translateShared();
 const loader=document.getElementById('page-loader');
 const loadingTargets=Array.from(document.querySelectorAll('body>header,body>main'));loadingTargets.forEach(el=>el.inert=true);
-let dismissed=false;function dismiss(){if(dismissed)return;dismissed=true;loader?.classList.add('finished');document.body.classList.remove('page-loading');loadingTargets.forEach(el=>el.inert=false);setTimeout(()=>loader?.remove(),350);}
-addEventListener('portfolio-scene-ready',dismiss,{once:true});
+const intro=root.classList.contains('intro-trial'),introStart=performance.now(),introReview=new URLSearchParams(location.search).get('intro')==='review';let dismissed=false;function dismiss(force=false){if(dismissed)return;if(intro&&introReview&&force!==true)return;if(intro&&force!==true&&performance.now()-introStart<1500){setTimeout(()=>dismiss(),1500-(performance.now()-introStart));return;}dismissed=true;if(intro)sessionStorage.setItem('portfolio-intro-seen','1');loader?.classList.add('finished');document.body.classList.remove('page-loading');loadingTargets.forEach(el=>el.inert=false);setTimeout(()=>loader?.remove(),350);}
+addEventListener('portfolio-scene-ready',()=>dismiss(),{once:true});
 if(root.dataset.sceneReady==='true')dismiss();
-if(new URLSearchParams(location.search).get('motion')==='studio' && location.pathname.startsWith('/projects/')){const arrived=Number(sessionStorage.getItem('portfolio-motion-arrival'));sessionStorage.removeItem('portfolio-motion-arrival');if(arrived&&Date.now()-arrived<15000)dismiss();}
-const skip=document.getElementById('skip-loading');skip?.addEventListener('click',dismiss);
+if(new URLSearchParams(location.search).get('motion')==='studio' && (location.pathname.startsWith('/projects/')||location.pathname==='/')){const arrived=Number(sessionStorage.getItem('portfolio-motion-arrival'));sessionStorage.removeItem('portfolio-motion-arrival');if(arrived&&Date.now()-arrived<15000)dismiss();}
+loader?.addEventListener('click',event=>{if(event.target.closest('#skip-loading'))dismiss(true);});
+document.addEventListener('DOMContentLoaded',translateShared);
+if(intro&&!introReview)setTimeout(()=>{if(!dismissed){if(root.dataset.sceneReady!=='true')root.dataset.sceneFallback='true';dismiss(true);}},2400);
 addEventListener('portfolio-scene-failed',()=>{root.dataset.sceneFallback='true';dismiss();},{once:true});
-setTimeout(()=>{if(!dismissed){root.dataset.sceneFallback='true';dismiss();}},10000);
+setTimeout(()=>{if(!dismissed&&!introReview){root.dataset.sceneFallback='true';dismiss();}},10000);
 // Preserve the chosen language and mode across full-page navigation.
 document.addEventListener('click',event=>{const a=event.target.closest('a[href]');if(!a||a.download)return;const u=new URL(a.href,location.href);if(u.origin!==location.origin||/\.(pdf|png|jpg|webp|svg)$/i.test(u.pathname))return;u.searchParams.set('lang',root.lang==='ar'?'ar':'en');u.searchParams.set('theme',root.dataset.theme==='night'?'night':'day');a.href=u.pathname+u.search+u.hash;});
 const dialog=document.getElementById('quick-overview');let opener;
@@ -24,4 +26,6 @@ import './interactions-prototype.js?v=chalk-a-integrated-1';
 
 
 
-if(new URLSearchParams(location.search).get('motion')==='studio') import('./content-motion-prototype.js?v=1');
+if(new URLSearchParams(location.search).get('motion')==='studio') import('./content-motion-prototype.js?v=2');
+
+
