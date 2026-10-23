@@ -46,8 +46,8 @@
   },
   {
     "path": "assets/chalk-journey-prototype.js",
-    "bytes": 6071,
-    "sha256": "3f39c4d5755355d88c7c40a5e282795cf9fce48db8d85392fee3c836bb5eaac9"
+    "bytes": 7586,
+    "sha256": "4e3b65a3c43ef6fa47debebb7e373c09198894d6d2982c121dd8cd808cd662fd"
   },
   {
     "path": "assets/city.js",
@@ -61,18 +61,18 @@
   },
   {
     "path": "assets/experience.js",
-    "bytes": 2318,
-    "sha256": "369a8c9716582cd11c9909611480ac71d6363c6eb98d89c496339a8b34b134a9"
+    "bytes": 2337,
+    "sha256": "4508d27c14fc612bf13b30c48b6fb3a1f661149ecb290d0aac0b2dca4a63e5c4"
   },
   {
     "path": "assets/interactions-prototype.css",
-    "bytes": 5333,
-    "sha256": "6881a6915a25144e96e01214d312ca1528f5a238b1771b1ab8aec98e54217a25"
+    "bytes": 6098,
+    "sha256": "6b2d27401f233e9d444ed83d02caa8d1519a4c821c2b20debcd2854e3827d2f1"
   },
   {
     "path": "assets/interactions-prototype.js",
-    "bytes": 3834,
-    "sha256": "09bc9446c828202a4c46616e97159f0c69ab6477d73c842f1e981335a5335774"
+    "bytes": 3870,
+    "sha256": "82493ccfcc46053b0fa564a468c8cb5be16dfdfbff961eb48da759b2acd2544e"
   },
   {
     "path": "assets/language.js",
@@ -301,8 +301,8 @@
   },
   {
     "path": "index.html",
-    "bytes": 19936,
-    "sha256": "157656c956afcd8d87389beeb66606df8c49530bc2c535829aba403058e2212c"
+    "bytes": 19955,
+    "sha256": "6ff1d3455a4f583d8b0a76607199df7e9cbfd98dbf20964f9ff01969ad393383"
   },
   {
     "path": "projects/django-ecommerce/index.html",
