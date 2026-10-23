@@ -5,21 +5,6 @@
     "sha256": "d411a594c1322b8e39139f31c45d849c0edb336c070065c56bc42b16b3b4fd39"
   },
   {
-    "path": "index.html",
-    "bytes": 19936,
-    "sha256": "157656c956afcd8d87389beeb66606df8c49530bc2c535829aba403058e2212c"
-  },
-  {
-    "path": "robots.txt",
-    "bytes": 69,
-    "sha256": "cea90c03266a204a2282282995d270fa4b9e3f3e03e69dff707ee8521698f457"
-  },
-  {
-    "path": "sitemap.xml",
-    "bytes": 768,
-    "sha256": "034fa0946cacc5ee4463968fb5b9b1bff6ca9561a81e0af0fe8338c667be1e2a"
-  },
-  {
     "path": "assets/academy-kaust.png",
     "bytes": 12940,
     "sha256": "f5d61914e28366decd7f682544a4762f07c9dff06fc11dbb8d07a233e7b9dec1"
@@ -71,8 +56,18 @@
   },
   {
     "path": "assets/experience.js",
-    "bytes": 2278,
-    "sha256": "7cee2561c1857a94b56fbab6386ac89a145cf068b7793d5b05f7fe4fd65d2d56"
+    "bytes": 2318,
+    "sha256": "369a8c9716582cd11c9909611480ac71d6363c6eb98d89c496339a8b34b134a9"
+  },
+  {
+    "path": "assets/interactions-prototype.css",
+    "bytes": 3069,
+    "sha256": "8f0babf0efd24f88da2b2fcd177afc5fd7ffe0a3f595bf46a1350213a654bbaa"
+  },
+  {
+    "path": "assets/interactions-prototype.js",
+    "bytes": 2592,
+    "sha256": "cbd68de481e1d1219741edc82450048a04c4687c2311fa475660ae40cc52d883"
   },
   {
     "path": "assets/language.js",
@@ -165,6 +160,61 @@
     "sha256": "6ed664c895877b26c2e06a7221b59286b3c8ce66e61fe870626c4f22ed309556"
   },
   {
+    "path": "assets/takram/atmosphere/irradiance.exr",
+    "bytes": 2253,
+    "sha256": "ca1cbc65648055b496389a08aa60fc7e529f59290dd36f4ee0a3aecda4085d87"
+  },
+  {
+    "path": "assets/takram/atmosphere/scattering.exr",
+    "bytes": 4094331,
+    "sha256": "6e6331c196f3d6c524543062bfe9d5fcf52201ac3d62cd443dfedfe58a53b2ce"
+  },
+  {
+    "path": "assets/takram/atmosphere/transmittance.exr",
+    "bytes": 27977,
+    "sha256": "aef6aba1a70ac159e92495feed1dfb62755f3acd918d954f28638c95f999af1b"
+  },
+  {
+    "path": "assets/takram/clouds/local_weather.png",
+    "bytes": 679653,
+    "sha256": "b84daef855dc5eebcc9b174fe832ba75a98e44b846dde201bce354417cc08031"
+  },
+  {
+    "path": "assets/takram/clouds/shape_detail.bin",
+    "bytes": 32768,
+    "sha256": "c09112199c6e0281b74ff5283c11c2943ae082650b9b67978cf5d59ed2956e4f"
+  },
+  {
+    "path": "assets/takram/clouds/shape.bin",
+    "bytes": 2097152,
+    "sha256": "ef65cf6156894720c00bf572c49e3e254f8899c4b5158246e5a35a1922e2519c"
+  },
+  {
+    "path": "assets/takram/clouds/turbulence.png",
+    "bytes": 49691,
+    "sha256": "ec2b1b0af4a6a6104102b21e58beb300b0a3d334c0281d84fde8c91d322910f9"
+  },
+  {
+    "path": "assets/takram/LICENSE.txt",
+    "bytes": 1081,
+    "sha256": "00846a358b3d0c38070523fc09e8bb2996d4515ca83b4cc18612e8a362398ffb"
+  },
+  {
+    "path": "assets/takram/SOURCE.txt",
+    "bytes": 828,
+    "sha256": "a1d7a721ae35f54ca9ca860d6cc65653ce4c6b2ee8fdd3b8bba1677ceaaa08d2"
+  },
+  {
+    "path": "assets/takram/stbn.bin",
+    "bytes": 1048576,
+    "sha256": "51f52f21e5578384585050390821a0a486dcb81e11a716fa7b92fbb6515ba852"
+  },
+  {
+    "path": "assets/takram/THIRD_PARTY_NOTICES.txt",
+    "bytes": 27185,
+    "sha256": "9380dcf9edb8693d22c065e980109c1c0078aafc5f6272eba97957b0d06185e0"
+  },
+  {
     "path": "assets/trackflow-screenshot_01.png",
     "bytes": 390083,
     "sha256": "cf76e86a08a2b6e4cd694717377858d88f89d092d22a18ecfd7774e8182851e9"
@@ -245,59 +295,9 @@
     "sha256": "05db4bb9e6fbc82a597ce8cedb0c2590205a79b7caee447c0416436c8c5e4380"
   },
   {
-    "path": "assets/takram/LICENSE.txt",
-    "bytes": 1081,
-    "sha256": "00846a358b3d0c38070523fc09e8bb2996d4515ca83b4cc18612e8a362398ffb"
-  },
-  {
-    "path": "assets/takram/SOURCE.txt",
-    "bytes": 828,
-    "sha256": "a1d7a721ae35f54ca9ca860d6cc65653ce4c6b2ee8fdd3b8bba1677ceaaa08d2"
-  },
-  {
-    "path": "assets/takram/stbn.bin",
-    "bytes": 1048576,
-    "sha256": "51f52f21e5578384585050390821a0a486dcb81e11a716fa7b92fbb6515ba852"
-  },
-  {
-    "path": "assets/takram/THIRD_PARTY_NOTICES.txt",
-    "bytes": 27185,
-    "sha256": "9380dcf9edb8693d22c065e980109c1c0078aafc5f6272eba97957b0d06185e0"
-  },
-  {
-    "path": "assets/takram/atmosphere/irradiance.exr",
-    "bytes": 2253,
-    "sha256": "ca1cbc65648055b496389a08aa60fc7e529f59290dd36f4ee0a3aecda4085d87"
-  },
-  {
-    "path": "assets/takram/atmosphere/scattering.exr",
-    "bytes": 4094331,
-    "sha256": "6e6331c196f3d6c524543062bfe9d5fcf52201ac3d62cd443dfedfe58a53b2ce"
-  },
-  {
-    "path": "assets/takram/atmosphere/transmittance.exr",
-    "bytes": 27977,
-    "sha256": "aef6aba1a70ac159e92495feed1dfb62755f3acd918d954f28638c95f999af1b"
-  },
-  {
-    "path": "assets/takram/clouds/local_weather.png",
-    "bytes": 679653,
-    "sha256": "b84daef855dc5eebcc9b174fe832ba75a98e44b846dde201bce354417cc08031"
-  },
-  {
-    "path": "assets/takram/clouds/shape.bin",
-    "bytes": 2097152,
-    "sha256": "ef65cf6156894720c00bf572c49e3e254f8899c4b5158246e5a35a1922e2519c"
-  },
-  {
-    "path": "assets/takram/clouds/shape_detail.bin",
-    "bytes": 32768,
-    "sha256": "c09112199c6e0281b74ff5283c11c2943ae082650b9b67978cf5d59ed2956e4f"
-  },
-  {
-    "path": "assets/takram/clouds/turbulence.png",
-    "bytes": 49691,
-    "sha256": "ec2b1b0af4a6a6104102b21e58beb300b0a3d334c0281d84fde8c91d322910f9"
+    "path": "index.html",
+    "bytes": 19936,
+    "sha256": "157656c956afcd8d87389beeb66606df8c49530bc2c535829aba403058e2212c"
   },
   {
     "path": "projects/django-ecommerce/index.html",
@@ -318,6 +318,16 @@
     "path": "projects/trackflow/index.html",
     "bytes": 26826,
     "sha256": "7edd9b750a56f8226e4a93a5170dc1da78ce75cc58a09e2a45e6ac3ee9be8172"
+  },
+  {
+    "path": "robots.txt",
+    "bytes": 69,
+    "sha256": "cea90c03266a204a2282282995d270fa4b9e3f3e03e69dff707ee8521698f457"
+  },
+  {
+    "path": "sitemap.xml",
+    "bytes": 768,
+    "sha256": "034fa0946cacc5ee4463968fb5b9b1bff6ca9561a81e0af0fe8338c667be1e2a"
   },
   {
     "path": "training/bio/index.html",

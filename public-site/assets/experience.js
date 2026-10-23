@@ -18,3 +18,5 @@ document.getElementById('quick-overview-open')?.addEventListener('click',event=>
 document.getElementById('quick-overview-close')?.addEventListener('click',()=>dialog.close());
 dialog?.addEventListener('click',event=>{if(event.target===dialog){const b=dialog.getBoundingClientRect();if(event.clientX<b.left||event.clientX>b.right||event.clientY<b.top||event.clientY>b.bottom)dialog.close();}});
 dialog?.addEventListener('close',()=>opener?.focus());
+
+import './interactions-prototype.js';
