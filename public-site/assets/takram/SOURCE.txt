@@ -1,0 +1,9 @@
+Prototype uses @takram/three-clouds 0.7.6, @takram/three-atmosphere 0.19.1 and @takram/three-geospatial 0.9.1.
+Source repository: https://github.com/takram-design-engineering/three-geospatial
+Cloud docs: https://github.com/takram-design-engineering/three-geospatial/tree/main/packages/clouds
+Integration based on: storybook/src/clouds/Clouds-Vanilla.tsx
+Cloud/atmosphere data copied unchanged from the corresponding pinned npm packages.
+Blue-noise data source: https://media.githubusercontent.com/media/takram-design-engineering/three-geospatial/9627216cc50057994c98a2118f3c4a23765d43b9/packages/core/assets/stbn.bin
+Takram license: LICENSE.txt, MIT, Copyright (c) 2024 Shota Matsuda.
+Bundled dependency license notices: THIRD_PARTY_NOTICES.txt.
+No code or textures from the Unity flipbook test are used to render these clouds.

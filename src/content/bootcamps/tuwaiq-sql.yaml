@@ -1,8 +1,0 @@
-order: 5
-name: Data Analysis Using SQL
-provider: Tuwaiq Academy
-hours: 20
-skills: [SQL, Joins, Aggregation, Exploratory analysis, Hypothesis testing]
-summary:
-  en: "Using SQL to answer real questions from data. We explored datasets, formed hypotheses about patterns, for example whether an attribute such as age relates to an outcome, and then proved or disproved them with filtering, joins, grouping and aggregation. The habit I kept: let the query test the assumption, not confirm it."
-  ar: "استخدام SQL للإجابة عن أسئلة حقيقية من البيانات: استكشفنا مجموعات البيانات، وصغنا فرضيات حول الأنماط، كأن نختبر هل ترتبط خاصية كالعمر بنتيجة معيّنة، ثم أثبتناها أو نفيناها بالتصفية والربط والتجميع والتلخيص. والعادة التي بقيت معي: أن يختبر الاستعلام الافتراض، لا أن يؤكده."

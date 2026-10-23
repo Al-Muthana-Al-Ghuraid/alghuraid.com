@@ -1,0 +1,337 @@
+[
+  {
+    "path": "404.html",
+    "bytes": 241,
+    "sha256": "d411a594c1322b8e39139f31c45d849c0edb336c070065c56bc42b16b3b4fd39"
+  },
+  {
+    "path": "index.html",
+    "bytes": 17626,
+    "sha256": "1551b8869d26300e10ba8b4377fc22ba823da0f9467e224b63f408219e0d1825"
+  },
+  {
+    "path": "robots.txt",
+    "bytes": 69,
+    "sha256": "cea90c03266a204a2282282995d270fa4b9e3f3e03e69dff707ee8521698f457"
+  },
+  {
+    "path": "sitemap.xml",
+    "bytes": 768,
+    "sha256": "034fa0946cacc5ee4463968fb5b9b1bff6ca9561a81e0af0fe8338c667be1e2a"
+  },
+  {
+    "path": "assets/academy-kaust.png",
+    "bytes": 12940,
+    "sha256": "f5d61914e28366decd7f682544a4762f07c9dff06fc11dbb8d07a233e7b9dec1"
+  },
+  {
+    "path": "assets/academy-misk.jpg",
+    "bytes": 16677,
+    "sha256": "8ea2a8550fe5f821a3cc30b561cd22e85bff64b170903cc38cc77781c15b68cc"
+  },
+  {
+    "path": "assets/academy-sda.jpg",
+    "bytes": 72835,
+    "sha256": "87c4877b42edffdfeff3e04be8102aba1adc84c6c5d6e20c0c6fa6cb101ae793"
+  },
+  {
+    "path": "assets/academy-tuwaiq.jpg",
+    "bytes": 27333,
+    "sha256": "94c70c870d0ca46d4f09f931ce06127117e466649ff3983d279fa54f328aa899"
+  },
+  {
+    "path": "assets/badge-pmi-rmp.png",
+    "bytes": 196632,
+    "sha256": "2ca445d2d268199de9f8452f0a176acfc723ed2af67ea7fcd788b5b6ea586b0c"
+  },
+  {
+    "path": "assets/badge-pmp.png",
+    "bytes": 69850,
+    "sha256": "e630e17ca53ce7d4cdf34fcaa053141ddadfa8010dfe053c9ed4fcb7e5c85081"
+  },
+  {
+    "path": "assets/badge-security-plus-reference.png",
+    "bytes": 30638,
+    "sha256": "fe8aa2163761bbb93b53309f2c77b328a5f2c8a8abae5c2782729f5b83ffc4b2"
+  },
+  {
+    "path": "assets/base.css",
+    "bytes": 9316,
+    "sha256": "71c0f17672b4c095440485de1518eb1869df297097fbab2ffbafaf61fe46b69a"
+  },
+  {
+    "path": "assets/city.js",
+    "bytes": 4420,
+    "sha256": "54fb082284e546accb32950e1187bbb691afba489ec94796abcc3c897a563e9f"
+  },
+  {
+    "path": "assets/language.js",
+    "bytes": 3309,
+    "sha256": "62bc84b05b709cd96c19aa61aa1b03b26da1f33cde44f3681ba8ff38a29d0bf3"
+  },
+  {
+    "path": "assets/metadata-deployment-page15.png",
+    "bytes": 805528,
+    "sha256": "d2c1b7bd226f4156afb89109a0bc5e6afe990c8bb8d4b22de8a04522722b3773"
+  },
+  {
+    "path": "assets/moon-lroc-nasa.jpg",
+    "bytes": 457942,
+    "sha256": "f7130a1822681fa7512d7dcfd40db8c10b9ba4f06777910348698260ed7a2170"
+  },
+  {
+    "path": "assets/n8n-email-sender-reference.png",
+    "bytes": 219686,
+    "sha256": "102693249b03ddd1e9ee34b075de6ae548a8218f9a65b0046db86bdf06011fa6"
+  },
+  {
+    "path": "assets/n8n-job-discovery-reference.png",
+    "bytes": 193166,
+    "sha256": "cc94764057b53880e64daed155c40b04e8567c097ce721231c43a05d3799bc76"
+  },
+  {
+    "path": "assets/n8n-lead-finder-reference.png",
+    "bytes": 254179,
+    "sha256": "5d46e7b4d35303617ef5e4bcdf20e8c28d029191638fc1bc2b7a67449c8ccd1d"
+  },
+  {
+    "path": "assets/portfolio.css",
+    "bytes": 22672,
+    "sha256": "042cef7ea9e90ab8fb14f1baf9f1916646106df93e7f100830a87bf094feeabc"
+  },
+  {
+    "path": "assets/portfolio.js",
+    "bytes": 3414,
+    "sha256": "d3c36c3343f1c27b321e5afc3eaad72c02bdeabf380530b45c0dadd08cb153f7"
+  },
+  {
+    "path": "assets/rag-architecture-page5.png",
+    "bytes": 123318,
+    "sha256": "549a0e743e8ae47b23264c984b6038d59de3c6044a015241c7c3698ef79b855c"
+  },
+  {
+    "path": "assets/rag-container-page16.png",
+    "bytes": 143521,
+    "sha256": "b118d9b6c2858bdd3cc7c9e8c8a7a6d1a8e64f1fbc2dba017949933b9c30e75d"
+  },
+  {
+    "path": "assets/riyadh-candidate-day-cutout-v1.png",
+    "bytes": 2148795,
+    "sha256": "d3ba3e78d83c5aaf3fc86ac193087aa401fcd799d362ebe71534ddfaef9e6205"
+  },
+  {
+    "path": "assets/riyadh-candidate-night-cutout-v1.png",
+    "bytes": 2366600,
+    "sha256": "044aa5f7b3ae66a68826dfee002fa88ce618feafe7b88f4fb31e57a4c54c5ec0"
+  },
+  {
+    "path": "assets/riyadh-candidate-night-fewer-lights-v2.png",
+    "bytes": 1920022,
+    "sha256": "ba783cd0a01a919e335f6e853f2b218b7b89ce865a6ae1744bc95b36565fe5fc"
+  },
+  {
+    "path": "assets/scroll.css",
+    "bytes": 2179,
+    "sha256": "5b173c23b1d68883eff3df9477f4a7474c637ab290cc283d3ebbd4cb131c9c33"
+  },
+  {
+    "path": "assets/scroll.js",
+    "bytes": 2473,
+    "sha256": "d783d1106e227e094cacb79fea4e839ecbd471ef21e127353ca5b7ba61e12419"
+  },
+  {
+    "path": "assets/sky.css",
+    "bytes": 2953,
+    "sha256": "30f7720523605e5053ef8ac0f46e2a8b95c78901e7f5449655bdcfc5f423d284"
+  },
+  {
+    "path": "assets/sky.js",
+    "bytes": 865311,
+    "sha256": "7a7c58e5766b209f330bf545d87956b6be9df61ae201c2e5bfd2ae4d50886e76"
+  },
+  {
+    "path": "assets/trackflow-screenshot_01.png",
+    "bytes": 390083,
+    "sha256": "cf76e86a08a2b6e4cd694717377858d88f89d092d22a18ecfd7774e8182851e9"
+  },
+  {
+    "path": "assets/trackflow-screenshot_10.png",
+    "bytes": 361265,
+    "sha256": "1eb44ad95bd559e261329000837f0cc313bda2db0fa90891ef7c1dbdc18e5dce"
+  },
+  {
+    "path": "assets/translations.json",
+    "bytes": 18029,
+    "sha256": "40db45e1d9ebcb84201128b866300efabe3f8db4bb8810e1ca6b5147a65cd8a7"
+  },
+  {
+    "path": "cv/Al-Muthana_Al-Ghuraid_CV.pdf",
+    "bytes": 53272,
+    "sha256": "cae33f50a05320b41cf206098edac46c8bb721a73b24c7377f664c902b5f7ca5"
+  },
+  {
+    "path": "diagrams/commerce-admin.html",
+    "bytes": 34478,
+    "sha256": "14dfbf493b39ed61882254617626149f3607bb6980e219d132df71f5758ff8de"
+  },
+  {
+    "path": "diagrams/commerce-shopping.html",
+    "bytes": 32916,
+    "sha256": "7b78f71466999ba0fd509475a0a791ee003af0c19067603a6ff22a8e6fc7b925"
+  },
+  {
+    "path": "diagrams/commerce-system.html",
+    "bytes": 31673,
+    "sha256": "4c3b4d10acbe689b57d5e782075d519ccb5fecac445783f5531f99516f4bc388"
+  },
+  {
+    "path": "diagrams/n8n-email.html",
+    "bytes": 10326,
+    "sha256": "0dfdee78935722de49a448644e1204f48d7f1e369dad34a908205f97b2d0d510"
+  },
+  {
+    "path": "diagrams/n8n-job.html",
+    "bytes": 11210,
+    "sha256": "23839cdd709ceff3cbff298f7f14c35e872435c6205170d7ffd1dcc19cbcada9"
+  },
+  {
+    "path": "diagrams/n8n-lead.html",
+    "bytes": 10342,
+    "sha256": "30b04da0c7c701dc3a5bc1b4f99718b35f3035caa237f77d0e202e884a5672ae"
+  },
+  {
+    "path": "diagrams/rag-container.html",
+    "bytes": 15647,
+    "sha256": "824299c919a129e7ea7114d5da7daf1add05966ab3eae0e2e559a3bae694ed2c"
+  },
+  {
+    "path": "diagrams/rag-governance.html",
+    "bytes": 15751,
+    "sha256": "17d0d8b38d0aafa017681dd511696b0e6ccb251552926a51723394ea9f6c8254"
+  },
+  {
+    "path": "diagrams/rag-vm.html",
+    "bytes": 14079,
+    "sha256": "da05f208cab6ed3890b259da87f42068b4f82ed4f89451ab613bdf734f237946"
+  },
+  {
+    "path": "diagrams/trackflow-help.html",
+    "bytes": 11753,
+    "sha256": "485fe4d63af38196f662293c791dbee8d227e252d21cfd4d3e611ac155714947"
+  },
+  {
+    "path": "diagrams/trackflow-learning.html",
+    "bytes": 10074,
+    "sha256": "4e5174a1ff4df25d8ed64c9b5940d9473c1dcb11f3e763ac58d46f3cd961257b"
+  },
+  {
+    "path": "diagrams/trackflow-system.html",
+    "bytes": 8788,
+    "sha256": "05db4bb9e6fbc82a597ce8cedb0c2590205a79b7caee447c0416436c8c5e4380"
+  },
+  {
+    "path": "assets/takram/LICENSE.txt",
+    "bytes": 1081,
+    "sha256": "00846a358b3d0c38070523fc09e8bb2996d4515ca83b4cc18612e8a362398ffb"
+  },
+  {
+    "path": "assets/takram/SOURCE.txt",
+    "bytes": 828,
+    "sha256": "a1d7a721ae35f54ca9ca860d6cc65653ce4c6b2ee8fdd3b8bba1677ceaaa08d2"
+  },
+  {
+    "path": "assets/takram/stbn.bin",
+    "bytes": 1048576,
+    "sha256": "51f52f21e5578384585050390821a0a486dcb81e11a716fa7b92fbb6515ba852"
+  },
+  {
+    "path": "assets/takram/THIRD_PARTY_NOTICES.txt",
+    "bytes": 27185,
+    "sha256": "9380dcf9edb8693d22c065e980109c1c0078aafc5f6272eba97957b0d06185e0"
+  },
+  {
+    "path": "assets/takram/atmosphere/irradiance.exr",
+    "bytes": 2253,
+    "sha256": "ca1cbc65648055b496389a08aa60fc7e529f59290dd36f4ee0a3aecda4085d87"
+  },
+  {
+    "path": "assets/takram/atmosphere/scattering.exr",
+    "bytes": 4094331,
+    "sha256": "6e6331c196f3d6c524543062bfe9d5fcf52201ac3d62cd443dfedfe58a53b2ce"
+  },
+  {
+    "path": "assets/takram/atmosphere/transmittance.exr",
+    "bytes": 27977,
+    "sha256": "aef6aba1a70ac159e92495feed1dfb62755f3acd918d954f28638c95f999af1b"
+  },
+  {
+    "path": "assets/takram/clouds/local_weather.png",
+    "bytes": 679653,
+    "sha256": "b84daef855dc5eebcc9b174fe832ba75a98e44b846dde201bce354417cc08031"
+  },
+  {
+    "path": "assets/takram/clouds/shape.bin",
+    "bytes": 2097152,
+    "sha256": "ef65cf6156894720c00bf572c49e3e254f8899c4b5158246e5a35a1922e2519c"
+  },
+  {
+    "path": "assets/takram/clouds/shape_detail.bin",
+    "bytes": 32768,
+    "sha256": "c09112199c6e0281b74ff5283c11c2943ae082650b9b67978cf5d59ed2956e4f"
+  },
+  {
+    "path": "assets/takram/clouds/turbulence.png",
+    "bytes": 49691,
+    "sha256": "ec2b1b0af4a6a6104102b21e58beb300b0a3d334c0281d84fde8c91d322910f9"
+  },
+  {
+    "path": "projects/django-ecommerce/index.html",
+    "bytes": 40197,
+    "sha256": "b44b9b2c2b25b131230ee30e1dcbeb1df04045e7a7b5790effb634aafeaf9634"
+  },
+  {
+    "path": "projects/n8n-automation/index.html",
+    "bytes": 16695,
+    "sha256": "1be7156ea8adce02734b6863044c5ec17a8822baacbb44ba29f13a967b5c171d"
+  },
+  {
+    "path": "projects/rag-chatbot/index.html",
+    "bytes": 29714,
+    "sha256": "f7872ea4d09da2c6d7641bbea5d70050e1488a539dea492a6e4dba6a07bbe450"
+  },
+  {
+    "path": "projects/trackflow/index.html",
+    "bytes": 23952,
+    "sha256": "e5542681a2144d46cdf3fe215bc5347e89550ddb0987224fb8f7f54eb5ebeaa7"
+  },
+  {
+    "path": "training/bio/index.html",
+    "bytes": 16021,
+    "sha256": "7b7cf31ece2aa2a176a727ac9a0c2b2840e14d0c9518082ccbc68172d60384fa"
+  },
+  {
+    "path": "training/cloud/index.html",
+    "bytes": 15433,
+    "sha256": "813f9298acab58e6b958e272829a20017cb2b865d890a5c4dd5f1ad81573de9d"
+  },
+  {
+    "path": "training/django/index.html",
+    "bytes": 13078,
+    "sha256": "58ffe15b97557ea16494d2fa52063e3fed0b1466db4831324df2708dd9ca99d8"
+  },
+  {
+    "path": "training/misk/index.html",
+    "bytes": 12288,
+    "sha256": "cff63224034b0d499e732e88294b33fcee3e3c4c504533dbab89e2d9827faaee"
+  },
+  {
+    "path": "training/python/index.html",
+    "bytes": 15527,
+    "sha256": "104bc9dfcc55c042c171c0920fbfc3fdac57776bdd83be645ea411b7ca5070f3"
+  },
+  {
+    "path": "training/sql/index.html",
+    "bytes": 13281,
+    "sha256": "3971787d0b821d172eead18714169e6b6a1f51cf167c216720d672ea808f5048"
+  }
+]

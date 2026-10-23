@@ -1,0 +1,16 @@
+:root{--arrival:0;--intro-opacity:1;--intro-shift:0px;--world-scale:1;--world-shift:0px}
+.world{transform:translate3d(0,var(--world-shift),0) scale(var(--world-scale));transform-origin:50% 58%;will-change:transform}
+.world.settled{will-change:auto}
+.city-back{background-image:url('/assets/riyadh-candidate-day-cutout-v1.png');filter:none;mask-size:cover;mask-position:center bottom;mask-repeat:no-repeat;-webkit-mask-size:cover;-webkit-mask-position:center bottom;-webkit-mask-repeat:no-repeat}
+.city-back:after{display:block;background-image:url('/assets/riyadh-candidate-night-fewer-lights-v2.png');opacity:var(--night)}
+.hero{height:100svh;min-height:650px;max-height:none;padding:clamp(135px,21vh,205px) 7% 65px}
+.hero>.eyebrow,.hero>h1,.hero>p,.hero>.explore,.hero>.hero-footer{opacity:var(--intro-opacity);transform:translate3d(0,var(--intro-shift),0)}
+.hero-footer{bottom:34px}
+.content{margin-top:0}
+.review{bottom:88px;width:320px}
+.review .engine-links[hidden]{display:none}
+.review summary{font-size:9px}
+.scroll-tools{position:fixed;z-index:40;bottom:17px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:12px;padding:10px 14px;background:#102a37f2;color:#fff;border:1px solid #ffffff40;border-radius:13px;box-shadow:0 5px 30px #0003;font-size:10px;white-space:nowrap}
+.scroll-tools>span{letter-spacing:1.4px;font-size:8px;color:#d9c193}.scroll-tools output{min-width:94px;color:#c8d5dc}.scroll-tools button{border:1px solid #ffffff40;border-radius:6px;padding:8px 10px;background:transparent;color:white;font:inherit;cursor:pointer}.scroll-tools button[aria-pressed=true]{background:#d9c193;color:#142c37}.section-nav{bottom:84px;left:50%;right:auto}
+@media(max-width:700px){.hero{min-height:650px;padding:145px 7% 60px}.hero h1{font-size:43px}.hero p{font-size:13px}.scroll-tools{bottom:12px;gap:7px;padding:8px 9px;font-size:9px;max-width:96%}.scroll-tools>span{display:none}.scroll-tools output{min-width:84px}.scroll-tools button{padding:8px}.review{bottom:70px}.section-nav{display:none}}
+@media(prefers-reduced-motion:reduce){.world{transform:none;will-change:auto}.hero>*{transform:none!important;opacity:1!important}}
