@@ -1,6 +1,6 @@
 // Initial live interaction trial; ?interactions=off retains the baseline.
 if(document.querySelector('#language-toggle') && new URLSearchParams(location.search).get('interactions')!=='off'){
- const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/interactions-prototype.css?v=launch-1';document.head.append(css);
+ const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/interactions-prototype.css?v=wall-launch-1';document.head.append(css);
  const root=document.documentElement,reduced=matchMedia('(prefers-reduced-motion: reduce)');root.classList.add('interaction-preview');
  const button=document.querySelector('#language-toggle');let busy=false;
  const layer=document.createElement('div');layer.className='word-flight-layer';layer.setAttribute('aria-hidden','true');document.body.append(layer);
@@ -33,7 +33,7 @@ if(document.querySelector('#language-toggle') && new URLSearchParams(location.se
   items.forEach(({original,left,top,width})=>Object.assign(original.style,{position:'fixed',left:left+'px',top:top+'px',width:width+'px',margin:'0',zIndex:'8501'}));
   return items;
  }
- // One continuous launch: compact V, release, destination overshoot, damped return.
+ // Edge-anchored wind-up and wall impact, followed by release back to the normal row.
  const slide=items=>{
   items.forEach(({original,style})=>style===null?original.removeAttribute('style'):original.setAttribute('style',style));
   const destinations=items.map(v=>v.original.getBoundingClientRect());
@@ -43,17 +43,23 @@ if(document.querySelector('#language-toggle') && new URLSearchParams(location.se
   const direction=targetCentre>=sourceCentre?1:-1;
   // Keep overshoot inside the viewport on narrow screens.
   const room=direction>0?innerWidth-Math.max(...destinations.map(r=>r.right))-12:Math.min(...destinations.map(r=>r.left))-12;
-  const overshoot=Math.max(0,Math.min(34,room));
+  const overshoot=Math.max(0,Math.min(54,room));
+  const sourceEdge=direction>0?Math.min(...items.map(v=>v.left)):Math.max(...items.map(v=>v.left+v.width));
+  const wall=direction>0?Math.max(...destinations.map(r=>r.right))+overshoot:Math.min(...destinations.map(r=>r.left))-overshoot;
   return Promise.all(items.map(({original,left,top,width,i},index)=>{
    const r=destinations[index],x=left-r.left,y=top-r.top;
-   const local=left+width/2-sourceCentre;
-   const squeezeX=x-local*.27-direction*12;
+   const sourceMid=left+width/2,targetMid=r.left+r.width/2;
+   // Compress distances toward the outer edge, never toward the group's centre.
+   const squeezedMid=sourceEdge+(sourceMid-sourceEdge)*.57-direction*14;
+   const squeezeX=squeezedMid-targetMid;
+   const impactMid=wall+(targetMid-wall)*.57;
+   const impactX=impactMid-targetMid;
    const v=Math.abs(index-(items.length-1)/2)*11-9;
    const animation=original.animate([
     {transform:`translate(${x}px,${y}px) scaleX(${width/r.width})`,offset:0,easing:'cubic-bezier(.45,0,.75,1)'},
-    {transform:`translate(${squeezeX}px,${y+v}px) scale(.9,1.08) rotate(${direction*(index-1.5)*3}deg)`,offset:.23,easing:'cubic-bezier(.52,0,.2,1)'},
-    {transform:`translate(${direction*overshoot}px,${v*.55}px) scale(1.08,.94) rotate(${-direction*(index-1.5)*2}deg)`,offset:.67,easing:'cubic-bezier(.35,0,.65,1)'},
-    {transform:`translate(${-direction*12}px,${-v*.22}px) scale(.97,1.025)`,offset:.82,easing:'cubic-bezier(.35,0,.65,1)'},
+    {transform:`translate(${squeezeX}px,${y+v}px) scale(.66,1.16) rotate(${direction*(index-1.5)*3}deg)`,offset:.23,easing:'cubic-bezier(.52,0,.2,1)'},
+    {transform:`translate(${impactX}px,${v*.55}px) scale(.64,1.2) rotate(${-direction*(index-1.5)*2}deg)`,offset:.67,easing:'cubic-bezier(.35,0,.65,1)'},
+    {transform:`translate(${-direction*16}px,${-v*.22}px) scale(1.07,.96)`,offset:.82,easing:'cubic-bezier(.35,0,.65,1)'},
     {transform:`translate(${direction*4}px,0) scale(1.01,.995)`,offset:.92,easing:'cubic-bezier(.35,0,.65,1)'},
     {transform:'translate(0,0) scale(1)',offset:1}
    ],{duration:1460,delay:i*12,easing:'linear',fill:'both'});
