@@ -371,28 +371,28 @@
   },
   {
     "path": "index.html",
-    "bytes": 20112,
-    "sha256": "4010a9dfc2c311c8e0bea07a816585afb1ae80049db93be067f702868b6d1b98"
+    "bytes": 20096,
+    "sha256": "2f40ab8e88cf0d5f6be89c2d13e492424d21c29cc8687c6dd59f8e72ec42bbaf"
   },
   {
     "path": "projects/django-ecommerce/index.html",
-    "bytes": 43120,
-    "sha256": "25d7096c270b488fdd38caed3a2af5cfdf1f9c6f3d651232da41b2ff4c263cb7"
+    "bytes": 43116,
+    "sha256": "fffa762932da42d12074ee4cb66222e058d9e8300ac38f46b1f7dd9028244b24"
   },
   {
     "path": "projects/n8n-automation/index.html",
-    "bytes": 19711,
-    "sha256": "ee562528d05b7d4e308f20573fe07ce0ba94c111a4e204a63840619d3b7f4e35"
+    "bytes": 19707,
+    "sha256": "9e9f583fc3e6600410b89ef6fb9c2e693b7eca5d390f052485342189f2cac224"
   },
   {
     "path": "projects/rag-chatbot/index.html",
-    "bytes": 32361,
-    "sha256": "752a8023eba13f24548b6d06836b75064d34f5a3f33cfb969e8b2cf31513fd89"
+    "bytes": 32357,
+    "sha256": "168136a6eed6fd7ec698cd8f822d06426a21747d11fe49f2eb3f3f82ef780da4"
   },
   {
     "path": "projects/trackflow/index.html",
-    "bytes": 26713,
-    "sha256": "bfe42dece7683ad1738a0b8fb6d3475a4e7f808a3a11e45c3ca2eede52d1ec55"
+    "bytes": 26709,
+    "sha256": "b7054ea402fe21098c6268c2e60f193828987a2ce43e60afe069e582cfbd2569"
   },
   {
     "path": "robots.txt",
@@ -406,32 +406,32 @@
   },
   {
     "path": "training/bio/index.html",
-    "bytes": 17576,
-    "sha256": "12c399f92d3e27dad252ae7be6eb7fc10e55e0bf53c43c15744a762b5fd6b2ad"
+    "bytes": 17572,
+    "sha256": "738a426d56623a91db3f8277a71f6eebfec39267e2a3c79aa3f0260fcc9c31fb"
   },
   {
     "path": "training/cloud/index.html",
-    "bytes": 17473,
-    "sha256": "e3a550a2e32f0f594fe7c21b620a7b70010e86ca301ce4d0c37c498ebaec5af5"
+    "bytes": 17469,
+    "sha256": "9eb89ce098e40e3ddab19e5327b65d13273b2e221564678a401d2f9a07462ce4"
   },
   {
     "path": "training/django/index.html",
-    "bytes": 15127,
-    "sha256": "b18080e0fee27504f8b29805730603b1dbb0b5ef2540fd9be65969248ca5458e"
+    "bytes": 15123,
+    "sha256": "7ddf7e540b7cf64ad60779994215816d14f10b33f357fff9cfa37afc79c12e32"
   },
   {
     "path": "training/misk/index.html",
-    "bytes": 13843,
-    "sha256": "f9220ad68b064edb5a6f1432787dbb04a58193cbbf986fe5abdae3e76cd116cd"
+    "bytes": 13839,
+    "sha256": "d6d169d4ca1c5d32bc065b529400a07b3ef1d341d539b39f386b1628051301c3"
   },
   {
     "path": "training/python/index.html",
-    "bytes": 17577,
-    "sha256": "f9c62be80e5c5bd72a3d2feffc90cd8354ded424c26c2b1491f0efdd676533b2"
+    "bytes": 17573,
+    "sha256": "8f807d230571d3d346d66c84107acebb8e9c6dcede354a1295312c5d7bc2821a"
   },
   {
     "path": "training/sql/index.html",
-    "bytes": 14836,
-    "sha256": "a518c9a18c722eacf3a7002bae376364ad8147c38aae669d75b5a4ede27e7e2f"
+    "bytes": 14832,
+    "sha256": "98442103f186c1b53b24f5cf3f605460483e7a3b0ea87b54d7fa1b3e709abe91"
   }
 ]
