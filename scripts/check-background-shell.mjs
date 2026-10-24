@@ -15,7 +15,7 @@ for (const page of pages) {
   const html = baseline
     ? execFileSync('git', ['show', `73f25e0:public-site/${page}`], {encoding:'utf8'})
     : await readFile(new URL(page, base), 'utf8');
-  if (!html.includes('src="/assets/scene.js"') && (!baseline || page !== 'index.html')) failed.push(page);
+  if (!/src="\/assets\/scene\.js(?:\?[^"]*)?"/.test(html) && (!baseline || page !== 'index.html')) failed.push(page);
 }
 if (baseline) {
   assert.ok(failed.length > 0, 'Expected the original release to reproduce the missing shared sky.');
