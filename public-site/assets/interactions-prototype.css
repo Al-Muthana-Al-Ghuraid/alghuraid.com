@@ -40,3 +40,7 @@
 
 
 .word-changing .skill-group-art *{animation-play-state:paused!important}
+
+.exchange-hidden{visibility:hidden!important}
+.exchange-control{position:fixed!important;z-index:8501!important;margin:0!important;box-sizing:border-box;display:inline-flex!important;align-items:center;justify-content:center;pointer-events:none!important;will-change:transform;box-shadow:0 8px 24px #061a3030}
+.exchange-control svg{width:20px;height:20px;fill:currentColor}
