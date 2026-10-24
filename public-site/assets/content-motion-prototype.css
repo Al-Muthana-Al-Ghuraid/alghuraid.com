@@ -52,3 +52,12 @@ html[data-theme=night] .skill-inline-choice{border-color:#5b7668;color:#edf0e7}h
 @media(max-width:800px){.content-motion-trial .readable-skills article:nth-child(-n+3) .skill-group-art{width:58px;height:58px}}
 @media(prefers-reduced-motion:reduce){.word-handoff *{transition:none!important}.scene-still-bridge{transition:none}.content-motion-trial .skill-art-visible .packet-stream{animation:none!important;opacity:1;offset-distance:40%}}
 
+
+/* Skills-only monochrome icon trial. Labels stay readable; icons inherit every tag state. */
+.content-motion-trial .skill-inline-choice{display:inline-flex;align-items:center;gap:8px}
+.skill-tag-icon{width:17px;height:17px;flex:0 0 17px;display:block;color:currentColor}
+.content-motion-trial .skill-inline-choice .skill-tag-label{padding:0;border:0;background:none;color:inherit;font:inherit;line-height:inherit}
+@media(max-width:800px){.skill-tag-icon{width:16px;height:16px;flex-basis:16px}.content-motion-trial .skill-inline-choice{gap:7px}}
+
+#skills .skill-inline-choice .skill-tag-label{padding:0;border:0;background:none;color:inherit;font:inherit;line-height:inherit}
+

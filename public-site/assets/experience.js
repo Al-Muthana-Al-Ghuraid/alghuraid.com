@@ -26,7 +26,8 @@ import './interactions-prototype.js?v=wall-launch-1';
 
 
 
-if(new URLSearchParams(location.search).get('motion')==='studio') import('./content-motion-prototype.js?v=4');
+if(new URLSearchParams(location.search).get('motion')==='studio') import('./content-motion-prototype.js?v=skill-icons-1');
+
 
 
 

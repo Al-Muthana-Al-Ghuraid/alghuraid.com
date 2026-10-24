@@ -56,18 +56,18 @@
   },
   {
     "path": "assets/content-motion-prototype.css",
-    "bytes": 10747,
-    "sha256": "eea070dc71acfa47efcdada28940b4cd3b39ca368a33d467965c30a2dc99e961"
+    "bytes": 11482,
+    "sha256": "c73991dd312491211cc7334efbdb0ec714551c8e29c1854c47c12afecaac4ecb"
   },
   {
     "path": "assets/content-motion-prototype.js",
-    "bytes": 7050,
-    "sha256": "18ed2d96d3c00c2d369869359d35a26730c1e230b2c91c614e07f498e3c9ec09"
+    "bytes": 7242,
+    "sha256": "b8454739a8b9bd2437f4ad4be44866782582d680704921c1b6ada58ee7a27c79"
   },
   {
     "path": "assets/content-motion-shell.js",
-    "bytes": 3696,
-    "sha256": "e34267cf14a6757ef4cf40506b790b87c3208ffce173f627adc6dee47db1a454"
+    "bytes": 3710,
+    "sha256": "6b94618afe03dc1aa5f129176b5be8aa8a50977abceb2cdb504748fe59ea7c51"
   },
   {
     "path": "assets/experience.css",
@@ -76,8 +76,8 @@
   },
   {
     "path": "assets/experience.js",
-    "bytes": 3414,
-    "sha256": "2df275e2a8f4d690df30a5811f7e9e50f0797bcc5d9d9e8c88cffcc4154ab552"
+    "bytes": 3428,
+    "sha256": "2b84b1b15931af4268776db6c6606442e5dc9d158939c8f7b26ecc961b0c14f7"
   },
   {
     "path": "assets/interactions-prototype.css",
@@ -173,6 +173,21 @@
     "path": "assets/scroll.js",
     "bytes": 2473,
     "sha256": "d783d1106e227e094cacb79fea4e839ecbd471ef21e127353ca5b7ba61e12419"
+  },
+  {
+    "path": "assets/skill-icons-NOTICE.txt",
+    "bytes": 352,
+    "sha256": "7bbe79a31ad15e9cfa6989129b92ab09f51900b81f3abdcda82b36241f035734"
+  },
+  {
+    "path": "assets/skill-icons-prototype.js",
+    "bytes": 2377,
+    "sha256": "c1ec81a68384491962b11c93a349fd7a636d79c57deb68cb070014b15990ef98"
+  },
+  {
+    "path": "assets/skill-icons-prototype.json",
+    "bytes": 21746,
+    "sha256": "6a6c2f2350837c80e5ef7d218531bef25dcf143ee6d03b64fdab8c4ddd3a0bff"
   },
   {
     "path": "assets/skills-mesh-prototype.css",
