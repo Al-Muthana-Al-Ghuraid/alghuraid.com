@@ -15,7 +15,7 @@ function updateButton(){const ar=root.lang==='ar',night=state.target>.5;const b=
 document.getElementById('time')?.addEventListener('click',()=>{state.target=state.target>.5?0:1;root.dataset.theme=state.target?'night':'day';updateButton();});
 new MutationObserver(updateButton).observe(root,{attributes:true,attributeFilter:['lang']});updateButton();
 try{
- await import('/assets/sky.js?v=shared-scene-1');
+ await import('/assets/sky.js?v=smooth-4');
  await import('/assets/city.js?v=shared-scene-1');
  cityReady=document.querySelector('.city-back').dataset.candidate==='ready';ready();
 }catch(error){root.dataset.sceneFailed='true';dispatchEvent(new Event('portfolio-scene-failed'));console.error('Portfolio background unavailable',error);}

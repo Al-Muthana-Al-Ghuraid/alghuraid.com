@@ -9,8 +9,8 @@ if(section){
  const hint=document.createElement('p');hint.className='skill-motion-hint';section.querySelector('h2').after(hint);
  const icons=[
  '<path d="M18 31 C7 29 9 13 21 14 C26 2 44 5 47 17 C60 15 63 31 50 32"/><rect x="16" y="38" width="38" height="21" rx="4"/><path d="M21 44 H42 M21 51 H42"/><circle class="art-packet" cx="49" cy="45" r="2"/><path class="art-signal" d="M35 33 V38"/>',
- '<rect x="7" y="10" width="57" height="45" rx="5"/><path d="M7 21 H64"/><path class="art-bracket" d="M25 30 L19 37 L25 44 M45 30 L51 37 L45 44"/><path class="art-code" d="M39 28 L32 47"/>',
- '<path d="M13 20 H35 L55 38 L35 56 H13 Z" opacity=".25"/><circle class="art-data art-data-a" cx="16" cy="20" r="3"/><circle class="art-data art-data-b" cx="16" cy="38" r="3"/><circle class="art-data art-data-c" cx="16" cy="56" r="3"/><circle cx="55" cy="38" r="5"/><path class="art-signal" d="M20 20 Q35 20 49 36 M20 56 Q35 56 49 40 M20 38 H48"/>',
+ '<rect x="7" y="10" width="57" height="45" rx="5"/><path d="M7 21 H64"/><path class="art-bracket art-bracket-left" d="M25 30 L19 37 L25 44"/><path class="art-bracket art-bracket-right" d="M45 30 L51 37 L45 44"/><path class="art-typing" d="M14 16 H20 M25 16 H31 M36 16 H42"/><path class="art-code" d="M39 28 L32 47"/>',
+ '<path d="M9 18 H24 Q35 18 35 36 H63 M9 36 H63 M9 54 H24 Q35 54 35 36" opacity=".5"/><rect x="58" y="28" width="10" height="16" rx="3"/><circle class="packet-stream packet-top" cx="9" cy="18" r="2.8"/><circle class="packet-stream packet-mid" cx="9" cy="36" r="2.8"/><circle class="packet-stream packet-low" cx="9" cy="54" r="2.8"/>',
  '<rect x="10" y="9" width="51" height="51" rx="5"/><path d="M26 9 V60 M44 9 V60" opacity=".4"/><rect class="art-task art-task-a" x="14" y="17" width="8" height="10" rx="2"/><rect class="art-task art-task-b" x="30" y="33" width="10" height="10" rx="2"/><path class="art-check" d="M48 23 L52 27 L58 18"/>'
  ];
  function play(card){card.classList.remove('skill-art-playing');requestAnimationFrame(()=>{card.classList.add('skill-art-playing');setTimeout(()=>card.classList.remove('skill-art-playing'),1600);});}

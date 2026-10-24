@@ -56,18 +56,18 @@
   },
   {
     "path": "assets/content-motion-prototype.css",
-    "bytes": 8383,
-    "sha256": "962a5df798fd3f46c67dac47c6683ffe06d7c03509f13f97769146cc14bf2605"
+    "bytes": 10747,
+    "sha256": "eea070dc71acfa47efcdada28940b4cd3b39ca368a33d467965c30a2dc99e961"
   },
   {
     "path": "assets/content-motion-prototype.js",
-    "bytes": 6936,
-    "sha256": "f431a8504d23971be9346bc8574fa739a2d9b685346be194da333e1218a71969"
+    "bytes": 7050,
+    "sha256": "18ed2d96d3c00c2d369869359d35a26730c1e230b2c91c614e07f498e3c9ec09"
   },
   {
     "path": "assets/content-motion-shell.js",
-    "bytes": 3531,
-    "sha256": "43a6aa4d0b0a6e0c46bea128ee6a9bd708279aa87861deb64aa3002a9840a382"
+    "bytes": 3696,
+    "sha256": "e34267cf14a6757ef4cf40506b790b87c3208ffce173f627adc6dee47db1a454"
   },
   {
     "path": "assets/experience.css",
@@ -76,18 +76,18 @@
   },
   {
     "path": "assets/experience.js",
-    "bytes": 3412,
-    "sha256": "8f155937b05e1def8fbef3aa785403a9ba153fb975df348957ea4f162d14eeb9"
+    "bytes": 3407,
+    "sha256": "612c534772f482c9e5dc079b61de3e5677faa4d73790a8e68eaefb6c29d29edd"
   },
   {
     "path": "assets/interactions-prototype.css",
-    "bytes": 6376,
-    "sha256": "0d5aef7475687ab93264229e47409d0a97cfd7249beb295cde4570c4f94551e4"
+    "bytes": 6494,
+    "sha256": "9cbf8e582aa74731d11a4acce8b9a515395bcff74a6f934105db2c4519e2e390"
   },
   {
     "path": "assets/interactions-prototype.js",
-    "bytes": 3916,
-    "sha256": "9a8ecf4010fc48dd4c3a8b655198adb9da6fd16ca8a4ffb9eca2fb3fef8e6733"
+    "bytes": 4653,
+    "sha256": "be9582b75d45e2f91fa66c97d32d0297090ca72cc2235e20f2bd25bbd18128f3"
   },
   {
     "path": "assets/language.js",
@@ -155,9 +155,14 @@
     "sha256": "ba783cd0a01a919e335f6e853f2b218b7b89ce865a6ae1744bc95b36565fe5fc"
   },
   {
+    "path": "assets/scene-bridge-prototype.js",
+    "bytes": 4173,
+    "sha256": "67288f0dbbd37e8aec9a31d0e436c5f15bc6398b9ad62f0e840838c2ecacabd0"
+  },
+  {
     "path": "assets/scene.js",
-    "bytes": 3538,
-    "sha256": "b208bd06c15bf7bcd2184b4d3e1fd9fe8a547e842eea066faaf7c7a147417058"
+    "bytes": 3532,
+    "sha256": "a76fac2ac030196259e1b48788f770e547bf5e3d125747d5636b190961dba8b1"
   },
   {
     "path": "assets/scroll.css",
@@ -186,8 +191,8 @@
   },
   {
     "path": "assets/sky.js",
-    "bytes": 865320,
-    "sha256": "6ed664c895877b26c2e06a7221b59286b3c8ce66e61fe870626c4f22ed309556"
+    "bytes": 865560,
+    "sha256": "a57f99e083aefbe34518f1baf0d3afa6115c0fd42791928052b73bb4b94385bd"
   },
   {
     "path": "assets/takram/atmosphere/irradiance.exr",
@@ -336,28 +341,28 @@
   },
   {
     "path": "index.html",
-    "bytes": 20022,
-    "sha256": "39fe2ddee2f1a2dad5e49c0cf532b47c4e5dd873386453806e7156c801962132"
+    "bytes": 20027,
+    "sha256": "022c4350f24b4a44538627423b45fc2289f074c04eefce6e6f15a32211d6c34b"
   },
   {
     "path": "projects/django-ecommerce/index.html",
-    "bytes": 43147,
-    "sha256": "f57bbd3dfd31afd4d9844db018af1472fb794d34f094bc4e543f895d52659ea8"
+    "bytes": 43150,
+    "sha256": "f3c410846db9aa0d9b3b6b8baedd4f97af84633241991711b747c53d34d6e746"
   },
   {
     "path": "projects/n8n-automation/index.html",
-    "bytes": 19623,
-    "sha256": "cca94e05e6a31d06dd192c9fcb4f65aed5aade4f0f7e83bd8488a15e89224651"
+    "bytes": 19626,
+    "sha256": "1a31f280dac4708e45a5f90219289b7747557df86ff076f1043594a43a7ea351"
   },
   {
     "path": "projects/rag-chatbot/index.html",
-    "bytes": 32651,
-    "sha256": "fa4b96d17257b9bddd07e58bbdd1cb23791d2e96b33fbd5d417e50d8207f8912"
+    "bytes": 32654,
+    "sha256": "82910b97edd3b3a52fa0ead2485bd7a4ac71185e279629ffb31358176fc37ead"
   },
   {
     "path": "projects/trackflow/index.html",
-    "bytes": 26904,
-    "sha256": "60b4d9d44e42844c23ac8efe54a456ae2515d0e12c50b4407961142dd318dea5"
+    "bytes": 26907,
+    "sha256": "906b03ec38482c1f4928766f4288a8b0f7da86730335b5256c37e1e2b7b6f79c"
   },
   {
     "path": "robots.txt",
@@ -371,32 +376,32 @@
   },
   {
     "path": "training/bio/index.html",
-    "bytes": 17488,
-    "sha256": "c79e4bc0307fbe89cfcd6ec28d12b3eb46dec6aff68e8d17ea61f5a1c652408c"
+    "bytes": 17491,
+    "sha256": "4dcc68f0cca5e3688ae1d7d2eecf8ba30d3d23a1fb7ce8b568137cfb22221651"
   },
   {
     "path": "training/cloud/index.html",
-    "bytes": 17385,
-    "sha256": "e12bfc89e88735e6c4d5d95e26ff47fcf8b612ff6416e24fed5f8ca3814afe94"
+    "bytes": 17388,
+    "sha256": "a8f890a05d78ac3a91902d681a9c7b550aaa2c3a42b39cc697153413c799c8f3"
   },
   {
     "path": "training/django/index.html",
-    "bytes": 15039,
-    "sha256": "1c72f5850c5159b448a357e0a6e69eded51275255cf8f544bfdd812d9596f411"
+    "bytes": 15042,
+    "sha256": "b74c8cbe9652aa7bf2cd54d2df1b9afff90eb3cb371ab3b7452e97e2efe4f1a7"
   },
   {
     "path": "training/misk/index.html",
-    "bytes": 13755,
-    "sha256": "ec924cc39a0d457c6babbe3dc6393e12e0f200d1dff3841e9cb6e494e5becfc5"
+    "bytes": 13758,
+    "sha256": "488cbd18eb6baa828df77ed6efce6c4dc024354843fd1dd5c0a37fe185cacd53"
   },
   {
     "path": "training/python/index.html",
-    "bytes": 17489,
-    "sha256": "47ef843e1c7f8867935f3f31e3a75b0c5044f0be819acc234acfd6cce35d5493"
+    "bytes": 17492,
+    "sha256": "8e70b32b02ee581b3ed075e8b157f49b77adb3ca692acf93838a56a0ea7f8e30"
   },
   {
     "path": "training/sql/index.html",
-    "bytes": 14748,
-    "sha256": "6ce823a6cbd54256ab2ed6b1a280bc02680ed3fa66f26af113ba713e0bf27c1a"
+    "bytes": 14751,
+    "sha256": "c078ffab5678836a411b506b67513ff6fa1d6dffeba47f8c3669b1b546cf825b"
   }
 ]

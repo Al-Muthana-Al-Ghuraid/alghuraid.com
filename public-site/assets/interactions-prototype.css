@@ -1,6 +1,6 @@
 /* Local provisional experiment; connected Arabic words stay intact. */
 .word-flight-layer{position:fixed;inset:0;z-index:8500;pointer-events:none;overflow:hidden}.word-flight-layer span{position:absolute;white-space:pre;transform-origin:center;will-change:transform,opacity}
-.word-changing main,.word-changing main *{color:transparent!important;text-shadow:none!important}.word-changing{overflow-anchor:none}
+.word-hidden{color:transparent!important;text-shadow:none!important}.word-handoff .word-hidden{transition:color .14s linear}.word-changing{overflow-anchor:none}
 .interaction-preview .journey-original{display:none!important}
 .travel-route{position:fixed;left:15px;top:50%;width:100px;height:460px;transform:translate(-25px,-50%);opacity:0;visibility:hidden;transition:opacity .4s,transform .5s;pointer-events:none;z-index:85;direction:ltr}
 .travel-route.visible{opacity:1;visibility:visible;transform:translate(0,-50%)}.travel-route svg{width:100%;height:420px;overflow:visible;filter:drop-shadow(0 2px 4px #071b3070)}
@@ -38,3 +38,5 @@
 /* Track parked; suppress the old floating navigation as well. */
 .interaction-preview .section-nav{display:none!important}
 
+
+.word-changing .skill-group-art *{animation-play-state:paused!important}
