@@ -39,3 +39,6 @@ for(let sample=0;sample<1;sample++){
 document.querySelector('#lang').onclick=()=>{ar=!ar;document.documentElement.lang=ar?'ar':'en';document.documentElement.dir=ar?'rtl':'ltr';document.querySelectorAll('[data-en]').forEach(n=>n.textContent=n.dataset[ar?'ar':'en']);document.querySelector('#lang').textContent=ar?'English':'العربية';};
 const original=document.querySelector('article svg');const zoom=document.createElement('article');const zh=document.createElement('h2');zh.dataset.en='Detail · Chalk grain and checkpoint spacing';zh.dataset.ar='تفصيل · حبيبات الطباشير والمسافة عند نقطة التوقف';zh.textContent=zh.dataset.en;zoom.append(zh);const enlarged=original.cloneNode(true);enlarged.querySelectorAll('[id]').forEach(n=>n.id='detail-'+n.id);enlarged.querySelectorAll('*').forEach(n=>{for(const a of [...n.attributes])if(a.value.includes('url(#'))n.setAttribute(a.name,a.value.replaceAll('url(#','url(#detail-'));});enlarged.setAttribute('viewBox','230 50 160 110');enlarged.style.height='270px';enlarged.setAttribute('aria-label','Chalk detail / تفصيل الطباشير');zoom.append(enlarged);document.querySelector('#samples').append(zoom);
 </script></body></html>
+
+
+

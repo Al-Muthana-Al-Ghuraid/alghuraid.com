@@ -1,8 +1,8 @@
 [
   {
     "path": "404.html",
-    "bytes": 243,
-    "sha256": "6c4ed8bc25ba7278d05e9e3793fd08e4cf241cf9b31d75b0eefd55af775494cf"
+    "bytes": 241,
+    "sha256": "d411a594c1322b8e39139f31c45d849c0edb336c070065c56bc42b16b3b4fd39"
   },
   {
     "path": "assets/academy-kaust.png",
@@ -301,13 +301,13 @@
   },
   {
     "path": "chalk-a-refined-prototype.html",
-    "bytes": 8748,
-    "sha256": "debb83587938b4c15aeb93cee0a0e5ee0706a821e09c0252cb6aca8aa2b1adfd"
+    "bytes": 8710,
+    "sha256": "b7216de965d81b5f03b3b25241ed0d55f78846273ade9bbfe8e30bda507324a4"
   },
   {
     "path": "chalk-material-prototype.html",
-    "bytes": 6970,
-    "sha256": "07d7ec3a0d415bf9df78013080d97eebee2a0fdc65f6d8a5bd843b0df05849ef"
+    "bytes": 6938,
+    "sha256": "af45a4714dd961a45a4847335fcbc7a27f8877c690a8bcf5821cd5a4734bf013"
   },
   {
     "path": "cv/Al-Muthana_Al-Ghuraid_CV.pdf",
@@ -316,63 +316,63 @@
   },
   {
     "path": "diagrams/commerce-admin.html",
-    "bytes": 34480,
-    "sha256": "6789f03ab8134644b66e22c2a8526b82f85c494835853e27132846d91015a9a9"
+    "bytes": 34478,
+    "sha256": "14dfbf493b39ed61882254617626149f3607bb6980e219d132df71f5758ff8de"
   },
   {
     "path": "diagrams/commerce-shopping.html",
-    "bytes": 32918,
-    "sha256": "af2b17ccb298498bc1d31a7ff2904544d795f492c8e012ab454a2cf4020aa789"
+    "bytes": 32916,
+    "sha256": "7b78f71466999ba0fd509475a0a791ee003af0c19067603a6ff22a8e6fc7b925"
   },
   {
     "path": "diagrams/commerce-system.html",
-    "bytes": 31675,
-    "sha256": "0468eca87e7cd30ce8e00de1e29581397ed9cbcca8b80dba9994d685e96f474a"
+    "bytes": 31673,
+    "sha256": "4c3b4d10acbe689b57d5e782075d519ccb5fecac445783f5531f99516f4bc388"
   },
   {
     "path": "diagrams/n8n-email.html",
-    "bytes": 10328,
-    "sha256": "dff41f1638d656bb66971bab143adee5a26722aaf32c72b6f934499d9269b8f8"
+    "bytes": 10326,
+    "sha256": "0dfdee78935722de49a448644e1204f48d7f1e369dad34a908205f97b2d0d510"
   },
   {
     "path": "diagrams/n8n-job.html",
-    "bytes": 11212,
-    "sha256": "7b2dd795f55fab4890850990c37632075dc477dc586374ed33e7e8a591bed872"
+    "bytes": 11210,
+    "sha256": "23839cdd709ceff3cbff298f7f14c35e872435c6205170d7ffd1dcc19cbcada9"
   },
   {
     "path": "diagrams/n8n-lead.html",
-    "bytes": 10344,
-    "sha256": "7d3cb593a143872c0b958e7a5771510e4dbe1790b8696f9d19f19f8606e0e4b8"
+    "bytes": 10342,
+    "sha256": "30b04da0c7c701dc3a5bc1b4f99718b35f3035caa237f77d0e202e884a5672ae"
   },
   {
     "path": "diagrams/rag-container.html",
-    "bytes": 15649,
-    "sha256": "1c6e6c873c18f1d0d9512527a38042f50c6409085a93acbc8780d996c9ed58f8"
+    "bytes": 15647,
+    "sha256": "824299c919a129e7ea7114d5da7daf1add05966ab3eae0e2e559a3bae694ed2c"
   },
   {
     "path": "diagrams/rag-governance.html",
-    "bytes": 15753,
-    "sha256": "048b341164966a96758bd38957a8b3721214a75550089e5f9013c3ec64b65a72"
+    "bytes": 15751,
+    "sha256": "17d0d8b38d0aafa017681dd511696b0e6ccb251552926a51723394ea9f6c8254"
   },
   {
     "path": "diagrams/rag-vm.html",
-    "bytes": 14081,
-    "sha256": "470c89282591d46498812029abc7967ec94b084b6ea45b8c82157ade88d5e1cc"
+    "bytes": 14079,
+    "sha256": "da05f208cab6ed3890b259da87f42068b4f82ed4f89451ab613bdf734f237946"
   },
   {
     "path": "diagrams/trackflow-help.html",
-    "bytes": 11755,
-    "sha256": "5564c3acafd7857344bebfb768b9de109e31ab087098edc757fca6bae3e87e19"
+    "bytes": 11753,
+    "sha256": "485fe4d63af38196f662293c791dbee8d227e252d21cfd4d3e611ac155714947"
   },
   {
     "path": "diagrams/trackflow-learning.html",
-    "bytes": 10076,
-    "sha256": "b0383dce5edb31643ad52f3d9f1490a26ba3736bca792fce7a1a07e681c71fcc"
+    "bytes": 10074,
+    "sha256": "4e5174a1ff4df25d8ed64c9b5940d9473c1dcb11f3e763ac58d46f3cd961257b"
   },
   {
     "path": "diagrams/trackflow-system.html",
-    "bytes": 8790,
-    "sha256": "725c35ffe486749dfe32b45b5d42c5a7cbbb1530d20baf0843fe07bc5140296c"
+    "bytes": 8788,
+    "sha256": "05db4bb9e6fbc82a597ce8cedb0c2590205a79b7caee447c0416436c8c5e4380"
   },
   {
     "path": "index.html",
