@@ -76,8 +76,8 @@
   },
   {
     "path": "assets/experience.js",
-    "bytes": 3428,
-    "sha256": "2b84b1b15931af4268776db6c6606442e5dc9d158939c8f7b26ecc961b0c14f7"
+    "bytes": 3481,
+    "sha256": "f60600307756ca5dfc9449161df0d89dd13acc037fa26adb768addf129c0a004"
   },
   {
     "path": "assets/interactions-prototype.css",
@@ -98,6 +98,21 @@
     "path": "assets/metadata-deployment-page15.png",
     "bytes": 805528,
     "sha256": "d2c1b7bd226f4156afb89109a0bc5e6afe990c8bb8d4b22de8a04522722b3773"
+  },
+  {
+    "path": "assets/mobile-architectures.json",
+    "bytes": 16681,
+    "sha256": "2100dcd8ea2e0d6f4383152b6e2bde298c6efd5ad6b247d382e432183eae30be"
+  },
+  {
+    "path": "assets/mobile-comfort-prototype.css",
+    "bytes": 9121,
+    "sha256": "a4db21974d2a3d9cf70cb32eea4add26851f7936dbe862446a6a539cc80a4810"
+  },
+  {
+    "path": "assets/mobile-comfort-prototype.js",
+    "bytes": 10156,
+    "sha256": "c96424008dc9dfd8f3269e946fb9846da7fa3964c80c5eb2cde1bf2250d11c50"
   },
   {
     "path": "assets/moon-lroc-nasa.jpg",
@@ -356,28 +371,28 @@
   },
   {
     "path": "index.html",
-    "bytes": 20027,
-    "sha256": "022c4350f24b4a44538627423b45fc2289f074c04eefce6e6f15a32211d6c34b"
+    "bytes": 20112,
+    "sha256": "4010a9dfc2c311c8e0bea07a816585afb1ae80049db93be067f702868b6d1b98"
   },
   {
     "path": "projects/django-ecommerce/index.html",
-    "bytes": 43150,
-    "sha256": "f3c410846db9aa0d9b3b6b8baedd4f97af84633241991711b747c53d34d6e746"
+    "bytes": 43120,
+    "sha256": "25d7096c270b488fdd38caed3a2af5cfdf1f9c6f3d651232da41b2ff4c263cb7"
   },
   {
     "path": "projects/n8n-automation/index.html",
-    "bytes": 19626,
-    "sha256": "1a31f280dac4708e45a5f90219289b7747557df86ff076f1043594a43a7ea351"
+    "bytes": 19711,
+    "sha256": "ee562528d05b7d4e308f20573fe07ce0ba94c111a4e204a63840619d3b7f4e35"
   },
   {
     "path": "projects/rag-chatbot/index.html",
-    "bytes": 32654,
-    "sha256": "82910b97edd3b3a52fa0ead2485bd7a4ac71185e279629ffb31358176fc37ead"
+    "bytes": 32361,
+    "sha256": "752a8023eba13f24548b6d06836b75064d34f5a3f33cfb969e8b2cf31513fd89"
   },
   {
     "path": "projects/trackflow/index.html",
-    "bytes": 26907,
-    "sha256": "906b03ec38482c1f4928766f4288a8b0f7da86730335b5256c37e1e2b7b6f79c"
+    "bytes": 26713,
+    "sha256": "bfe42dece7683ad1738a0b8fb6d3475a4e7f808a3a11e45c3ca2eede52d1ec55"
   },
   {
     "path": "robots.txt",
@@ -391,32 +406,32 @@
   },
   {
     "path": "training/bio/index.html",
-    "bytes": 17491,
-    "sha256": "4dcc68f0cca5e3688ae1d7d2eecf8ba30d3d23a1fb7ce8b568137cfb22221651"
+    "bytes": 17576,
+    "sha256": "12c399f92d3e27dad252ae7be6eb7fc10e55e0bf53c43c15744a762b5fd6b2ad"
   },
   {
     "path": "training/cloud/index.html",
-    "bytes": 17388,
-    "sha256": "a8f890a05d78ac3a91902d681a9c7b550aaa2c3a42b39cc697153413c799c8f3"
+    "bytes": 17473,
+    "sha256": "e3a550a2e32f0f594fe7c21b620a7b70010e86ca301ce4d0c37c498ebaec5af5"
   },
   {
     "path": "training/django/index.html",
-    "bytes": 15042,
-    "sha256": "b74c8cbe9652aa7bf2cd54d2df1b9afff90eb3cb371ab3b7452e97e2efe4f1a7"
+    "bytes": 15127,
+    "sha256": "b18080e0fee27504f8b29805730603b1dbb0b5ef2540fd9be65969248ca5458e"
   },
   {
     "path": "training/misk/index.html",
-    "bytes": 13758,
-    "sha256": "488cbd18eb6baa828df77ed6efce6c4dc024354843fd1dd5c0a37fe185cacd53"
+    "bytes": 13843,
+    "sha256": "f9220ad68b064edb5a6f1432787dbb04a58193cbbf986fe5abdae3e76cd116cd"
   },
   {
     "path": "training/python/index.html",
-    "bytes": 17492,
-    "sha256": "8e70b32b02ee581b3ed075e8b157f49b77adb3ca692acf93838a56a0ea7f8e30"
+    "bytes": 17577,
+    "sha256": "f9c62be80e5c5bd72a3d2feffc90cd8354ded424c26c2b1491f0efdd676533b2"
   },
   {
     "path": "training/sql/index.html",
-    "bytes": 14751,
-    "sha256": "c078ffab5678836a411b506b67513ff6fa1d6dffeba47f8c3669b1b546cf825b"
+    "bytes": 14836,
+    "sha256": "a518c9a18c722eacf3a7002bae376364ad8147c38aae669d75b5a4ede27e7e2f"
   }
 ]

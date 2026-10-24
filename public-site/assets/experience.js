@@ -32,3 +32,8 @@ if(new URLSearchParams(location.search).get('motion')==='studio') import('./cont
 
 
 
+
+import './mobile-comfort-prototype.js?v=5';
+
+
+
