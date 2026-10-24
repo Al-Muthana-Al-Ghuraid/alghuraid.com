@@ -76,18 +76,18 @@
   },
   {
     "path": "assets/experience.js",
-    "bytes": 3416,
-    "sha256": "32da5f99445aabeb62de3515ef4735b32e56a7d5f9e6fafacb8df8016edcc2ba"
+    "bytes": 3412,
+    "sha256": "8f155937b05e1def8fbef3aa785403a9ba153fb975df348957ea4f162d14eeb9"
   },
   {
     "path": "assets/interactions-prototype.css",
-    "bytes": 6392,
-    "sha256": "4ee6bf4293debea7cfc0a5623055d2e5c2f43e61a154b9e18b29aa05173e6b2e"
+    "bytes": 6376,
+    "sha256": "0d5aef7475687ab93264229e47409d0a97cfd7249beb295cde4570c4f94551e4"
   },
   {
     "path": "assets/interactions-prototype.js",
-    "bytes": 3884,
-    "sha256": "14ab57b8947528e7b47e097883d4d3b0817e850047a12c6d626a1825b6b5bc5d"
+    "bytes": 3916,
+    "sha256": "9a8ecf4010fc48dd4c3a8b655198adb9da6fd16ca8a4ffb9eca2fb3fef8e6733"
   },
   {
     "path": "assets/language.js",
@@ -337,7 +337,7 @@
   {
     "path": "index.html",
     "bytes": 20022,
-    "sha256": "fe5b4abfe1fd3ec9d8984fee0c92c86e88ccd62f3b3dcacb5478738bb5c89561"
+    "sha256": "39fe2ddee2f1a2dad5e49c0cf532b47c4e5dd873386453806e7156c801962132"
   },
   {
     "path": "projects/django-ecommerce/index.html",

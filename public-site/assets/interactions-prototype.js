@@ -1,6 +1,6 @@
 // Initial live interaction trial; ?interactions=off retains the baseline.
 if(document.querySelector('#language-toggle') && new URLSearchParams(location.search).get('interactions')!=='off'){
- const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/interactions-prototype.css?v=chalk-a-integrated-1';document.head.append(css);
+ const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/interactions-prototype.css?v=track-parked-1';document.head.append(css);
  const root=document.documentElement,reduced=matchMedia('(prefers-reduced-motion: reduce)');root.classList.add('interaction-preview');
  const button=document.querySelector('#language-toggle');let busy=false;
  const layer=document.createElement('div');layer.className='word-flight-layer';layer.setAttribute('aria-hidden','true');document.body.append(layer);
@@ -46,8 +46,10 @@ if(document.querySelector('#language-toggle') && new URLSearchParams(location.se
   }finally{layer.replaceChildren();root.classList.remove('word-changing');button.removeAttribute('aria-busy');busy=false;}
  },true);
 
- import('./chalk-journey-prototype.js?v=chalk-a-integrated-1');
+ // Side track parked at owner request. Saved in .scratch/portfolio/parked-side-track-2026-10-24.
 }
+
+
 
 
 

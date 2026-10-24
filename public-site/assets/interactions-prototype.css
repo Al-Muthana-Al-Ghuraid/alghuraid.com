@@ -33,4 +33,8 @@
 @media(max-width:800px){.interaction-preview .content-study .content{width:calc(100% - 24px);margin-left:auto;margin-right:auto}}
 /* Selected material A replaces the two-option experiment. */
 .chalk-journey .chalk-a-mark,.chalk-journey .chalk-a-checkpoint{fill:#fff;stroke:none}
-@media(min-width:1024px){.interaction-preview .content-study .content{width:min(1440px,calc(100% - 160px));margin-left:auto;margin-right:auto}}
+
+
+/* Track parked; suppress the old floating navigation as well. */
+.interaction-preview .section-nav{display:none!important}
+
