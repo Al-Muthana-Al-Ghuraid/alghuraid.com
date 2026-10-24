@@ -1,6 +1,6 @@
 // Initial live interaction trial; ?interactions=off retains the baseline.
 if(document.querySelector('#language-toggle') && new URLSearchParams(location.search).get('interactions')!=='off'){
- const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/interactions-prototype.css?v=exchange-1';document.head.append(css);
+ const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/interactions-prototype.css?v=ripple-3';document.head.append(css);
  const root=document.documentElement,reduced=matchMedia('(prefers-reduced-motion: reduce)');root.classList.add('interaction-preview');
  const button=document.querySelector('#language-toggle');let busy=false;
  const layer=document.createElement('div');layer.className='word-flight-layer';layer.setAttribute('aria-hidden','true');document.body.append(layer);
@@ -20,50 +20,50 @@ if(document.querySelector('#language-toggle') && new URLSearchParams(location.se
    }
   }return items;
  }
- // Owner-selected provisional choreography: curved social fan and an orbiting word exchange.
- const play=(items,inward)=>Promise.all(items.map(({el,x,y},i)=>{
-  const angle=i*2.4,ox=Math.cos(angle)*(24+i%5*8),oy=Math.sin(angle)*(24+i%5*8);
-  const cluster=`translate(${x+ox}px,${y+oy}px) scale(.3) rotate(${i%7*12-36}deg)`;
+ // Provisional turning wave: connected words rotate in depth; no centre gathering.
+ const play=(items,inward)=>Promise.all(items.map(({el},i)=>{
+  const r=el.getBoundingClientRect(),direction=root.lang==='ar'?-1:1;
+  const progress=direction===1?r.left/innerWidth:1-r.right/innerWidth;
+  const delay=Math.max(0,progress)*190+Math.min(130,r.top/innerHeight*130);
+  el.style.transformOrigin=inward?'50% 100%':'50% 0%';
   return el.animate(inward?[
-   {transform:'translate(0,0)',opacity:1},
-   {transform:`translate(${i%2?3:-3}px,-4px) rotate(2deg)`,offset:.14},
-   {transform:`translate(${x*.65-oy}px,${y*.65+ox}px) scale(.72) rotate(12deg)`,opacity:.9,offset:.65},
-   {transform:cluster,opacity:.25}
+   {transform:'perspective(650px) rotateX(0) translateY(0)',opacity:1},
+   {transform:`perspective(650px) rotateX(-16deg) translateY(-8px) translateX(${-direction*5}px)`,opacity:1,offset:.28},
+   {transform:`perspective(650px) rotateX(88deg) translateY(24px) translateX(${direction*24}px)`,opacity:0}
   ]:[
-   {transform:cluster,opacity:0},
-   {transform:`translate(${x*.5+oy}px,${y*.5-ox}px) scale(.72) rotate(-8deg)`,opacity:1,offset:.4},
-   {transform:'translate(0,-2px) scale(1.015)',opacity:1,offset:.86},
-   {transform:'translate(0,0)',opacity:1}
-  ],{duration:inward?820:920,delay:i%9*14,easing:'cubic-bezier(.25,.7,.25,1)',fill:'both'}).finished;
+   {transform:`perspective(650px) rotateX(-88deg) translateY(-26px) translateX(${-direction*24}px)`,opacity:0},
+   {transform:`perspective(650px) rotateX(12deg) translateY(5px) translateX(${direction*3}px)`,opacity:1,offset:.76},
+   {transform:'perspective(650px) rotateX(0) translateY(0)',opacity:1}
+  ],{duration:inward?620:840,delay,easing:'cubic-bezier(.25,.7,.2,1)',fill:'both'}).finished;
  }));
  let controls=[];
  function captureControls(){return [...document.querySelectorAll('.hero-actions > a,.hero-actions > button')].flatMap((original,i)=>{
   const r=original.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return [];
   const clone=original.cloneNode(true);clone.removeAttribute('id');clone.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));clone.classList.add('exchange-control');clone.setAttribute('aria-hidden','true');clone.tabIndex=-1;
   Object.assign(clone.style,{left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px'});document.body.append(clone);original.classList.add('exchange-hidden');
-  return [{original,clone,x:innerWidth-70-r.left-r.width/2,y:innerHeight*.48-r.top-r.height/2+(i-1.5)*13,i}];
+  return [{original,clone,left:r.left,top:r.top,i}];
  });}
- const fan=(items,inward)=>Promise.all(items.map(({clone,x,y,i})=>clone.animate(inward?[
-  {transform:'translate(0,0)',opacity:1},
-  {transform:'translate(-12px,-14px) rotate(-7deg)',offset:.2},
-  {transform:`translate(${x*.7}px,${y-42}px) rotate(9deg) scale(.92)`,offset:.7},
-  {transform:`translate(${x}px,${y}px) rotate(${(i-1.5)*9}deg) scale(.82)`,opacity:.9}
- ]:[
-  {transform:`translate(${x}px,${y}px) rotate(${(i-1.5)*9}deg) scale(.82)`,opacity:.9},
-  {transform:`translate(${x*.4}px,${y*.4-35}px) rotate(-6deg)`,offset:.48},
-  {transform:'translate(-4px,0) rotate(1deg)',offset:.85},
-  {transform:'translate(0,0)',opacity:1}
- ],{duration:inward?740:860,delay:i*55,easing:'cubic-bezier(.22,.8,.25,1)',fill:'both'}).finished));
+ // Every control retains its place in the row; one continuous trip to its translated position.
+ const slide=items=>Promise.all(items.map(({clone,original,left,top,i})=>{
+  const r=original.getBoundingClientRect(),x=r.left-left,y=r.top-top,direction=x<0?-1:1;
+  return clone.animate([
+   {transform:'translate(0,0) scale(1,1)',opacity:1},
+   {transform:`translate(${-direction*9}px,0) scale(.95,1.04)`,offset:.12},
+   {transform:`translate(${x*.48}px,${y*.48}px) scale(1.13,.94)`,offset:.5},
+   {transform:`translate(${x+direction*5}px,${y}px) scale(.97,1.03)`,offset:.87},
+   {transform:`translate(${x}px,${y}px) scale(1,1)`,opacity:1}
+  ],{duration:1080,delay:i*65,easing:'cubic-bezier(.45,0,.2,1)',fill:'both'}).finished;
+ }));
  document.addEventListener('click',async event=>{
   if(!event.target.closest('#language-toggle'))return;if(reduced.matches)return;
   event.preventDefault();event.stopImmediatePropagation();if(busy)return;busy=true;await document.fonts.ready;button.setAttribute('aria-busy','true');
   const scrollPosition=scrollY;let outgoing=[];const priorFreeze=window.skyState?.freezeFrame;if(window.skyState)window.skyState.freezeFrame=true;const hide=items=>new Set(items.map(i=>i.parent)).forEach(p=>p.classList.add('word-hidden'));const reveal=()=>document.querySelectorAll('.word-hidden').forEach(p=>p.classList.remove('word-hidden'));
   try{
-   outgoing=snapshot();controls=captureControls();hide(outgoing);root.classList.add('word-changing');await Promise.all([play(outgoing,true),fan(controls,true)]);outgoing.forEach(v=>v.el.remove());
+   outgoing=snapshot();controls=captureControls();hide(outgoing);root.classList.add('word-changing');await play(outgoing,true);outgoing.forEach(v=>v.el.remove());
    button.onclick?.call(button,event);await document.fonts.ready;scrollTo({top:scrollPosition,behavior:'instant'});
    // Translation and direction have settled before measuring destination word positions.
    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-   reveal();const incoming=snapshot();hide(incoming);controls.forEach(c=>{const old=c.clone.getBoundingClientRect(),r=c.original.getBoundingClientRect();c.clone.getAnimations().forEach(a=>a.cancel());Object.assign(c.clone.style,{left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px'});c.x=old.left+old.width/2-r.left-r.width/2;c.y=old.top+old.height/2-r.top-r.height/2;});await Promise.all([play(incoming,false),fan(controls,false)]);
+   reveal();const incoming=snapshot();hide(incoming);await Promise.all([play(incoming,false),slide(controls)]);
    // A short crossfade hands the same settled positions back to real text.
    root.classList.add('word-handoff');reveal();
    await layer.animate([{opacity:1},{opacity:0}],{duration:140,easing:'linear',fill:'forwards'}).finished;
@@ -73,6 +73,7 @@ if(document.querySelector('#language-toggle') && new URLSearchParams(location.se
 
  // Side track parked at owner request. Saved in .scratch/portfolio/parked-side-track-2026-10-24.
 }
+
 
 
 

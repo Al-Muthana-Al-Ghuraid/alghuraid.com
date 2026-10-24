@@ -77,17 +77,17 @@
   {
     "path": "assets/experience.js",
     "bytes": 3409,
-    "sha256": "8d0628935c249c66678bd88dc513eb0844687a927250067fe1a180101e48c237"
+    "sha256": "0b7745b5111ef6f1d50b62f99658e5f35268792974d09225b91e2e1fc6f6120c"
   },
   {
     "path": "assets/interactions-prototype.css",
-    "bytes": 6873,
-    "sha256": "e2179680dde06e9ab2d149c2ce5e93d2d661cab4aa50b31bd7e2467f8f1bc6cc"
+    "bytes": 7085,
+    "sha256": "214894079128500c0240f90d70667458f0d54a92fdff3fff8317a356654b806d"
   },
   {
     "path": "assets/interactions-prototype.js",
-    "bytes": 6906,
-    "sha256": "c56eb4b7bddf8d43590163ab72257bcae737fb80154c4e2763962fa4a21bf30f"
+    "bytes": 6658,
+    "sha256": "b69a546628a9087d6a5f50b14bd19a0e00594a79c089c1db44f1f01ce856b1ab"
   },
   {
     "path": "assets/language.js",

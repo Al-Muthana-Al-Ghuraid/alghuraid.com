@@ -22,11 +22,12 @@ document.getElementById('quick-overview-close')?.addEventListener('click',()=>di
 dialog?.addEventListener('click',event=>{if(event.target===dialog){const b=dialog.getBoundingClientRect();if(event.clientX<b.left||event.clientX>b.right||event.clientY<b.top||event.clientY>b.bottom)dialog.close();}});
 dialog?.addEventListener('close',()=>opener?.focus());
 
-import './interactions-prototype.js?v=exchange-1';
+import './interactions-prototype.js?v=ripple-3';
 
 
 
 if(new URLSearchParams(location.search).get('motion')==='studio') import('./content-motion-prototype.js?v=4');
+
 
 
 
