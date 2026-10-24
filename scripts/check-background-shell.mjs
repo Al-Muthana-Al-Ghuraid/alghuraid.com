@@ -15,6 +15,7 @@ for (const page of pages) {
   const html = baseline
     ? execFileSync('git', ['show', `73f25e0:public-site/${page}`], {encoding:'utf8'})
     : await readFile(new URL(page, base), 'utf8');
+  if (!baseline && page !== 'index.html') assert.ok(html.includes('detail-background-prototype.css') && html.includes('detail-background-trial'), `Missing lightweight detail background: ${page}`);
   if (!/src="\/assets\/scene\.js(?:\?[^"]*)?"/.test(html) && (!baseline || page !== 'index.html')) failed.push(page);
 }
 if (baseline) {
@@ -22,5 +23,5 @@ if (baseline) {
   console.log(`RED baseline: ${failed.length} pages lack the shared sky bootstrap.`);
 } else {
   assert.deepEqual(failed, [], 'Every content route must load the shared sky bootstrap.');
-  console.log(`PASS: all ${pages.length} content routes load the shared sky bootstrap.`);
+  console.log(`PASS: all ${pages.length} routes load the background controller; detail routes use the lightweight shell.`);
 }

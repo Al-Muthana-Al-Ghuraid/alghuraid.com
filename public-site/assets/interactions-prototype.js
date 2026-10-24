@@ -4,27 +4,15 @@ if(document.querySelector('#language-toggle') && new URLSearchParams(location.se
  const root=document.documentElement,reduced=matchMedia('(prefers-reduced-motion: reduce)');root.classList.add('interaction-preview');
  const button=document.querySelector('#language-toggle');let busy=false;
  const layer=document.createElement('div');layer.className='word-flight-layer';layer.setAttribute('aria-hidden','true');document.body.append(layer);
- // Whole-word fragments preserve connected Arabic shaping; only visible main-page text participates.
- function snapshot(){
-  const items=[];const walker=document.createTreeWalker(document.querySelector('main'),NodeFilter.SHOW_TEXT);
-  for(let node;node=walker.nextNode();){
-   const parent=node.parentElement;if(parent.closest('script,style,iframe,svg,.hero-actions')||!node.textContent.trim())continue;
-   if(!parent.getBoundingClientRect().width)continue;const style=getComputedStyle(parent);if(style.visibility==='hidden'&&!root.classList.contains('word-changing')||style.display==='none')continue;
-   for(const match of node.textContent.matchAll(/\S+/gu)){
-    const range=document.createRange();range.setStart(node,match.index);range.setEnd(node,match.index+match[0].length);
-    const rect=range.getBoundingClientRect();if(rect.width<1||rect.height<1||rect.top<0||rect.bottom>innerHeight||rect.right<0||rect.left>innerWidth)continue;
-    const el=document.createElement('span');el.textContent=match[0];el.dir=root.dir;
-    Object.assign(el.style,{left:rect.left+'px',top:rect.top+'px',font:style.font,color:style.color,letterSpacing:style.letterSpacing,lineHeight:rect.height+'px'});layer.append(el);
-    items.push({parent,el,x:innerWidth/2-rect.left-rect.width/2,y:innerHeight/2-rect.top-rect.height/2});
-    if(items.length>=220)return items;
-   }
-  }return items;
+ // Fade real document text; never detach words into a viewport overlay.
+ function textElements(){
+  const nodes=new Set(),walker=document.createTreeWalker(document.querySelector('main'),NodeFilter.SHOW_TEXT);
+  for(let node;node=walker.nextNode();){const p=node.parentElement;if(!node.textContent.trim()||p.closest('script,style,iframe,svg,.hero-actions'))continue;const rect=p.getBoundingClientRect();if(!rect.width||rect.bottom<0||rect.top>innerHeight)continue;nodes.add(p);}
+  return [...nodes].filter(p=>![...nodes].some(other=>other!==p&&other.contains(p)));
  }
- // Provisional simple text fade; the controls carry the expressive motion.
- const play=(items,outward)=>Promise.all(items.map(({el})=>el.animate(
-  outward?[{opacity:1},{opacity:0}]:[{opacity:0},{opacity:1}],
-  {duration:outward?260:460,easing:'ease-in-out',fill:'both'}).finished));
- let controls=[];
+ let fades=[];
+ function fade(elements,frames,options){const animations=elements.map(el=>el.animate(frames,{...options,fill:'both'}));fades.push(...animations);return Promise.all(animations.map(a=>a.finished));}
+ let controls=[],startScroll=0;
  // Read every rectangle before changing layout: otherwise the flex row collapses between reads.
  function captureControls(){
   const items=[...document.querySelectorAll('.hero-actions > a,.hero-actions > button')].map((original,i)=>{
@@ -47,7 +35,7 @@ if(document.querySelector('#language-toggle') && new URLSearchParams(location.se
   const sourceEdge=direction>0?Math.min(...items.map(v=>v.left)):Math.max(...items.map(v=>v.left+v.width));
   const wall=direction>0?Math.max(...destinations.map(r=>r.right))+overshoot:Math.min(...destinations.map(r=>r.left))-overshoot;
   return Promise.all(items.map(({original,left,top,width,i},index)=>{
-   const r=destinations[index],x=left-r.left,y=top-r.top;
+   const r=destinations[index],x=left-r.left,y=top-(scrollY-startScroll)-r.top;
    const sourceMid=left+width/2,targetMid=r.left+r.width/2;
    // Compress distances toward the outer edge, never toward the group's centre.
    const squeezedMid=sourceEdge+(sourceMid-sourceEdge)*.57-direction*14;
@@ -56,31 +44,45 @@ if(document.querySelector('#language-toggle') && new URLSearchParams(location.se
    const impactX=impactMid-targetMid;
    const v=Math.abs(index-(items.length-1)/2)*11-9;
    const animation=original.animate([
-    {transform:`translate(${x}px,${y}px) scaleX(${width/r.width})`,offset:0,easing:'cubic-bezier(.45,0,.75,1)'},
-    {transform:`translate(${squeezeX}px,${y+v}px) scale(.66,1.16) rotate(${direction*(index-1.5)*3}deg)`,offset:.23,easing:'cubic-bezier(.52,0,.2,1)'},
-    {transform:`translate(${impactX}px,${v*.55}px) scale(.64,1.2) rotate(${-direction*(index-1.5)*2}deg)`,offset:.67,easing:'cubic-bezier(.35,0,.65,1)'},
-    {transform:`translate(${-direction*16}px,${-v*.22}px) scale(1.07,.96)`,offset:.82,easing:'cubic-bezier(.35,0,.65,1)'},
-    {transform:`translate(${direction*4}px,0) scale(1.01,.995)`,offset:.92,easing:'cubic-bezier(.35,0,.65,1)'},
+    {transform:`translate(${squeezeX}px,${y+v}px) scale(.66,1.16) rotate(${direction*(index-1.5)*3}deg)`,offset:0,easing:'cubic-bezier(.52,0,.2,1)'},
+    {transform:`translate(${impactX}px,${v*.55}px) scale(.64,1.2) rotate(${-direction*(index-1.5)*2}deg)`,offset:.57,easing:'cubic-bezier(.35,0,.65,1)'},
+    {transform:`translate(${-direction*16}px,${-v*.22}px) scale(1.07,.96)`,offset:.77,easing:'cubic-bezier(.35,0,.65,1)'},
+    {transform:`translate(${direction*4}px,0) scale(1.01,.995)`,offset:.9,easing:'cubic-bezier(.35,0,.65,1)'},
     {transform:'translate(0,0) scale(1)',offset:1}
-   ],{duration:1460,delay:i*12,easing:'linear',fill:'both'});
+   ],{duration:1120,delay:i*12,easing:'linear',fill:'both'});
    return animation.finished.then(()=>animation.cancel());
   }));
  };
+ // Wind up at the source edge while the outgoing words disappear.
+ function windUp(items){
+  if(!items.length)return Promise.resolve();const direction=root.dir==='rtl'?-1:1;
+  const edge=direction>0?Math.min(...items.map(v=>v.left)):Math.max(...items.map(v=>v.left+v.width));
+  return Promise.all(items.map(({original,left,width,i})=>{
+   const dx=edge+(left+width/2-edge)*.57-direction*14-(left+width/2),v=Math.abs(i-(items.length-1)/2)*11-9;
+   const animation=original.animate([{transform:'none'},{transform:`translate(${dx}px,${v}px) scale(.66,1.16) rotate(${direction*(i-1.5)*3}deg)`}],{duration:340,easing:'cubic-bezier(.45,0,.75,1)',fill:'both'});
+   return animation.finished;
+  }));
+ }
  document.addEventListener('click',async event=>{
-  if(!event.target.closest('#language-toggle'))return;if(reduced.matches)return;
+  if(!event.target.closest('#language-toggle')||reduced.matches)return;
   event.preventDefault();event.stopImmediatePropagation();if(busy)return;busy=true;await document.fonts.ready;button.setAttribute('aria-busy','true');
-  const scrollPosition=scrollY;let outgoing=[];const priorFreeze=window.skyState?.freezeFrame;if(window.skyState)window.skyState.freezeFrame=true;const hide=items=>new Set(items.map(i=>i.parent)).forEach(p=>p.classList.add('word-hidden'));const reveal=()=>document.querySelectorAll('.word-hidden').forEach(p=>p.classList.remove('word-hidden'));
+  const priorFreeze=window.skyState?.freezeFrame;if(window.skyState)window.skyState.freezeFrame=true;
   try{
-   outgoing=snapshot();controls=captureControls();hide(outgoing);root.classList.add('word-changing');await play(outgoing,true);outgoing.forEach(v=>v.el.remove());
-   button.onclick?.call(button,event);await document.fonts.ready;scrollTo({top:scrollPosition,behavior:'instant'});
-   // Translation and direction have settled before measuring destination word positions.
+   startScroll=scrollY;const outgoing=textElements();controls=captureControls();root.classList.add('word-changing');
+   await Promise.all([fade(outgoing,[{opacity:1},{opacity:0}],{duration:340,easing:'ease-in'}),windUp(controls)]);
+   // Preserve the user's current scroll, rather than snapping back to the click position.
+   button.onclick?.call(button,event);await document.fonts.ready;
    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-   reveal();const incoming=snapshot();hide(incoming);await Promise.all([play(incoming,false),slide(controls)]);
-   // A short crossfade hands the same settled positions back to real text.
-   root.classList.add('word-handoff');reveal();
-   await layer.animate([{opacity:1},{opacity:0}],{duration:140,easing:'linear',fill:'forwards'}).finished;
-
-  }finally{controls.forEach(({original,style})=>style===null?original.removeAttribute('style'):original.setAttribute('style',style));controls=[];reveal();layer.replaceChildren();layer.getAnimations().forEach(a=>a.cancel());root.classList.remove('word-changing','word-handoff');if(window.skyState)window.skyState.freezeFrame=priorFreeze||false;button.removeAttribute('aria-busy');busy=false;}
+   controls.forEach(({original})=>original.getAnimations().forEach(a=>a.cancel()));
+   const incoming=textElements();
+   // Fade starts during flight and finishes with the arrival/rebound, on the same timeline.
+   const entering=fade(incoming,[{opacity:0,offset:0},{opacity:0,offset:.22},{opacity:.25,offset:.48},{opacity:.85,offset:.78},{opacity:1,offset:1}],{duration:1120,easing:'linear'});
+   await Promise.all([entering,slide(controls)]);
+  }finally{
+   controls.forEach(({original,style})=>{original.getAnimations().forEach(a=>a.cancel());style===null?original.removeAttribute('style'):original.setAttribute('style',style);});controls=[];
+   fades.forEach(a=>a.cancel());fades=[];layer.replaceChildren();root.classList.remove('word-changing','word-handoff');
+   if(window.skyState)window.skyState.freezeFrame=priorFreeze||false;button.removeAttribute('aria-busy');busy=false;
+  }
  },true);
 
  // Side track parked at owner request. Saved in .scratch/portfolio/parked-side-track-2026-10-24.

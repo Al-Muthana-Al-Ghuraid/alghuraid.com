@@ -1,0 +1,12 @@
+
+/* Provisional editorial detail canvas: no renderer, bitmap downloads or scene handoff. */
+html.detail-background-trial{background:#e5e7dd}
+html.detail-background-trial body.detail-page{background:radial-gradient(ellipse at 8% 0%,#c7d9ce80,transparent 52%),radial-gradient(ellipse at 100% 70%,#d7c49a38,transparent 55%),linear-gradient(90deg,#305d4b08 1px,transparent 1px),linear-gradient(#305d4b08 1px,transparent 1px),#e9e9df!important;background-size:auto,auto,64px 64px,64px 64px,auto!important;background-attachment:fixed!important}
+html.detail-background-trial .world,html.detail-background-trial .scene-still-bridge{display:none!important}
+html.detail-background-trial .detail-page>main{background:#f7f5eef5;box-shadow:0 12px 60px #193b3b12;border:1px solid #c8cec1}
+html.detail-background-trial[data-theme=night]{background:#0c2029}
+html.detail-background-trial[data-theme=night] body.detail-page{background:radial-gradient(ellipse at 10% 0%,#285c4e60,transparent 55%),radial-gradient(ellipse at 100% 80%,#89733a18,transparent 55%),linear-gradient(90deg,#c0d4b909 1px,transparent 1px),linear-gradient(#c0d4b909 1px,transparent 1px),#0c2029!important;background-size:auto,auto,64px 64px,64px 64px,auto!important}
+html.detail-background-trial[data-theme=night] .detail-page>main{background:#142d32f7;border-color:#395254;box-shadow:0 12px 60px #0002}
+html.detail-background-trial .page-loader{display:none!important}
+@media(prefers-reduced-motion:reduce){html.detail-background-trial *{scroll-behavior:auto}}
+html.detail-background-trial[data-theme=night] .detail-page .tags>span{color:#e0e9e1!important;border-color:#69847b!important;background:#244247!important}
