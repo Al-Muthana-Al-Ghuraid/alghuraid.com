@@ -1,6 +1,6 @@
 // Initial live interaction trial; ?interactions=off retains the baseline.
 if(document.querySelector('#language-toggle') && new URLSearchParams(location.search).get('interactions')!=='off'){
- const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/interactions-prototype.css?v=spring-1';document.head.append(css);
+ const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/interactions-prototype.css?v=launch-1';document.head.append(css);
  const root=document.documentElement,reduced=matchMedia('(prefers-reduced-motion: reduce)');root.classList.add('interaction-preview');
  const button=document.querySelector('#language-toggle');let busy=false;
  const layer=document.createElement('div');layer.className='word-flight-layer';layer.setAttribute('aria-hidden','true');document.body.append(layer);
@@ -25,28 +25,41 @@ if(document.querySelector('#language-toggle') && new URLSearchParams(location.se
   outward?[{opacity:1},{opacity:0}]:[{opacity:0},{opacity:1}],
   {duration:outward?260:460,easing:'ease-in-out',fill:'both'}).finished));
  let controls=[];
- function captureControls(){return [...document.querySelectorAll('.hero-actions > a,.hero-actions > button')].flatMap((original,i)=>{
-  const r=original.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return [];
-  const style=original.getAttribute('style');
-  Object.assign(original.style,{position:'fixed',left:r.left+'px',top:r.top+'px',width:r.width+'px',margin:'0',zIndex:'8501'});
-  return [{original,left:r.left,top:r.top,width:r.width,style,i}];
- });}
- // FLIP animates the actual controls, removing the clone-to-original visual handoff.
+ // Read every rectangle before changing layout: otherwise the flex row collapses between reads.
+ function captureControls(){
+  const items=[...document.querySelectorAll('.hero-actions > a,.hero-actions > button')].map((original,i)=>{
+   const r=original.getBoundingClientRect();return {original,left:r.left,top:r.top,width:r.width,height:r.height,style:original.getAttribute('style'),i};
+  }).filter(v=>v.top+v.height>=0&&v.top<innerHeight);
+  items.forEach(({original,left,top,width})=>Object.assign(original.style,{position:'fixed',left:left+'px',top:top+'px',width:width+'px',margin:'0',zIndex:'8501'}));
+  return items;
+ }
+ // One continuous launch: compact V, release, destination overshoot, damped return.
  const slide=items=>{
   items.forEach(({original,style})=>style===null?original.removeAttribute('style'):original.setAttribute('style',style));
-  return Promise.all(items.map(({original,left,top,width,i})=>{
-  const r=original.getBoundingClientRect(),x=left-r.left,y=top-r.top,direction=x>0?-1:1;
-  const animation=original.animate([
-   {transform:`translate(${x}px,${y}px) scaleX(${width/r.width})`},
-   {transform:`translate(${x-direction*9}px,${y}px) scale(.97,1.03)`,offset:.1},
-   {transform:`translate(${x*.45}px,${y*.45}px) scale(1.09,.96)`,offset:.46},
-   {transform:`translate(${direction*14}px,0) scale(.97,1.025)`,offset:.73},
-   {transform:`translate(${-direction*6}px,0) scale(1.015,.99)`,offset:.85},
-   {transform:`translate(${direction*2}px,0)`,offset:.94},
-   {transform:'translate(0,0) scale(1)'}
-  ].map(frame=>({...frame,easing:'cubic-bezier(.33,0,.67,1)'})),{duration:1120,delay:i*45,easing:'linear',fill:'both'});
-  return animation.finished.then(()=>animation.cancel());
- }));};
+  const destinations=items.map(v=>v.original.getBoundingClientRect());
+  if(!items.length)return Promise.resolve();
+  const sourceCentre=items.reduce((sum,v)=>sum+v.left+v.width/2,0)/items.length;
+  const targetCentre=destinations.reduce((sum,r)=>sum+r.left+r.width/2,0)/items.length;
+  const direction=targetCentre>=sourceCentre?1:-1;
+  // Keep overshoot inside the viewport on narrow screens.
+  const room=direction>0?innerWidth-Math.max(...destinations.map(r=>r.right))-12:Math.min(...destinations.map(r=>r.left))-12;
+  const overshoot=Math.max(0,Math.min(34,room));
+  return Promise.all(items.map(({original,left,top,width,i},index)=>{
+   const r=destinations[index],x=left-r.left,y=top-r.top;
+   const local=left+width/2-sourceCentre;
+   const squeezeX=x-local*.27-direction*12;
+   const v=Math.abs(index-(items.length-1)/2)*11-9;
+   const animation=original.animate([
+    {transform:`translate(${x}px,${y}px) scaleX(${width/r.width})`,offset:0,easing:'cubic-bezier(.45,0,.75,1)'},
+    {transform:`translate(${squeezeX}px,${y+v}px) scale(.9,1.08) rotate(${direction*(index-1.5)*3}deg)`,offset:.23,easing:'cubic-bezier(.52,0,.2,1)'},
+    {transform:`translate(${direction*overshoot}px,${v*.55}px) scale(1.08,.94) rotate(${-direction*(index-1.5)*2}deg)`,offset:.67,easing:'cubic-bezier(.35,0,.65,1)'},
+    {transform:`translate(${-direction*12}px,${-v*.22}px) scale(.97,1.025)`,offset:.82,easing:'cubic-bezier(.35,0,.65,1)'},
+    {transform:`translate(${direction*4}px,0) scale(1.01,.995)`,offset:.92,easing:'cubic-bezier(.35,0,.65,1)'},
+    {transform:'translate(0,0) scale(1)',offset:1}
+   ],{duration:1460,delay:i*12,easing:'linear',fill:'both'});
+   return animation.finished.then(()=>animation.cancel());
+  }));
+ };
  document.addEventListener('click',async event=>{
   if(!event.target.closest('#language-toggle'))return;if(reduced.matches)return;
   event.preventDefault();event.stopImmediatePropagation();if(busy)return;busy=true;await document.fonts.ready;button.setAttribute('aria-busy','true');
