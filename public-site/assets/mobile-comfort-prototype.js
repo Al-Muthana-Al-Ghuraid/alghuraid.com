@@ -60,3 +60,5 @@ if(document.body.classList.contains('detail-page')){
  if(back){const footer=document.createElement('footer');footer.className='detail-return';const link=document.createElement('a');link.href=back.href;const training=location.pathname.startsWith('/training/');link.dataset.copyEn=training?'← Back to programs':'← Back to projects';link.dataset.copyAr=training?'العودة إلى البرامج →':'العودة إلى المشاريع →';link.textContent=ar()?link.dataset.copyAr:link.dataset.copyEn;footer.append(link);document.querySelector('main').append(footer);preferences();}
 }
 
+
+root.dataset.mobileComfortReady='true';

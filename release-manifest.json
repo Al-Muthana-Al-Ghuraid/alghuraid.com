@@ -81,8 +81,8 @@
   },
   {
     "path": "assets/experience.js",
-    "bytes": 3320,
-    "sha256": "3e75673ab28c4822681fb3dc5df2f74f061c9ff2fa464bcae73b34c13e5fa44e"
+    "bytes": 3327,
+    "sha256": "72052a2e21a207817c92806cfb6adda6cfc9a89be348f07df54b9244bd74ef71"
   },
   {
     "path": "assets/interactions-prototype.css",
@@ -116,8 +116,8 @@
   },
   {
     "path": "assets/mobile-comfort-prototype.js",
-    "bytes": 10156,
-    "sha256": "c96424008dc9dfd8f3269e946fb9846da7fa3964c80c5eb2cde1bf2250d11c50"
+    "bytes": 10200,
+    "sha256": "e3c4955ce5fcdd92da64ebbe3e83665e7adec071cea6d014bd106f759c44c6aa"
   },
   {
     "path": "assets/moon-lroc-nasa.jpg",
@@ -173,6 +173,11 @@
     "path": "assets/rag-container-page16.png",
     "bytes": 143521,
     "sha256": "b118d9b6c2858bdd3cc7c9e8c8a7a6d1a8e64f1fbc2dba017949933b9c30e75d"
+  },
+  {
+    "path": "assets/return-position-prototype.js",
+    "bytes": 3914,
+    "sha256": "51db23a64b2f52b18ce462ff3d0213f5e6b80122f556cc496500ebb9582a6743"
   },
   {
     "path": "assets/riyadh-candidate-day-cutout-v1.png",
@@ -411,28 +416,28 @@
   },
   {
     "path": "index.html",
-    "bytes": 20244,
-    "sha256": "829e8d8f42f6ef0b26f1864c7d79de8ba632c3aed1008bc1cc7b4f464f352bbc"
+    "bytes": 20303,
+    "sha256": "e230f42dc9b73a276afafd649f78382e4baef53d951f3e8c3f33cf55b4c13f8c"
   },
   {
     "path": "projects/django-ecommerce/index.html",
-    "bytes": 43421,
-    "sha256": "7307acb831c9023944d923a803b289d9bdc0c69d641249e6ec3ac2025730bbc5"
+    "bytes": 43480,
+    "sha256": "57d198fcda68cba35c915bdb3872e4ddb620dccb0936fb833d1fc24ed7e7045f"
   },
   {
     "path": "projects/n8n-automation/index.html",
-    "bytes": 20012,
-    "sha256": "7557755889222cfcbe65df766c558f2ba17fa10a00962ae83ef16b99bce78fe6"
+    "bytes": 20071,
+    "sha256": "8eeaa777ebcd527de80878bb076e40b52d40d97c79ddaad7a7fed2fd6191d6e3"
   },
   {
     "path": "projects/rag-chatbot/index.html",
-    "bytes": 32662,
-    "sha256": "599687707ff1c30f142cbb1519cab03cda7f3b4fe9f8db4b5e1d2e09e3a5d592"
+    "bytes": 32721,
+    "sha256": "7f55ff721cdec86a8b33375a59a97feeaca35488a49ddf6460986a727deab3f5"
   },
   {
     "path": "projects/trackflow/index.html",
-    "bytes": 27014,
-    "sha256": "f0d025f6210cb856ade3bea157779b98c660bf288554cc5418e54841507cdeb1"
+    "bytes": 27073,
+    "sha256": "7625c8df3a77973e1437f2ecdc0cd67ad2e81ecfbd171685af849800b82d57be"
   },
   {
     "path": "robots.txt",
@@ -446,32 +451,32 @@
   },
   {
     "path": "training/bio/index.html",
-    "bytes": 17877,
-    "sha256": "cc8aab927d153a3a233d4886d045a189add2c6048319a016777bce655307c0bf"
+    "bytes": 17936,
+    "sha256": "0a006ec8d0b4ee354eb4f0c55efc23bf2f3c8070041ca7226eef2247d0daea8f"
   },
   {
     "path": "training/cloud/index.html",
-    "bytes": 17774,
-    "sha256": "a49121cac9d2acf719316e81c571e456dc59e6a6236ecdc546bcaf09af36bd41"
+    "bytes": 17833,
+    "sha256": "b66aa34a2884a1262b2cb446e1fdba4d6f408f42a621c9e67a4456d6efa687c8"
   },
   {
     "path": "training/django/index.html",
-    "bytes": 15428,
-    "sha256": "dbffcadc9ac8654546ba71d7d58dc572026fdd07d36731ff5605b0e26fe9f5a5"
+    "bytes": 15487,
+    "sha256": "3784cc7780c8604efe4a7db5d2840517efb7155eb59e7d891d376c440c9b1240"
   },
   {
     "path": "training/misk/index.html",
-    "bytes": 14144,
-    "sha256": "e3069afeca88ed9bed1d8896bef9e5daa89f1d3d66b8f348adaa0789de302a96"
+    "bytes": 14203,
+    "sha256": "ef3c002e595638f26e8a75e58ae191c3380b429b54698f24a446be1d547df509"
   },
   {
     "path": "training/python/index.html",
-    "bytes": 17878,
-    "sha256": "ff239a536a87a919dfb9a8db9d2dc826730848b9379ced90a097f3818e9f1588"
+    "bytes": 17937,
+    "sha256": "b0beca6ea37d001ac546f2d0777548382c00e6c7cb774d5be4944c7f55a82e1a"
   },
   {
     "path": "training/sql/index.html",
-    "bytes": 15137,
-    "sha256": "80aaf6e4de5efc5e40c619f5e513d95e3578e39cbd803d1163a05bdf93aaf62c"
+    "bytes": 15196,
+    "sha256": "fb3492fca33b3ec5d593e8a5df7d762dcd400bcaab0d99952a8a804573ba14d4"
   }
 ]
