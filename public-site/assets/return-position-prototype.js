@@ -9,20 +9,32 @@
   const historyReturn=performance.getEntriesByType('navigation')[0]?.type==='back_forward';
   returning=!!saved&&Date.now()-saved.at<1800000&&(requested==='1'||requested?.startsWith('#')||historyReturn);
   if(returning){
-   root.dataset.returnSavedY=String(saved.y);root.dataset.returnSavedCardTop=String(saved.cardTop);root.classList.add('restoring-return');root.dataset.returnPosition='preparing';history.scrollRestoration='manual';
-   const style=document.createElement('style');style.textContent='html.restoring-return{scroll-behavior:auto!important;overflow-anchor:none}html.restoring-return body>header,html.restoring-return body>main{visibility:hidden!important}html.restoring-return .scene-start-stage{visibility:hidden}';document.head.append(style);
+   root.dataset.returnSavedY=String(saved.y);root.dataset.returnSavedCardTop=String(saved.cardTop);root.classList.add('restoring-return','return-visit');root.dataset.returnPosition='preparing';history.scrollRestoration='manual';
+   const style=document.createElement('style');style.textContent='@view-transition{navigation:none}html.restoring-return{scroll-behavior:auto!important;overflow-anchor:none}html.restoring-return body>header,html.restoring-return body>main{visibility:hidden!important}html.restoring-return .scene-start-stage{visibility:hidden}';document.head.append(style);
    const hash=location.hash;history.replaceState(history.state,'',location.pathname+location.search);
    const restore=async()=>{
     // Fonts and phone architecture summaries affect the card positions above the saved point.
     await document.fonts.ready;
     await new Promise(resolve=>{
-     if(root.dataset.mobileComfortReady==='true'){resolve();return;}
-     const observer=new MutationObserver(()=>{if(root.dataset.mobileComfortReady==='true'){observer.disconnect();resolve();}});observer.observe(root,{attributes:true,attributeFilter:['data-mobile-comfort-ready']});
+     const prepared=()=>root.dataset.mobileComfortReady==='true'&&(!root.classList.contains('content-motion-trial')||root.dataset.contentMotionReady==='true');
+     if(prepared()){resolve();return;}
+     const observer=new MutationObserver(()=>{if(prepared()){observer.disconnect();resolve();}});observer.observe(root,{attributes:true,attributeFilter:['data-mobile-comfort-ready','data-content-motion-ready']});
      setTimeout(()=>{observer.disconnect();resolve();},1800);
     });
+    await Promise.all([...document.querySelectorAll('link[rel=stylesheet]')].filter(link=>/content-motion-prototype/.test(link.href)&&!link.sheet).map(link=>new Promise(resolve=>{link.addEventListener('load',resolve,{once:true});link.addEventListener('error',resolve,{once:true});setTimeout(resolve,1800);})));
     const locate=()=>saved.section?document.getElementById(saved.section.slice(1)):[...document.querySelectorAll('a.project-page-link,a.program-page-link')].find(a=>new URL(a.href,location.href).pathname===saved.path)?.closest('article');
     const apply=()=>{const card=locate();const y=card?card.getBoundingClientRect().top+scrollY-saved.cardTop:saved.y;scrollTo({top:Math.max(0,y),behavior:'instant'});};
-    apply();await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));apply();
+    apply();
+    // Only prepare media in the restored viewport; keep off-screen covers lazy.
+    const visible=el=>{const r=el.getBoundingClientRect();return r.bottom>0&&r.top<innerHeight;};
+    const frames=[...document.querySelectorAll('.animated-project-cover iframe')].filter(frame=>innerWidth>800&&visible(frame));
+    await Promise.all(frames.map(frame=>new Promise(resolve=>{
+     const loaded=()=>frame.contentDocument?.querySelector('svg');
+     if(loaded()){resolve();return;}frame.loading='eager';
+     const done=()=>{frame.removeEventListener('load',done);resolve();};frame.addEventListener('load',done,{once:true});setTimeout(done,2500);
+    })));
+    await Promise.all([...document.querySelectorAll('.boot-card img')].filter(visible).map(img=>img.decode().catch(()=>{})));
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));apply();
     history.replaceState(history.state,'',location.pathname+location.search+hash);root.dataset.returnPosition='restored';root.classList.remove('restoring-return');history.scrollRestoration='auto';
    };
    document.addEventListener('DOMContentLoaded',()=>restore().catch(()=>{root.classList.remove('restoring-return');history.scrollRestoration='auto';}),{once:true});

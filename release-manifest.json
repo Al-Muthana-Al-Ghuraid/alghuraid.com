@@ -61,8 +61,8 @@
   },
   {
     "path": "assets/content-motion-prototype.js",
-    "bytes": 7242,
-    "sha256": "b8454739a8b9bd2437f4ad4be44866782582d680704921c1b6ada58ee7a27c79"
+    "bytes": 7429,
+    "sha256": "3efdc9ff0842fb53fb9f3566280efeef3667304938e2757b267e7ec5a62bf45a"
   },
   {
     "path": "assets/content-motion-shell.js",
@@ -81,8 +81,8 @@
   },
   {
     "path": "assets/experience.js",
-    "bytes": 3327,
-    "sha256": "72052a2e21a207817c92806cfb6adda6cfc9a89be348f07df54b9244bd74ef71"
+    "bytes": 3328,
+    "sha256": "c54fbab147e14aaf9f59869b619396276a000687181a5f6feb937e156e9049d2"
   },
   {
     "path": "assets/interactions-prototype.css",
@@ -176,8 +176,8 @@
   },
   {
     "path": "assets/return-position-prototype.js",
-    "bytes": 3914,
-    "sha256": "51db23a64b2f52b18ce462ff3d0213f5e6b80122f556cc496500ebb9582a6743"
+    "bytes": 5194,
+    "sha256": "1bfcfb5b68af9c4d6f9238b8875d1816c386c0fde3427c804bf32867fc20b5b8"
   },
   {
     "path": "assets/riyadh-candidate-day-cutout-v1.png",
@@ -416,28 +416,28 @@
   },
   {
     "path": "index.html",
-    "bytes": 20303,
-    "sha256": "e230f42dc9b73a276afafd649f78382e4baef53d951f3e8c3f33cf55b4c13f8c"
+    "bytes": 20309,
+    "sha256": "288cf3e514af3a9336eedea9762339eac4382ef654d3b1e942f2ef9dd4b3ea0b"
   },
   {
     "path": "projects/django-ecommerce/index.html",
-    "bytes": 43480,
-    "sha256": "57d198fcda68cba35c915bdb3872e4ddb620dccb0936fb833d1fc24ed7e7045f"
+    "bytes": 43486,
+    "sha256": "3aa99ac6e2d26beb92a5dcf4c9ca31ec0a5f661b5864e54df8890d2251d8c5f8"
   },
   {
     "path": "projects/n8n-automation/index.html",
-    "bytes": 20071,
-    "sha256": "8eeaa777ebcd527de80878bb076e40b52d40d97c79ddaad7a7fed2fd6191d6e3"
+    "bytes": 20077,
+    "sha256": "14385059d3d10771c417111558984e352af4dc125d1c3ef0177731b09fd1d6e1"
   },
   {
     "path": "projects/rag-chatbot/index.html",
-    "bytes": 32721,
-    "sha256": "7f55ff721cdec86a8b33375a59a97feeaca35488a49ddf6460986a727deab3f5"
+    "bytes": 32727,
+    "sha256": "ba51ec52586f6cecc44b6a914e4b6c40783b587523b1138c9e394ba601f879ac"
   },
   {
     "path": "projects/trackflow/index.html",
-    "bytes": 27073,
-    "sha256": "7625c8df3a77973e1437f2ecdc0cd67ad2e81ecfbd171685af849800b82d57be"
+    "bytes": 27079,
+    "sha256": "aa25125a0e41af3606402efa2e2a6e42d864c230178313b6b74c523b0ac2298e"
   },
   {
     "path": "robots.txt",
@@ -451,32 +451,32 @@
   },
   {
     "path": "training/bio/index.html",
-    "bytes": 17936,
-    "sha256": "0a006ec8d0b4ee354eb4f0c55efc23bf2f3c8070041ca7226eef2247d0daea8f"
+    "bytes": 17942,
+    "sha256": "4549005c47d33c5c9ed201631c0641bface96ea6a0bcd47f5e1cbcaf5c7c3e08"
   },
   {
     "path": "training/cloud/index.html",
-    "bytes": 17833,
-    "sha256": "b66aa34a2884a1262b2cb446e1fdba4d6f408f42a621c9e67a4456d6efa687c8"
+    "bytes": 17839,
+    "sha256": "df5c7672c5acbed2406a2ea4c513e382249dc651c8f0fb35a12e3a13dd23df45"
   },
   {
     "path": "training/django/index.html",
-    "bytes": 15487,
-    "sha256": "3784cc7780c8604efe4a7db5d2840517efb7155eb59e7d891d376c440c9b1240"
+    "bytes": 15493,
+    "sha256": "57ea95c532b0d0b3de91c04d784db7a62fbbf0479976eb7df02da6e42553dd25"
   },
   {
     "path": "training/misk/index.html",
-    "bytes": 14203,
-    "sha256": "ef3c002e595638f26e8a75e58ae191c3380b429b54698f24a446be1d547df509"
+    "bytes": 14209,
+    "sha256": "b7fdb977ea350953d7129f852077766c63c45426afdbfc691f85c1d69c5d735a"
   },
   {
     "path": "training/python/index.html",
-    "bytes": 17937,
-    "sha256": "b0beca6ea37d001ac546f2d0777548382c00e6c7cb774d5be4944c7f55a82e1a"
+    "bytes": 17943,
+    "sha256": "aaa67c13b85ba9cb61d5a804cb2eba760e532527c213659dc41369d1b7043d6a"
   },
   {
     "path": "training/sql/index.html",
-    "bytes": 15196,
-    "sha256": "fb3492fca33b3ec5d593e8a5df7d762dcd400bcaab0d99952a8a804573ba14d4"
+    "bytes": 15202,
+    "sha256": "59ec08a28a644d596ac0c839f7da9f5970f0623d041a197a19f88c344fad1225"
   }
 ]
