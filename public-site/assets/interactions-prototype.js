@@ -1,6 +1,6 @@
 // Initial live interaction trial; ?interactions=off retains the baseline.
 if(document.querySelector('#language-toggle') && new URLSearchParams(location.search).get('interactions')!=='off'){
- const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/interactions-prototype.css?v=ripple-3';document.head.append(css);
+ const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/interactions-prototype.css?v=spring-1';document.head.append(css);
  const root=document.documentElement,reduced=matchMedia('(prefers-reduced-motion: reduce)');root.classList.add('interaction-preview');
  const button=document.querySelector('#language-toggle');let busy=false;
  const layer=document.createElement('div');layer.className='word-flight-layer';layer.setAttribute('aria-hidden','true');document.body.append(layer);
@@ -20,40 +20,33 @@ if(document.querySelector('#language-toggle') && new URLSearchParams(location.se
    }
   }return items;
  }
- // Provisional turning wave: connected words rotate in depth; no centre gathering.
- const play=(items,inward)=>Promise.all(items.map(({el},i)=>{
-  const r=el.getBoundingClientRect(),direction=root.lang==='ar'?-1:1;
-  const progress=direction===1?r.left/innerWidth:1-r.right/innerWidth;
-  const delay=Math.max(0,progress)*190+Math.min(130,r.top/innerHeight*130);
-  el.style.transformOrigin=inward?'50% 100%':'50% 0%';
-  return el.animate(inward?[
-   {transform:'perspective(650px) rotateX(0) translateY(0)',opacity:1},
-   {transform:`perspective(650px) rotateX(-16deg) translateY(-8px) translateX(${-direction*5}px)`,opacity:1,offset:.28},
-   {transform:`perspective(650px) rotateX(88deg) translateY(24px) translateX(${direction*24}px)`,opacity:0}
-  ]:[
-   {transform:`perspective(650px) rotateX(-88deg) translateY(-26px) translateX(${-direction*24}px)`,opacity:0},
-   {transform:`perspective(650px) rotateX(12deg) translateY(5px) translateX(${direction*3}px)`,opacity:1,offset:.76},
-   {transform:'perspective(650px) rotateX(0) translateY(0)',opacity:1}
-  ],{duration:inward?620:840,delay,easing:'cubic-bezier(.25,.7,.2,1)',fill:'both'}).finished;
- }));
+ // Provisional simple text fade; the controls carry the expressive motion.
+ const play=(items,outward)=>Promise.all(items.map(({el})=>el.animate(
+  outward?[{opacity:1},{opacity:0}]:[{opacity:0},{opacity:1}],
+  {duration:outward?260:460,easing:'ease-in-out',fill:'both'}).finished));
  let controls=[];
  function captureControls(){return [...document.querySelectorAll('.hero-actions > a,.hero-actions > button')].flatMap((original,i)=>{
   const r=original.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return [];
-  const clone=original.cloneNode(true);clone.removeAttribute('id');clone.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));clone.classList.add('exchange-control');clone.setAttribute('aria-hidden','true');clone.tabIndex=-1;
-  Object.assign(clone.style,{left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px'});document.body.append(clone);original.classList.add('exchange-hidden');
-  return [{original,clone,left:r.left,top:r.top,i}];
+  const style=original.getAttribute('style');
+  Object.assign(original.style,{position:'fixed',left:r.left+'px',top:r.top+'px',width:r.width+'px',margin:'0',zIndex:'8501'});
+  return [{original,left:r.left,top:r.top,width:r.width,style,i}];
  });}
- // Every control retains its place in the row; one continuous trip to its translated position.
- const slide=items=>Promise.all(items.map(({clone,original,left,top,i})=>{
-  const r=original.getBoundingClientRect(),x=r.left-left,y=r.top-top,direction=x<0?-1:1;
-  return clone.animate([
-   {transform:'translate(0,0) scale(1,1)',opacity:1},
-   {transform:`translate(${-direction*9}px,0) scale(.95,1.04)`,offset:.12},
-   {transform:`translate(${x*.48}px,${y*.48}px) scale(1.13,.94)`,offset:.5},
-   {transform:`translate(${x+direction*5}px,${y}px) scale(.97,1.03)`,offset:.87},
-   {transform:`translate(${x}px,${y}px) scale(1,1)`,opacity:1}
-  ],{duration:1080,delay:i*65,easing:'cubic-bezier(.45,0,.2,1)',fill:'both'}).finished;
- }));
+ // FLIP animates the actual controls, removing the clone-to-original visual handoff.
+ const slide=items=>{
+  items.forEach(({original,style})=>style===null?original.removeAttribute('style'):original.setAttribute('style',style));
+  return Promise.all(items.map(({original,left,top,width,i})=>{
+  const r=original.getBoundingClientRect(),x=left-r.left,y=top-r.top,direction=x>0?-1:1;
+  const animation=original.animate([
+   {transform:`translate(${x}px,${y}px) scaleX(${width/r.width})`},
+   {transform:`translate(${x-direction*9}px,${y}px) scale(.97,1.03)`,offset:.1},
+   {transform:`translate(${x*.45}px,${y*.45}px) scale(1.09,.96)`,offset:.46},
+   {transform:`translate(${direction*14}px,0) scale(.97,1.025)`,offset:.73},
+   {transform:`translate(${-direction*6}px,0) scale(1.015,.99)`,offset:.85},
+   {transform:`translate(${direction*2}px,0)`,offset:.94},
+   {transform:'translate(0,0) scale(1)'}
+  ].map(frame=>({...frame,easing:'cubic-bezier(.33,0,.67,1)'})),{duration:1120,delay:i*45,easing:'linear',fill:'both'});
+  return animation.finished.then(()=>animation.cancel());
+ }));};
  document.addEventListener('click',async event=>{
   if(!event.target.closest('#language-toggle'))return;if(reduced.matches)return;
   event.preventDefault();event.stopImmediatePropagation();if(busy)return;busy=true;await document.fonts.ready;button.setAttribute('aria-busy','true');
@@ -68,7 +61,7 @@ if(document.querySelector('#language-toggle') && new URLSearchParams(location.se
    root.classList.add('word-handoff');reveal();
    await layer.animate([{opacity:1},{opacity:0}],{duration:140,easing:'linear',fill:'forwards'}).finished;
 
-  }finally{controls.forEach(c=>{c.original.classList.remove("exchange-hidden");c.clone.remove();});controls=[];reveal();layer.replaceChildren();layer.getAnimations().forEach(a=>a.cancel());root.classList.remove('word-changing','word-handoff');if(window.skyState)window.skyState.freezeFrame=priorFreeze||false;button.removeAttribute('aria-busy');busy=false;}
+  }finally{controls.forEach(({original,style})=>style===null?original.removeAttribute('style'):original.setAttribute('style',style));controls=[];reveal();layer.replaceChildren();layer.getAnimations().forEach(a=>a.cancel());root.classList.remove('word-changing','word-handoff');if(window.skyState)window.skyState.freezeFrame=priorFreeze||false;button.removeAttribute('aria-busy');busy=false;}
  },true);
 
  // Side track parked at owner request. Saved in .scratch/portfolio/parked-side-track-2026-10-24.
