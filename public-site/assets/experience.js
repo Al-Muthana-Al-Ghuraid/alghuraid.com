@@ -27,7 +27,7 @@ import './interactions-prototype.js?v=rhythm-2';
 
 
 
-if(new URLSearchParams(location.search).get('motion')==='studio') import('./content-motion-prototype.js?v=return-ready-2');
+if(new URLSearchParams(location.search).get('motion')!=='off') import('./content-motion-prototype.js?v=return-ready-2');
 
 
 

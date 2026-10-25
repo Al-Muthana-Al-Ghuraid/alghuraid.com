@@ -1,5 +1,5 @@
 // Early opt-in shell for the local cross-page transition trial.
-if(new URLSearchParams(location.search).get('motion')==='studio'){
+if(new URLSearchParams(location.search).get('motion')!=='off'){
  document.documentElement.classList.add('content-motion-trial');// Detail backgrounds render directly; no scene screenshot bridge.
  if(location.pathname==='/'&&(!sessionStorage.getItem('portfolio-intro-seen')||new URLSearchParams(location.search).has('intro'))){
   document.documentElement.classList.add('intro-trial');
