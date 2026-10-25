@@ -1,5 +1,6 @@
 // Local navigation fix: restore the source card before exposing the returning content.
 (()=>{
+ if(parent!==window)return;
  const root=document.documentElement,key='portfolio-return-position',intent='portfolio-return-intent';
  const read=()=>{try{return JSON.parse(sessionStorage.getItem(key)||'null');}catch{return null;}};
  let saved=read(),returning=false;

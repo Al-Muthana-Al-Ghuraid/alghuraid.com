@@ -1,0 +1,13 @@
+/* Local navigation trial: stable scrollbars, one prepared detail surface. */
+html{scrollbar-gutter:stable}
+html.has-persistent-detail{overflow:hidden!important}
+.persistent-detail{position:fixed;left:0;top:0;width:100vw;height:100dvh;border:0;z-index:9500;background:var(--control-bg);visibility:hidden;opacity:0;pointer-events:none;transition:none}
+.persistent-detail.detail-ready{visibility:visible;opacity:1;pointer-events:auto}
+html.has-persistent-detail .world{visibility:hidden}
+a[aria-busy=true]{cursor:progress;opacity:.65}
+.navigation-notice:empty{display:none}.navigation-notice{position:fixed;bottom:20px;left:20px;right:20px;z-index:9600;padding:14px 18px;border-radius:10px;background:var(--control-bg);color:var(--control-ink);border:1px solid var(--control-border);font:15px/1.6 Arial,sans-serif}
+@media(prefers-reduced-motion:reduce){.persistent-detail{transition:none}}
+
+html.has-persistent-detail body>main *{animation-play-state:paused!important}
+
+.detail-page h1[tabindex="-1"]:focus{outline:none}

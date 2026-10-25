@@ -40,3 +40,5 @@ import './mobile-comfort-prototype.js?v=return-1';
 
 
 import './progressive-scene-prototype.js?v=3';
+
+import './navigation-continuity.js?v=6';
