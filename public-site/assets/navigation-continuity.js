@@ -18,6 +18,7 @@ if(document.body.classList.contains('content-study')){
   const doc=frame.contentDocument;if(!doc||doc.location.pathname==='/')throw new Error('Unexpected detail response');
   await doc.fonts.ready;
   await until(()=>doc.documentElement.dataset.mobileComfortReady==='true',doc.documentElement);
+  if(new URL(frame.src).searchParams.has('mobile-preview'))await until(()=>doc.documentElement.dataset.mobilePreviewReady==='true',doc.documentElement);
   const visible=el=>{const r=el.getBoundingClientRect();return r.bottom>0&&r.top<frame.clientHeight;};
   const nested=[...doc.querySelectorAll('.diagram-scroll iframe')].filter(el=>frame.clientWidth>800&&visible(el));
   await Promise.all(nested.map(el=>new Promise((resolve,reject)=>{if(el.contentDocument?.querySelector('svg')){resolve();return;}el.loading='eager';let timer;const done=()=>{clearTimeout(timer);resolve();};el.addEventListener('load',done,{once:true});timer=setTimeout(()=>reject(new Error('Diagram not ready')),8000);}))); 
@@ -43,6 +44,7 @@ if(document.body.classList.contains('content-study')){
   if(pending)pending.remove();const frame=document.createElement('iframe');pending=frame;
   frame.className='persistent-detail';frame.title=ar()?'تفاصيل المشروع أو البرنامج':'Project or program details';frame.setAttribute('aria-hidden','true');frame.tabIndex=-1;
   url.searchParams.set('lang',active?.contentDocument.documentElement.lang||root.lang);url.searchParams.set('theme',active?.contentDocument.documentElement.dataset.theme||root.dataset.theme||'day');url.searchParams.set('motion','off');url.searchParams.set('embedded','1');
+  const preview=new URL(location.href).searchParams.get('mobile-preview');if(preview)url.searchParams.set('mobile-preview',preview);
   const loaded=new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('Navigation timeout')),12000);frame.addEventListener('load',()=>{clearTimeout(timer);resolve();},{once:true});frame.addEventListener('error',()=>{clearTimeout(timer);reject(new Error('Navigation failed'));},{once:true});});
   frame.src=url.href;document.body.append(frame);
   try{
@@ -78,6 +80,6 @@ if(document.body.classList.contains('content-study')){
   const url=new URL(link.href);if(url.origin!==location.origin||!isDetail(url))return;
   event.preventDefault();event.stopImmediatePropagation();open(url,link,true);
  },true);
- addEventListener('popstate',event=>{if(event.state?.portfolioDetail){open(new URL(event.state.url),sourceLink,false);}else if(active||pending){close(false);}});
+ addEventListener('popstate',event=>{if(window.portfolioDialogs?.handlePop(event))return;if(event.state?.portfolioDetail){open(new URL(event.state.url),sourceLink,false);}else if(active||pending){close(false);}});
  root.dataset.navigationState='home';
 }

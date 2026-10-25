@@ -1,4 +1,11 @@
 import {cp,rm} from 'node:fs/promises';
-await rm(new URL('../dist/',import.meta.url),{recursive:true,force:true});
-await cp(new URL('../public-site/',import.meta.url),new URL('../dist/',import.meta.url),{recursive:true});
-console.log('Built portfolio in dist/');
+import {fileURLToPath} from 'node:url';
+import {relative,resolve} from 'node:path';
+const source=fileURLToPath(new URL('../public-site/',import.meta.url));
+const output=fileURLToPath(new URL('../dist/',import.meta.url));
+const root=fileURLToPath(new URL('../',import.meta.url));
+if(resolve(output)!==resolve(root,'dist'))throw new Error('Unexpected build directory');
+const localOnly=new Set(['mobile-review-prototype.html','opening-art-directions-prototype.html','assets/opening-performance-probe.js']);
+await rm(output,{recursive:true,force:true});
+await cp(source,output,{recursive:true,filter:path=>!localOnly.has(relative(source,path).replaceAll('\\','/'))});
+console.log('Built public portfolio in dist/ (local review tools excluded)');

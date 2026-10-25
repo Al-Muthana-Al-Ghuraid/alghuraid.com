@@ -1,5 +1,7 @@
 /* Local navigation trial: stable scrollbars, one prepared detail surface. */
-html{scrollbar-gutter:stable}
+html{scrollbar-gutter:auto;scrollbar-width:none}
+*{scrollbar-width:none}
+*::-webkit-scrollbar{display:none;width:0;height:0}
 html.has-persistent-detail{overflow:hidden!important}
 .persistent-detail{position:fixed;left:0;top:0;width:100vw;height:100dvh;border:0;z-index:9500;background:var(--control-bg);visibility:hidden;opacity:0;pointer-events:none;transition:none}
 .persistent-detail.detail-ready{visibility:visible;opacity:1;pointer-events:auto}

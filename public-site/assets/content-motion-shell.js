@@ -1,10 +1,6 @@
 // Early opt-in shell for the local cross-page transition trial.
 if(location.pathname==='/' && new URLSearchParams(location.search).get('motion')!=='off'){
  document.documentElement.classList.add('content-motion-trial');// Detail backgrounds render directly; no scene screenshot bridge.
- if(location.pathname==='/'&&(!sessionStorage.getItem('portfolio-intro-seen')||new URLSearchParams(location.search).has('intro'))){
-  document.documentElement.classList.add('intro-trial');
-  document.addEventListener('DOMContentLoaded',()=>{const intro=document.getElementById('page-loader');if(!intro)return;intro.classList.add('portfolio-intro');intro.setAttribute('aria-label','Introduction / مقدمة');intro.innerHTML='<div class="intro-cloud" aria-hidden="true"><svg viewBox="0 0 100 70"><path d="M23 51 C3 49 8 23 29 25 C36 3 65 5 71 26 C96 20 103 53 78 53 H23"/><path class="intro-cloud-line" d="M41 53 V65 M59 53 V65"/></svg></div><p class="intro-welcome" data-copy-en="Welcome" data-copy-ar="أهلًا بك">Welcome</p><h1 class="intro-name" data-copy-en="Al-Muthana Al-Ghuraid" data-copy-ar="المثنى الغريض">Al-Muthana Al-Ghuraid</h1><p class="intro-role" data-copy-en="Cloud & DevOps Engineer" data-copy-ar="مهندس سحابي وDevOps">Cloud & DevOps Engineer</p><button id="skip-loading" class="intro-enter" type="button"><span data-copy-en="Enter portfolio" data-copy-ar="استعرض الموقع">Enter portfolio</span><span aria-hidden="true"> ↗</span></button>';});
- }
  document.addEventListener('DOMContentLoaded',()=>{const label=document.querySelector('#quick-overview-open [data-copy-en]');if(label){label.dataset.copyEn='Quick view';label.dataset.copyAr='نظرة سريعة';label.textContent=document.documentElement.lang==='ar'?label.dataset.copyAr:label.dataset.copyEn;}});
  const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/content-motion-prototype.css?v=skill-icons-2';document.head.append(css);
  const incoming=()=>{if(!location.pathname.startsWith('/projects/'))return;const cover=document.querySelector('main .diagram-scroll');if(cover)cover.style.viewTransitionName='none';};

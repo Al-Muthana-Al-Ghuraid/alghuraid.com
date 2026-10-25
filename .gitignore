@@ -2,3 +2,12 @@ dist/
 node_modules/
 .wrangler/
 .env*
+
+# Local phone-review frame; not part of the deployed source.
+public-site/mobile-review-prototype.html
+
+# Local opening art-direction sketches.
+public-site/opening-art-directions-prototype.html
+
+# Loopback performance diagnostic; excluded from release.
+public-site/assets/opening-performance-probe.js

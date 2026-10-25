@@ -1,3 +1,4 @@
+import {bindDialogHistory} from './dialog-history.js?v=release-20261025-fieldbook';
 // Local mobile comfort study: readable architecture groups + optional original full diagram.
 const root=document.documentElement,ar=()=>root.lang==='ar';
 const copy=(en,arabic)=>ar()?arabic:en;
@@ -42,9 +43,12 @@ if(blocks.length||covers.length){
 }
 // A native dialog gives keyboard dismissal/focus containment and a larger inspection surface.
 const viewer=document.createElement('dialog');viewer.className='architecture-viewer';viewer.innerHTML='<div class="viewer-toolbar"><strong class="viewer-title"></strong><div><button type="button" data-action="minus">−</button><button type="button" data-action="plus">+</button><button type="button" data-action="close">×</button></div></div><p class="viewer-help"></p><div class="viewer-pan" dir="ltr"></div>';
-document.body.append(viewer);let zoom=1,baseWidth=0,opener;
+document.body.append(viewer);let zoom=1,baseWidth=0,opener,lastMedia;
+viewer.querySelector('.viewer-title').id='architecture-viewer-title';viewer.setAttribute('aria-labelledby','architecture-viewer-title');
+bindDialogHistory(viewer,()=>{if(lastMedia)showMedia(...lastMedia);});
 function resizeMedia(){const media=viewer.querySelector('.viewer-pan').firstElementChild;if(!media)return;media.style.width=Math.round(baseWidth*zoom)+'px';if(media.tagName==='IFRAME')media.style.height=Math.round(baseWidth*zoom/2)+'px';}
 function showMedia(src,diagram,title){
+ lastMedia=[src,diagram,title];
  opener=document.activeElement;viewer.querySelector('.viewer-title').textContent=title?.split(' / ')[ar()?1:0]||title||copy('Project image','صورة المشروع');
  viewer.querySelector('.viewer-help').textContent=copy('Use + to enlarge. Swipe to move around the image.','استخدم + للتكبير، ثم اسحب لاستكشاف الصورة.');
  viewer.querySelector('[data-action="minus"]').setAttribute('aria-label',copy('Zoom out','تصغير'));viewer.querySelector('[data-action="plus"]').setAttribute('aria-label',copy('Zoom in','تكبير'));viewer.querySelector('[data-action="close"]').setAttribute('aria-label',copy('Close viewer','إغلاق العارض'));

@@ -1,8 +1,9 @@
+import {renderThemeControl} from './theme-control.js?v=release-20261025-fieldbook';
 // Provisional editorial background for detail routes; homepage retains the live scene.
 if(location.pathname.startsWith('/projects/')||location.pathname.startsWith('/training/')){
  const root=document.documentElement;root.classList.add('detail-background-trial');
  root.dataset.theme=root.dataset.theme==='night'?'night':'day';
- const update=()=>{const button=document.getElementById('time');if(!button)return;const ar=root.lang==='ar',night=root.dataset.theme==='night';button.textContent=ar?(night?'☀ الوضع النهاري':'☾ الوضع الليلي'):(night?'☀ Light mode':'☾ Dark mode');button.setAttribute('aria-pressed',String(night));};
+ const update=()=>renderThemeControl(document.getElementById('time'),root.lang,root.dataset.theme==='night');
  document.getElementById('time')?.addEventListener('click',()=>{root.dataset.theme=root.dataset.theme==='night'?'day':'night';update();});
  new MutationObserver(update).observe(root,{attributes:true,attributeFilter:['lang']});update();
  root.dataset.sceneReady='true';root.dataset.backgroundMode='editorial';dispatchEvent(new Event('portfolio-scene-ready'));
@@ -23,7 +24,7 @@ function ready(){if(skyReady&&cityReady&&window.skyState?.startFrameReady){root.
 window.skyState={startupHold:true,target:initial,paused:reduced.matches,speed:4,coverage:.24,status(text){document.getElementById('render-status').textContent=text;if(text.includes('ready')||text.includes('Calm sky')){skyReady=true;ready();}},update(phase){document.querySelector('.city-back').style.setProperty('--night',Math.max(0,Math.min(1,(phase-.35)/.65)));document.getElementById('phase').textContent=phase<.2?'Day':phase>.85?'Night':'Twilight';}};
 const state=window.skyState;addEventListener('portfolio-start-frame-ready',ready,{once:true});
 if(innerWidth<700)document.getElementById('quality').value='medium';
-function updateButton(){const ar=root.lang==='ar',night=state.target>.5;const b=document.getElementById('time');if(b){b.textContent=ar?(night?'☀ الوضع النهاري':'☾ الوضع الليلي'):(night?'☀ Light mode':'☾ Dark mode');b.setAttribute('aria-pressed',String(night));}}
+function updateButton(){renderThemeControl(document.getElementById('time'),root.lang,state.target>.5);}
 document.getElementById('time')?.addEventListener('click',()=>{state.target=state.target>.5?0:1;root.dataset.theme=state.target?'night':'day';updateButton();});
 new MutationObserver(updateButton).observe(root,{attributes:true,attributeFilter:['lang']});updateButton();
 try{
