@@ -43,3 +43,6 @@ This is one shared website, not four separate language/theme builds. English con
 - Record commit/source, viewport/DPR, hardware, cache/network conditions and whether the browser was throttled. Worker requests can be absent from the parent page's ResourceTiming sum.
 - Compare one mounted renderer at a time, matching theme, viewport, scene state and cache conditions. Validate appearance and navigation alongside savings.
 - Frame-rate/battery/thermal claims need suitable real-device measurements. Current throttled embedded-browser results establish behavior and allocations, not certification of those outcomes.
+
+## Diagram lifecycle regression
+The live release check found diagram scripts observing a detached parent document after navigation. All12diagrams now guard parent availability and disconnect observers on teardown. Run `node tests/diagram-lifecycle.cjs` from this repository root:36real-script cases cover connected, detached and inaccessible parents, including language sync and observer cleanup. This correction preserves appearance and preference defaults.
