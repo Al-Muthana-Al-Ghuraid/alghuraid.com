@@ -6,6 +6,7 @@ Use this guide when discussing visual options or optimization. Preserve dated fi
 
 - [Original analysis, 26 October 2026](baseline-2026-10-26.md): pinned public97121cc, component weights, renderer startup, quality/paused/frozen comparisons and limitations.
 - [Accepted optimization results, 26 October 2026](optimization-2026-10-26.md): exact-value conversion/background decoder,60fps policy, idle rendering, medium quality, deferred diagrams, request sharing and validation. Owner accepted the appearance and authorized publication on26October2026.
+- [Accepted detail-logo and phone-handoff addition, 26 October 2026](detail-logos-2026-10-26.md): per-page icon bytes, no homepage logo load, static rendering and phone word geometry. Owner authorized publication on26October2026.
 
 ## Components and tradeoffs
 
@@ -19,6 +20,7 @@ Use this guide when discussing visual options or optimization. Preserve dated fi
 | Diagrams | `diagrams/`, `diagram-visibility.js` | Deferred near the homepage section; CSS/SMIL pauses offscreen, hidden, or behind a detail. Keep visible diagrams and full-view actions functional. |
 | Language and skills | `language.js`, `translation-catalog.js`, `content-motion-prototype.js`, `translations.json` | Small shared translation request. Hero footprints and language motion preserve bilingual layout. Translation data is not a major performance target. |
 | Project media/viewer | Project/program HTML, `mobile-comfort-prototype.js`, `media-viewer-geometry.js` | Screenshots load as needed. Preserve pinch/pan/Fit, centered controls and dialog Back/focus behavior. Direct detail pages use a static background rather than another live sky. |
+| Detail technology logos | `assets/detail-tech-stack.css`, `assets/tech-logos/` | Static local SVGs:0.4–26.3KB per detail plus1.4KB shared CSS, no homepage logo requests or animation loop. Keep fixed dimensions and native colors. See dated addition for exact bytes and limits. |
 | Ordinary controls/cards | Shared styles and interaction modules | Mainly interaction-time layout/paint. Prioritize verified jank; avoid removing inexpensive design details in response to sky costs. |
 
 ## Language and theme defaults

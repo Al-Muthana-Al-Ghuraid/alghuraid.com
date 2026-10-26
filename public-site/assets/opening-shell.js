@@ -31,16 +31,16 @@
   root.dataset.openingVisibleMs=String(Math.round(shownMs+(visibleSince?performance.now()-visibleSince:0)));
   try{
    if(handoff){
-    const style=getComputedStyle(target),pieces=[...source.querySelectorAll(ar?'.opening-ar-word':'.opening-letter')];let offset=0;
+    const phone=innerWidth<=800,style=getComputedStyle(target),pieces=[...source.querySelectorAll(ar?'.opening-ar-word':phone?'.opening-word':'.opening-letter')];let offset=0;
     for(const [i,piece] of pieces.entries()){
      while(name[offset]===' ')offset++;
      const text=piece.textContent,sourceRange=document.createRange(),targetRange=document.createRange();sourceRange.selectNodeContents(piece);const sr=sourceRange.getBoundingClientRect();
-     targetRange.setStart(target.firstChild,offset);targetRange.setEnd(target.firstChild,offset+text.length);const tr=targetRange.getBoundingClientRect();offset+=text.length;
+     targetRange.setStart(target.firstChild,offset);targetRange.setEnd(target.firstChild,offset+text.length);const tr=targetRange.getBoundingClientRect(),lines=[...targetRange.getClientRects()].filter(rect=>rect.width>.1);if(phone&&lines.some(rect=>Math.abs(rect.top-lines[0].top)>1))throw new Error('Unstable name word layout');offset+=text.length;
      const ghost=document.createElement('span');ghost.className='opening-handoff';ghost.textContent=text;ghost.setAttribute('aria-hidden','true');
      Object.assign(ghost.style,{left:tr.left+'px',top:tr.top+'px',fontFamily:style.fontFamily,fontSize:style.fontSize,fontWeight:style.fontWeight,lineHeight:style.lineHeight,letterSpacing:style.letterSpacing,color:style.color,direction:style.direction,whiteSpace:'nowrap'});document.body.append(ghost);ghosts.push(ghost);
      const measure=document.createRange();measure.selectNodeContents(ghost);const gr=measure.getBoundingClientRect();ghost.style.left=(tr.left+tr.left-gr.left)+'px';ghost.style.top=(tr.top+tr.top-gr.top)+'px';
      const transform=`translate(${sr.left-tr.left}px,${sr.top-tr.top}px) scale(${sr.width/Math.max(1,gr.width)},${sr.height/Math.max(1,gr.height)})`;
-     animations.push(ghost.animate([{transform},{transform:'none'}],{duration:ar?720:620,delay:Math.min(120,i*(ar?40:6)),easing:'cubic-bezier(.22,.65,.25,1)',fill:'both'}));
+     animations.push(ghost.animate([{transform},{transform:'none'}],{duration:ar?720:620,delay:Math.min(120,i*(ar||phone?40:6)),easing:'cubic-bezier(.22,.65,.25,1)',fill:'both'}));
     }
     root.dataset.openingActors=String(ghosts.length);
     target.classList.add('opening-target-hidden');source.style.opacity='0';

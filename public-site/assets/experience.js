@@ -44,6 +44,6 @@ import './mobile-comfort-prototype.js?v=release-20261026-performance';
 import './progressive-scene-prototype.js?v=release-20261026-performance';
 
 import './navigation-continuity.js?v=release-20261026-performance';
-import './mobile-layout-prototype.js?v=release-20261026-performance';
+import './mobile-layout-prototype.js?v=release-20261026-phone-stack';
 
 import './diagram-visibility.js?v=release-20261026-performance';

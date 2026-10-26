@@ -74,3 +74,6 @@ html[lang=ar] .detail-page :is(h1,h2,h3,p,strong,button,a,span){font-family:Taho
 @media(max-width:800px){.architecture-viewer{padding:12px;width:calc(100vw - 16px);max-width:calc(100vw - 16px);border-radius:20px}.viewer-controls{gap:5px;padding:5px}.viewer-scale{width:43px}.viewer-toolbar .viewer-title{font-size:14px}}
 
 .architecture-viewer .viewer-pan{scroll-behavior:auto}
+
+/* Phone handoff destinations keep the two name words intact and balanced. */
+@media(max-width:800px){html[lang=en] .content-study .hero h1{text-wrap:balance}}

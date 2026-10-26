@@ -26,7 +26,7 @@ const localReview=['127.0.0.1','localhost','[::1]'].includes(location.hostname)&
   }
   if(location.pathname==='/training/cloud/'){
    const main=document.querySelector('main'),title=main.querySelector('h1'),provider=main.querySelector('.provider'),cover=main.querySelector('.program-cover');
-   if(title&&cover){main.querySelector('header').after(title);if(provider)title.after(provider);main.classList.add('preview-title-first');}
+   if(title&&cover){(main.querySelector('.detail-tech-stack')||main.querySelector('header')).after(title);if(provider)title.after(provider);main.classList.add('preview-title-first');}
   }
  }
  const bar=document.createElement('nav');bar.className='mobile-preview-switcher';bar.setAttribute('aria-label','Mobile layout preview');
