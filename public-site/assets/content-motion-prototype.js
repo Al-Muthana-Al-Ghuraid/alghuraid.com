@@ -1,8 +1,9 @@
-import {skillIcon} from './skill-icons-prototype.js?v=1';
+import {catalogReady} from './translation-catalog.js?v=release-20261026-performance';
+import {skillIcon} from './skill-icons-prototype.js?v=release-20261026-performance';
 // Opt-in motion study: no generated mesh or extra skills panel.
 const section=document.querySelector('#skills'),reduced=matchMedia('(prefers-reduced-motion: reduce)');
 if(section){
- const catalog=await fetch('/assets/translations.json').then(r=>r.json());
+ const catalog=await catalogReady;
  const keys=['Microsoft Azure','Oracle Cloud','Terraform','Docker','Linux','Key Vault','GitHub Actions','Cloudflare Zero Trust','Python','JavaScript','React','FastAPI','Django','Streamlit','JWT','Bootstrap','SQL','PostgreSQL','Cosmos DB','SQLAlchemy','RAG','OpenAI API','n8n','Project planning','Risk registers','Stakeholders','Team coordination','Scrum','Kanban','Communication'];
  const stacks=[['Microsoft Azure','Terraform','Docker','Linux','Key Vault','GitHub Actions','Python','FastAPI','Streamlit','PostgreSQL','Cosmos DB','RAG'],['Python','JavaScript','React','FastAPI','JWT','Bootstrap','SQLAlchemy','SQL','Team coordination'],['Python','Django','Bootstrap','SQL'],['Oracle Cloud','Docker','Linux','Cloudflare Zero Trust','OpenAI API','n8n']];
  const preferred={Python:['Django','FastAPI','SQLAlchemy','React','Streamlit'],'Microsoft Azure':['Terraform','Docker','Key Vault','GitHub Actions','Linux']};

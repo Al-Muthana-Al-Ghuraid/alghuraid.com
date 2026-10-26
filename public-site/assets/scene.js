@@ -1,4 +1,4 @@
-import {renderThemeControl} from './theme-control.js?v=release-20261025-fieldbook';
+import {renderThemeControl} from './theme-control.js?v=release-20261026-performance';
 // Provisional editorial background for detail routes; homepage retains the live scene.
 if(location.pathname.startsWith('/projects/')||location.pathname.startsWith('/training/')){
  const root=document.documentElement;root.classList.add('detail-background-trial');
@@ -23,13 +23,13 @@ let skyReady=false,cityReady=false;
 function ready(){if(skyReady&&cityReady&&window.skyState?.startFrameReady){root.dataset.sceneReady='true';dispatchEvent(new Event('portfolio-scene-ready'));}}
 window.skyState={startupHold:true,target:initial,paused:reduced.matches,speed:4,coverage:.24,status(text){document.getElementById('render-status').textContent=text;if(text.includes('ready')||text.includes('Calm sky')){skyReady=true;ready();}},update(phase){document.querySelector('.city-back').style.setProperty('--night',Math.max(0,Math.min(1,(phase-.35)/.65)));document.getElementById('phase').textContent=phase<.2?'Day':phase>.85?'Night':'Twilight';}};
 const state=window.skyState;addEventListener('portfolio-start-frame-ready',ready,{once:true});
-if(innerWidth<700)document.getElementById('quality').value='medium';
+document.getElementById('quality').value='medium';
 function updateButton(){renderThemeControl(document.getElementById('time'),root.lang,state.target>.5);}
 document.getElementById('time')?.addEventListener('click',()=>{state.target=state.target>.5?0:1;root.dataset.theme=state.target?'night':'day';updateButton();});
 new MutationObserver(updateButton).observe(root,{attributes:true,attributeFilter:['lang']});updateButton();
 try{
- await import('/assets/sky.js?v=start-frame-2');
- await import('/assets/city.js?v=shared-scene-1');
+ await import('/assets/sky.js?v=release-20261026-performance');
+ await import('/assets/city.js?v=release-20261026-performance');
  state.update(initial);cityReady=document.querySelector('.city-back').dataset.candidate==='ready';ready();
 }catch(error){root.dataset.sceneFailed='true';dispatchEvent(new Event('portfolio-scene-failed'));console.error('Portfolio background unavailable',error);}
 reduced.addEventListener('change',()=>{state.paused=reduced.matches;});

@@ -1,5 +1,6 @@
-import {renderThemeControl} from './theme-control.js?v=release-20261025-fieldbook';
-const catalog=await fetch('/assets/translations.json').then(r=>r.json());
+import {catalogReady} from './translation-catalog.js?v=release-20261026-performance';
+import {renderThemeControl} from './theme-control.js?v=release-20261026-performance';
+const catalog=await catalogReady;
 Object.assign(catalog,{'Experience night ↗':'استعرض الليل ↖','Experience sunrise ↗':'استعرض النهار ↖','RIYADH, SAUDI ARABIA':'الرياض، المملكة العربية السعودية','Home':'الرئيسية','CONTENT STUDY · Draft copy & visuals':'دراسة التصميم · محتوى وصور أولية','Previous layout ↗':'التصميم السابق ↖','Jump to projects ↓':'انتقل إلى المشاريع ↓'});
 const source=new WeakMap(),originalAttributes=new WeakMap();
 const button=document.querySelector('#language-toggle');

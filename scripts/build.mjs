@@ -5,7 +5,7 @@ const source=fileURLToPath(new URL('../public-site/',import.meta.url));
 const output=fileURLToPath(new URL('../dist/',import.meta.url));
 const root=fileURLToPath(new URL('../',import.meta.url));
 if(resolve(output)!==resolve(root,'dist'))throw new Error('Unexpected build directory');
-const localOnly=new Set(['mobile-review-prototype.html','opening-art-directions-prototype.html','assets/opening-performance-probe.js']);
+const localOnly=new Set(['mobile-review-prototype.html','performance-review-prototype.html','opening-art-directions-prototype.html','assets/opening-performance-probe.js']);
 await rm(output,{recursive:true,force:true});
 await cp(source,output,{recursive:true,filter:path=>!localOnly.has(relative(source,path).replaceAll('\\','/'))});
 console.log('Built public portfolio in dist/ (local review tools excluded)');

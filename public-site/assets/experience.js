@@ -1,4 +1,4 @@
-import {bindDialogHistory} from './dialog-history.js?v=release-20261025-fieldbook';
+import {bindDialogHistory} from './dialog-history.js?v=release-20261026-performance';
 // Shared loading, recruiter summary and navigation preferences.
 const root=document.documentElement;
 const ar=()=>root.lang==='ar';
@@ -25,23 +25,25 @@ document.getElementById('quick-overview-close')?.addEventListener('click',()=>di
 dialog?.addEventListener('click',event=>{if(event.target===dialog){const b=dialog.getBoundingClientRect();if(event.clientX<b.left||event.clientX>b.right||event.clientY<b.top||event.clientY>b.bottom)dialog.close();}});
 dialog?.addEventListener('close',()=>opener?.focus());
 
-import './interactions-prototype.js?v=release-20261025-fieldbook';
+import './interactions-prototype.js?v=release-20261026-performance';
 
 
 
-if(new URLSearchParams(location.search).get('motion')!=='off') import('./content-motion-prototype.js?v=return-ready-2');
-
-
-
-
-
-
-import './mobile-comfort-prototype.js?v=release-20261025-fieldbook';
+if(new URLSearchParams(location.search).get('motion')!=='off') import('./content-motion-prototype.js?v=release-20261026-performance');
 
 
 
 
-import './progressive-scene-prototype.js?v=3';
 
-import './navigation-continuity.js?v=release-20261025-fieldbook';
-import './mobile-layout-prototype.js?v=release-20261025-fieldbook';
+
+import './mobile-comfort-prototype.js?v=release-20261026-performance';
+
+
+
+
+import './progressive-scene-prototype.js?v=release-20261026-performance';
+
+import './navigation-continuity.js?v=release-20261026-performance';
+import './mobile-layout-prototype.js?v=release-20261026-performance';
+
+import './diagram-visibility.js?v=release-20261026-performance';

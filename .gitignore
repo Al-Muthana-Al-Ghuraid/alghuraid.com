@@ -11,3 +11,6 @@ public-site/opening-art-directions-prototype.html
 
 # Loopback performance diagnostic; excluded from release.
 public-site/assets/opening-performance-probe.js
+
+# Local before/after performance comparison.
+public-site/performance-review-prototype.html

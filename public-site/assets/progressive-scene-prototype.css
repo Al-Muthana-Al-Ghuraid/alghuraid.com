@@ -9,12 +9,7 @@
 @media(prefers-reduced-motion:reduce){.progressive-scene-trial .scene-start-poster{transition:none}}
 html.poster-capture{overflow:hidden!important}
 
-/* The first paint uses CSS, before the scene modules have downloaded. */
-.progressive-scene-trial .world:after{content:'';position:absolute;inset:0;z-index:6;background:url('/assets/scene-start-day-desktop.webp') center/cover no-repeat;pointer-events:none}
-.progressive-scene-trial[data-theme=night] .world:after{background-image:url('/assets/scene-start-night-desktop.webp')}
-.progressive-scene-trial[data-poster-mounted=true] .world:after,.poster-capture .world:after{display:none}
-@media(max-width:700px){.progressive-scene-trial .world:after{background-image:url('/assets/scene-start-day-phone.webp')}.progressive-scene-trial[data-theme=night] .world:after{background-image:url('/assets/scene-start-night-phone.webp')}}
-
+/* The early shell owns one poster image; the critical opening cover protects first paint. */
 .scene-start-stage{position:absolute;left:50%;top:50%;width:max(100%,160vh);aspect-ratio:1440/900;transform:translate(-50%,-50%)}
 .scene-start-stage #scene canvas{width:100%!important;height:100%!important}
 @media(max-width:700px){.scene-start-stage{width:max(100%,46.2085308vh);aspect-ratio:390/844}}

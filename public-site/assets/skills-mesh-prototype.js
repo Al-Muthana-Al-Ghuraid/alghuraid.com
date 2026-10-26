@@ -12,7 +12,7 @@ if(section){
  const professional=['Project planning','Risk registers','Stakeholders','Team coordination','Scrum','Kanban','Communication'];
  const groups=[keys.slice(0,8),keys.slice(8,16),keys.slice(16,23),keys.slice(23)];
  const grid=section.querySelector('.readable-skills'),layout=document.createElement('div');layout.className='skills-mesh-layout';grid.before(layout);layout.append(grid);
- const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/skills-mesh-prototype.css?v=1';document.head.append(css);
+ const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/skills-mesh-prototype.css?v=release-20261026-performance';document.head.append(css);
  const panel=document.createElement('aside');panel.className='skills-mesh-panel';panel.innerHTML='<p class="mesh-eyebrow"></p><h3 class="mesh-title"></h3><p class="mesh-help"></p><div class="mesh-stage"><svg aria-hidden="true" viewBox="0 0 500 340" preserveAspectRatio="none"></svg><div class="mesh-nodes"></div></div><div class="mesh-evidence" aria-live="polite"></div><p class="mesh-prototype-note"></p>';layout.append(panel);
  const instruction=document.createElement('p');instruction.className='mesh-instruction';section.querySelector('h2').after(instruction);
  const buttons=[];let selected='Python';

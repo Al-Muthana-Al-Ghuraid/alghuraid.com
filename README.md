@@ -13,3 +13,6 @@ Old source, local uncommitted work, compiled output and Git history are archived
 
 ## Attribution
 Cloud/atmosphere library and assets: Takram MIT license and bundled third-party notices in public-site/assets/takram/. Moon texture: NASA LROC. Academy/certification logos are supplied by the owner.
+
+## Performance reference
+Read [the component/performance guide](docs/performance/README.md) before changing rendering, animation, loading, media, or language/theme defaults. It preserves the dated baseline, accepted optimization results and measurement limits.

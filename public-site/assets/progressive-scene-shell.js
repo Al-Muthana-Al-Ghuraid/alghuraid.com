@@ -5,5 +5,8 @@
  new MutationObserver(()=>{try{localStorage.setItem('portfolio-theme',root.dataset.theme);}catch{}const url=new URL(location.href);url.searchParams.set('theme',root.dataset.theme);history.replaceState(null,'',url.pathname+url.search+url.hash);}).observe(root,{attributes:true,attributeFilter:['data-theme']});
  if(location.pathname!=='/')return;
  root.classList.add('progressive-scene-trial');if(query.has('poster-capture'))root.classList.add('poster-capture');
- const link=document.createElement('link');link.rel='preload';link.as='image';link.href='/assets/scene-start-'+theme+(innerWidth<=700?'-phone':'-desktop')+'.webp';document.head.append(link);
+ const link=new Image();link.fetchPriority='high';link.decoding='async';link.src='/assets/scene-start-'+theme+(innerWidth<=700?'-phone':'-desktop')+'.webp';window.portfolioStartPoster=link;
+ link.className='scene-start-poster';link.alt='';link.setAttribute('aria-hidden','true');
+ const mount=()=>{if(!link.isConnected)document.querySelector('.world')?.append(link);};
+ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount,{once:true}):mount();
 })();
