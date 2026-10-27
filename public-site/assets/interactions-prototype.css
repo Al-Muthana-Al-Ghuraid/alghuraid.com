@@ -20,19 +20,19 @@
 .travel-caption{display:none!important}.route-checkpoint text{font:700 8px Arial,sans-serif;text-anchor:middle;fill:var(--control-ink)}.route-checkpoint.passed circle{fill:#e4bf63;stroke:#fff2bf}
 @media(max-width:800px){.interaction-preview .content-study .content{width:calc(100% - 48px);margin-left:36px;margin-right:12px}.route-shadow{stroke-width:12}.route-road{stroke-width:8}.route-checkpoint text{display:none}.traveller-halo{r:9}.interaction-preview .travel-route{left:3px}}
 /* Chalk variants: a travelling window of textured ink, no road or vehicle. */
-.chalk-journey{position:absolute;left:4px;pointer-events:none;z-index:80;opacity:0;visibility:hidden;transition:opacity .3s;direction:ltr}.chalk-journey.visible{opacity:1;visibility:visible}.chalk-journey svg{width:100%;height:100%;overflow:hidden}.chalk-journey path{fill:none;stroke-linecap:round;stroke-linejoin:round}.chalk-under{stroke:#173b3c;stroke-width:5;opacity:.24}.chalk-core{stroke:#fff4d9;stroke-width:2.6;opacity:.9}.chalk-grain{stroke:#73857d;stroke-width:1;opacity:.4}.chalk-web{stroke:#fff4d9;stroke-width:1.7;opacity:.9}
-.chalk-review-switcher{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;background:var(--control-bg);color:var(--control-ink);border:1px solid var(--control-border);border-radius:28px;box-shadow:0 4px 22px #071b3040;padding:5px;font:12px Arial,sans-serif;direction:ltr;white-space:nowrap}.chalk-review-switcher button{width:42px;height:42px;border:0;background:transparent;color:inherit;font-size:26px;border-radius:50%;cursor:pointer}.chalk-review-switcher button:hover{background:#a98c4920}
+.chalk-journey{position:absolute;left:4px;pointer-events:none;z-index:80;opacity:0;visibility:hidden;transition:opacity .3s;direction:ltr}.chalk-journey.visible{opacity:1;visibility:visible}.chalk-journey svg{width:100%;height:100%;overflow:hidden}.chalk-journey path{fill:none;stroke-linecap:round;stroke-linejoin:round}.chalk-under{stroke-width:5;opacity:.24}.chalk-core{stroke-width:2.6;opacity:.9}.chalk-grain{stroke-width:1;opacity:.4}.chalk-web{stroke-width:1.7;opacity:.9}
+.chalk-review-switcher{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;background:var(--control-bg);color:var(--control-ink);border:1px solid var(--control-border);border-radius:28px;padding:5px;font:12px Arial,sans-serif;direction:ltr;white-space:nowrap}.chalk-review-switcher button{width:42px;height:42px;border:0;color:inherit;font-size:26px;border-radius:50%;cursor:pointer}.chalk-review-switcher button:hover{}
 @media(max-width:800px){.chalk-review-switcher{font-size:10px;gap:5px}.chalk-journey{left:3px}.chalk-core{stroke-width:2}.chalk-web{stroke-width:1.4}}
 @media(prefers-reduced-motion:reduce){.chalk-journey{transition:none}}
 /* Treasure-map chalk study: rectangular pigment blocks and circular stopping points. */
-.chalk-journey .chalk-under{stroke:#173633;stroke-width:11;opacity:.3;stroke-linecap:butt}
-.chalk-journey .chalk-core{stroke:#fff1ca;stroke-width:8;opacity:.96;stroke-linecap:butt}
-.chalk-journey .chalk-grain{stroke:#fff8df;stroke-width:1.6;opacity:.5;stroke-linecap:butt}
-.chalk-stop-ring{fill:none;stroke:#fff1ca;stroke-width:5}.chalk-stop-dot{fill:#fff1ca;stroke:none}.chalk-journey .chalk-web{stroke-width:3;stroke-dasharray:5 4}
+.chalk-journey .chalk-under{stroke-width:11;opacity:.3;stroke-linecap:butt}
+.chalk-journey .chalk-core{stroke-width:8;opacity:.96;stroke-linecap:butt}
+.chalk-journey .chalk-grain{stroke-width:1.6;opacity:.5;stroke-linecap:butt}
+.chalk-stop-ring{fill:none;stroke-width:5}.chalk-stop-dot{stroke:none}.chalk-journey .chalk-web{stroke-width:3;stroke-dasharray:5 4}
 @media(max-width:1023px){.chalk-journey,.chalk-journey.visible,.chalk-review-switcher{display:none!important}}
 @media(max-width:800px){.interaction-preview .content-study .content{width:calc(100% - 24px);margin-left:auto;margin-right:auto}}
 /* Selected material A replaces the two-option experiment. */
-.chalk-journey .chalk-a-mark,.chalk-journey .chalk-a-checkpoint{fill:#fff;stroke:none}
+.chalk-journey .chalk-a-mark,.chalk-journey .chalk-a-checkpoint{stroke:none}
 
 
 /* Track parked; suppress the old floating navigation as well. */

@@ -1,0 +1,91 @@
+/* Slate & Cobalt: the sole production color identity. Geometry and motion live in component sheets. */
+:root{--color-page:#E8EDF4;--color-surface:#F3F6FA;--color-raised:#FFFFFF;--color-soft:#E3EAF5;--color-text:#202C43;--color-muted:#56647B;--color-line:#BAC6D8;--color-line-strong:#7184A1;--color-accent:#2F56C5;--color-accent-strong:#2042A4;--color-accent-soft:#DFE7FF;--color-on-accent:#FFFFFF;--color-hero-accent:#DDE7FF;color-scheme:light}
+html[data-theme=night]{--color-page:#101622;--color-surface:#192334;--color-raised:#232F43;--color-soft:#2C3A51;--color-text:#EEF3FF;--color-muted:#B4C2D8;--color-line:#455975;--color-line-strong:#718BAD;--color-accent:#9AB6FF;--color-accent-strong:#BED0FF;--color-accent-soft:#2B3F67;--color-on-accent:#13203A;--color-hero-accent:#C7D8FF;color-scheme:dark}
+/* Shared component paint roles from the accepted design. */
+html,html .content-study{
+ --paper:var(--color-surface);--ink:var(--color-text);--muted:var(--color-muted);--line:var(--color-line);--accent:var(--color-accent);
+ --control-bg:var(--color-raised);--control-ink:var(--color-text);--control-border:var(--color-line-strong);
+ --opening-paper:var(--color-surface);--opening-boot-paper:var(--color-surface);--opening-ink:var(--color-text);--opening-line:var(--color-line-strong);--opening-accent:var(--color-accent);--opening-node:var(--color-soft);
+}
+html body{color:var(--color-text)}
+html :is(.panel,.quick-overview,.architecture-viewer,.mobile-architecture){background:var(--color-surface);color:var(--color-text);border-color:var(--color-line)}
+html :is(.panel-title,.viewer-toolbar,.overview-heading){background:var(--color-surface);color:var(--color-text);border-color:var(--color-line)}
+html :is(.work-card,.boot-card,.readable-skills article,.clear-cert-grid article,.overview-facts>div,.mobile-map-node){background:var(--color-raised);color:var(--color-text);border-color:var(--color-line)}
+html :is(.panel,.work-card,.boot-card,.readable-skills article,.clear-cert-grid article,.quick-overview,.architecture-viewer){box-shadow:0 12px 45px #05081018}
+html :is(.panel,.detail-page,.quick-overview,.architecture-viewer) :is(h1,h2,h3,h4,strong,dt,dd){color:var(--color-text)}
+html :is(.panel,.detail-page,.quick-overview,.architecture-viewer) :is(p,figcaption,.program-provider,.mesh-help,.skill-motion-hint,.viewer-help,.swipe-hint){color:var(--color-muted)}
+html :is(.tags span,.credential-state,.skill-inline-choice,.mesh-skill,.notice,.overview-stack){color:var(--color-text);background:var(--color-soft);border-color:var(--color-line)}
+html :is(.panel,.detail-page) :is(.project-domain,.program-hours,.hours,.training-total,.education>span,.mobile-map-label){color:var(--color-accent)}
+html .project-domain{background:var(--color-soft)}
+html :is(.skill-inline-choice,.project-page-link,.program-page-link,.text-link):hover{border-color:var(--color-accent)}
+html .readable-project:hover .animated-project-cover{outline-color:var(--color-accent);box-shadow:0 10px 25px #05081020}
+html :is(.project-page-link,.program-page-link,.text-link,.detail-page header a,.detail-return a){color:var(--color-text);border-color:var(--color-line)}
+html :is(.primary-action,.overview-actions a,.mobile-map-open){background:var(--color-accent-strong);color:var(--color-on-accent);border-color:var(--color-accent-strong)}
+html :is(.skill-inline-choice[aria-pressed=true],.mesh-skill[aria-pressed=true]){background:var(--color-accent);color:var(--color-on-accent);border-color:var(--color-accent)}
+html .skill-inline-choice.is-related{background:var(--color-accent-soft);color:var(--color-text);border-color:var(--color-accent)}
+html :is(.skill-group-art,.plus){color:var(--color-accent)}
+html .skill-group-art :is(.art-packet,.art-data){fill:var(--color-accent)}
+html .skill-group-art .art-task{fill:var(--color-accent-soft);stroke:var(--color-accent)}
+/* Match the actual SVG paints, including the more specific legacy night rule. */
+html #skills .skill-group-art,
+html #skills .skill-group-art svg{color:var(--color-accent);stroke:var(--color-accent)}
+html #skills .skill-group-art svg :is(path,rect,circle,ellipse,line,polyline,polygon){fill:none;stroke:var(--color-accent)}
+html #skills .skill-group-art :is(.art-packet,.art-data,.packet-stream){fill:var(--color-accent);stroke:none}
+html #skills .skill-group-art .art-task{fill:var(--color-accent-soft);stroke:var(--color-accent)}
+html #skills .skill-tag-icon{color:var(--color-accent);transition:color 1200ms ease}
+html #skills .skill-inline-choice[aria-pressed=true] .skill-tag-icon{color:var(--color-on-accent)}
+html #skills .skill-inline-choice{box-shadow:none}
+html #skills .skill-inline-choice.is-related{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--color-accent) 20%,transparent)}
+html #skills .skill-inline-choice[aria-pressed=true]{box-shadow:0 3px 10px color-mix(in srgb,var(--color-accent) 18%,transparent)}
+html .professional-focus{color:var(--color-hero-accent)}
+html .wordmark span{color:var(--color-hero-accent)}
+html .opening-grid{background:radial-gradient(ellipse at 50% 8%,color-mix(in srgb,var(--color-accent) 12%,transparent),transparent 66%)}
+html :is(.opening-stamp,.opening-mark){border-color:var(--color-line)}
+html .opening-beacon{color:var(--color-accent)}
+html :is(.program-cover,.mobile-architecture-cover,.animated-project-cover){background:var(--color-soft);color:var(--color-text);border-color:var(--color-line)}
+html :is(.program-cover .cover-subject,.program-cover .cover-hours,.mobile-architecture-cover strong){color:var(--color-text)}
+html .program-cover:after{border-color:var(--color-line-strong)}
+html .mobile-map-stage{border-color:var(--color-line)}
+html .mobile-map-stage:before{background:var(--color-line-strong)}
+html .mobile-map-node.ai{background:var(--color-accent-soft);border-color:var(--color-accent)}
+html .mobile-map-node.reject{border-style:dashed}
+html .mobile-project-preview{background:var(--color-soft);color:var(--color-text)}
+html .mobile-preview-row{background:var(--color-raised);color:var(--color-text);border-color:var(--color-line)}
+html :is(.mobile-preview-title,.mobile-preview-row>span){color:var(--color-accent)}
+html .mobile-preview-row:after{border-color:var(--color-line-strong)}
+html .mobile-map-stage:before{box-shadow:0 0 0 4px var(--color-accent-soft)}
+html :is(.program-cover,.cover-subject,.cover-hours,.mobile-project-preview,.mobile-preview-row,.mobile-preview-title,.mobile-map-label,.mobile-map-stage,.primary-action,.viewer-controls,.viewer-controls button,.viewer-help,.viewer-scale,.skill-inline-choice,.skill-group-art,.project-domain){transition:background-color 1200ms ease,color 1200ms ease,border-color 1200ms ease}
+html .program-cover:after{transition:border-color 1200ms ease}
+html .skill-group-art :is(path,rect,circle){transition:fill 1200ms ease,stroke 1200ms ease}
+html .chalk-journey path{transition:stroke 1200ms ease}
+html :is(.viewer-controls,.viewer-controls button,.detail-page header a,.detail-return a){background:var(--color-raised);color:var(--color-text);border-color:var(--color-line-strong)}
+html .viewer-pan{background:var(--color-soft);border-color:var(--color-line)}
+html.detail-background-trial{background:var(--color-page)}
+html.detail-background-trial body.detail-page{background:linear-gradient(90deg,color-mix(in srgb,var(--color-line) 18%,transparent) 1px,transparent 1px),linear-gradient(color-mix(in srgb,var(--color-line) 18%,transparent) 1px,transparent 1px),var(--color-page);background-size:64px 64px,64px 64px,auto}
+html .detail-page>main{background:var(--color-surface);color:var(--color-text);border-color:var(--color-line);box-shadow:0 12px 45px #05081018}
+html :is(.detail-page iframe,.diagram-scroll){background:var(--color-soft);border-color:var(--color-line)}
+html .detail-tech-stack{border-color:var(--color-line)}
+html .detail-tech-stack li{background:#fff;border-color:#d6d8de}
+html :is(a,button):focus-visible{outline-color:var(--color-accent)}
+html .chalk-under{stroke:var(--color-text)}
+html :is(.chalk-core,.chalk-web){stroke:var(--color-accent)}
+html .chalk-grain{stroke:var(--color-line-strong)}
+/* True SVG paints, not a filter over the diagram. Existing routing/motion stays. */
+html.architecture-diagram body{background:var(--color-soft);color:var(--color-text);transition:background-color 1200ms ease,color 1200ms ease}
+html.architecture-diagram .node rect{fill:var(--color-raised);stroke:var(--color-line-strong)}
+html.architecture-diagram :is(.node.ai rect,.node.accept rect){fill:var(--color-accent-soft);stroke:var(--color-accent)}
+html.architecture-diagram .node.reject rect{fill:var(--color-surface);stroke:var(--color-line-strong);stroke-dasharray:5 4}
+html.architecture-diagram text{fill:var(--color-text)}
+html.architecture-diagram :is(.sub,.branch,.note,.group-label){fill:var(--color-muted)}
+html.architecture-diagram .wire{stroke:var(--color-line-strong)}
+html.architecture-diagram .pulse{stroke:var(--color-accent)}
+html.architecture-diagram .pulse.bad{stroke:var(--color-muted)}
+html.architecture-diagram .group{fill:var(--color-surface);stroke:var(--color-line)}
+html.architecture-diagram marker path{fill:var(--color-line-strong)}
+html.architecture-diagram :is(rect,path,text,polygon){transition:fill 1200ms ease,stroke 1200ms ease}
+@media(prefers-reduced-motion:reduce){html.architecture-diagram :is(body,rect,path,text,polygon),html :is(.program-cover,.cover-subject,.cover-hours,.mobile-project-preview,.mobile-preview-row,.mobile-preview-title,.mobile-map-label,.mobile-map-stage,.primary-action,.viewer-controls,.viewer-controls button,.viewer-help,.viewer-scale,.skill-inline-choice,.skill-group-art,.skill-group-art path,.skill-group-art rect,.skill-group-art circle,.project-domain,.chalk-journey path){transition:none}}
+@media(prefers-reduced-motion:reduce){html .program-cover:after{transition:none}}
+@media(prefers-reduced-motion:reduce){html #skills .skill-tag-icon{transition:none}}
+
+html :is(#language-toggle,#time,.top-cv,.social-link,.quick-overview-trigger){background:var(--color-raised);color:var(--color-text);border-color:var(--color-line-strong);box-shadow:0 3px 14px #071b301c}
+html .detail-page :is(header>a,#back,#lang,#language){background:var(--color-raised);color:var(--color-text);border-color:var(--color-line-strong)}

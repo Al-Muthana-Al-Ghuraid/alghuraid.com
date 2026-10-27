@@ -1,7 +1,7 @@
 /* Local prototype controls are excluded from production by the loopback gate. */
-.mobile-preview-switcher{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:9000;display:flex;align-items:center;gap:6px;max-width:calc(100vw - 20px);padding:5px 8px;background:var(--control-bg);color:var(--control-ink);border:1px solid var(--control-border);border-radius:14px;box-shadow:0 4px 24px #0005;font:12px Arial,sans-serif;white-space:nowrap}
+.mobile-preview-switcher{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:9000;display:flex;align-items:center;gap:6px;max-width:calc(100vw - 20px);padding:5px 8px;background:var(--control-bg);color:var(--control-ink);border:1px solid var(--control-border);border-radius:14px;font:12px Arial,sans-serif;white-space:nowrap}
 .mobile-preview-switcher>span{padding-inline:4px}.mobile-preview-switcher a{display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 10px;border:1px solid transparent;border-radius:9px}
-.mobile-preview-switcher a[aria-current]{border-color:var(--control-border);background:#91a2b328}
+.mobile-preview-switcher a[aria-current]{border-color:var(--control-border)}
 @media(max-width:800px){
  html[data-mobile-preview=compact] .mobile-preview-card .work-copy{display:flex;flex-direction:column;gap:14px;padding:20px 16px 0}
  html[data-mobile-preview=compact] .mobile-preview-card .work-copy>p,html[data-mobile-preview=compact] .mobile-preview-card h3{margin:0;min-height:0}

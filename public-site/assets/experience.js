@@ -25,7 +25,7 @@ document.getElementById('quick-overview-close')?.addEventListener('click',()=>di
 dialog?.addEventListener('click',event=>{if(event.target===dialog){const b=dialog.getBoundingClientRect();if(event.clientX<b.left||event.clientX>b.right||event.clientY<b.top||event.clientY>b.bottom)dialog.close();}});
 dialog?.addEventListener('close',()=>opener?.focus());
 
-import './interactions-prototype.js?v=release-20261026-performance';
+import './interactions-prototype.js?v=release-20261027-slate-cobalt';
 
 
 
@@ -44,6 +44,6 @@ import './mobile-comfort-prototype.js?v=release-20261026-performance';
 import './progressive-scene-prototype.js?v=release-20261026-performance';
 
 import './navigation-continuity.js?v=release-20261026-performance';
-import './mobile-layout-prototype.js?v=release-20261026-phone-stack';
+import './mobile-layout-prototype.js?v=release-20261027-slate-cobalt';
 
 import './diagram-visibility.js?v=release-20261026-performance';

@@ -7,6 +7,7 @@ Use this guide when discussing visual options or optimization. Preserve dated fi
 - [Original analysis, 26 October 2026](baseline-2026-10-26.md): pinned public97121cc, component weights, renderer startup, quality/paused/frozen comparisons and limitations.
 - [Accepted optimization results, 26 October 2026](optimization-2026-10-26.md): exact-value conversion/background decoder,60fps policy, idle rendering, medium quality, deferred diagrams, request sharing and validation. Owner accepted the appearance and authorized publication on26October2026.
 - [Accepted detail-logo and phone-handoff addition, 26 October 2026](detail-logos-2026-10-26.md): per-page icon bytes, no homepage logo load, static rendering and phone word geometry. Owner authorized publication on26October2026.
+- [Accepted Slate & Cobalt identity, 27 October 2026](slate-cobalt-2026-10-27.md): shared component paints and diagram theme inheritance; no new continuous rendering, textures or animation loops. Owner authorized publication on27October2026.
 
 ## Components and tradeoffs
 
