@@ -1,8 +1,11 @@
 // Initial live interaction trial; ?interactions=off retains the baseline.
 if(document.querySelector('#language-toggle') && new URLSearchParams(location.search).get('interactions')!=='off'){
- const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/interactions-prototype.css?v=release-20261027-slate-cobalt';document.head.append(css);
+ const css=document.createElement('link');css.rel='stylesheet';css.href='/assets/interactions-prototype.css?v=release-20261027-single-opening';document.head.append(css);
  const root=document.documentElement,reduced=matchMedia('(prefers-reduced-motion: reduce)');root.classList.add('interaction-preview');
  const button=document.querySelector('#language-toggle');let busy=false;
+ const quick=document.querySelector('#quick-overview-open');
+ if(quick&&!quick.querySelector('.quick-view-label')){const label=document.createElement('span');label.className='quick-view-label';label.append(...quick.childNodes);quick.append(label);}
+ async function nextFont(){const family=root.lang==='ar'?'Portfolio Sans':'Portfolio Arabic',sample=root.lang==='ar'?'Quick view':'نظرة سريعة';await Promise.all([400,500,600,700].map(weight=>document.fonts.load(weight+' 14px "'+family+'"',sample))); }
  const layer=document.createElement('div');layer.className='word-flight-layer';layer.setAttribute('aria-hidden','true');document.body.append(layer);
  // Fade real document text; never detach words into a viewport overlay.
  function textElements(){
@@ -67,15 +70,16 @@ if(document.querySelector('#language-toggle') && new URLSearchParams(location.se
  }
  document.addEventListener('click',async event=>{
   if(!event.target.closest('#language-toggle')||reduced.matches)return;
-  event.preventDefault();event.stopImmediatePropagation();if(busy)return;busy=true;await document.fonts.ready;button.setAttribute('aria-busy','true');
+  event.preventDefault();event.stopImmediatePropagation();if(busy)return;busy=true;button.setAttribute('aria-busy','true');
   const priorFreeze=window.skyState?.freezeFrame;if(window.skyState)window.skyState.freezeFrame=true;
   try{
+   await nextFont();await document.fonts.ready;
    const mobile=matchMedia('(max-width:800px)').matches;
    actionRow=document.querySelector('.hero-actions');priorRowHeight=actionRow?.style.minHeight;if(actionRow)actionRow.style.minHeight=actionRow.getBoundingClientRect().height+'px';
    startScroll=scrollY;const outgoing=textElements();controls=captureControls();root.classList.add('word-changing');
    const shadow=[...document.querySelectorAll('.readability')];
-   const headerLabels=[...document.querySelectorAll('header .header-control-label,header .top-cv>span')];
-   await Promise.all([fade([...outgoing,...shadow,...headerLabels],[{opacity:1},{opacity:0}],{duration:mobile?280:340,easing:'ease-in'}),windUp(controls)]);
+   const headerLabels=[...document.querySelectorAll('header .header-control-label,header .top-cv>span')];const quickLabels=[...document.querySelectorAll('#quick-overview-open .quick-view-label')];
+   await Promise.all([fade([...outgoing,...shadow,...headerLabels,...quickLabels],[{opacity:1},{opacity:0}],{duration:mobile?280:340,easing:'ease-in'}),windUp(controls)]);
    // Preserve the user's current scroll, rather than snapping back to the click position.
    button.onclick?.call(button,event);await document.fonts.ready;
    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
@@ -85,8 +89,9 @@ if(document.querySelector('#language-toggle') && new URLSearchParams(location.se
    const frames=[{opacity:0,offset:0},{opacity:0,offset:.22},{opacity:.25,offset:.48},{opacity:.85,offset:.78},{opacity:1,offset:1}];
    const entering=fade([...incoming,...headerLabels],frames,{duration:mobile?900:1120,easing:'linear'});
    // The scene shade has no word-flight hold: reveal continuously after direction flips.
+   const quickEntering=fade(quickLabels,[{opacity:0,offset:0},{opacity:0,offset:.65},{opacity:1,offset:1}],{duration:mobile?900:1120,easing:'ease-out'});
    const shadeEntering=fade(shadow,[{opacity:0},{opacity:1}],{duration:mobile?900:1120,easing:'cubic-bezier(.25,.1,.25,1)'});
-   await Promise.all([entering,shadeEntering,slide(controls)]);
+   await Promise.all([entering,shadeEntering,quickEntering,slide(controls)]);
   }finally{
    controls.forEach(({original,style})=>{original.getAnimations().forEach(a=>a.cancel());style===null?original.removeAttribute('style'):original.setAttribute('style',style);});controls=[];
    if(actionRow)actionRow.style.minHeight=priorRowHeight||'';

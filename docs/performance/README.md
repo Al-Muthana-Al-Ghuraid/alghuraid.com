@@ -10,6 +10,8 @@ Use this guide when discussing visual options or optimization. Preserve dated fi
 - [Accepted Slate & Cobalt identity, 27 October 2026](slate-cobalt-2026-10-27.md): shared component paints and diagram theme inheritance; no new continuous rendering, textures or animation loops. Owner authorized publication on27October2026.
 - [Accepted content and transition polish, 27 October 2026](content-polish-2026-10-27.md): temporary up-to120fps desktop theme-transition ceiling, workflow media replacement and interaction fixes. Owner accepted the local preview and authorized publication on27October2026.
 
+- [Accepted single opening, typography and Quick view, 27 October 2026](entry-quickview-2026-10-27.md): repaired font-dependent entry/switch sequencing, fixed Quick view geometry and reviewed font/tag appearance; previous release retained for rollback.
+
 ## Components and tradeoffs
 
 | Component | Source | Cost and decision guidance |

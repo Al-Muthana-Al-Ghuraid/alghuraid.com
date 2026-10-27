@@ -18,7 +18,7 @@ $('meteor-preview').onclick=()=>{setTarget(1);state.meteorPending=true;};
 function pauseLabel(){$('pause').textContent=state.paused?'Resume clouds':'Pause clouds';$('pause').setAttribute('aria-pressed',state.paused);}
 $('coverage').oninput=e=>state.coverage=+e.target.value;$('speed').oninput=e=>state.speed=+e.target.value;
 if(variant==='unity'){$('scene').hidden=true;$('quality').hidden=true;await import('./portfolio-unity-prototype.js');}
-else{$('sky-canvas').hidden=true;await import('/assets/sky.js?rev=sky-final-1');}
+else{$('sky-canvas').hidden=true;await import('/assets/sky.js?v=release-20261027-single-opening?rev=sky-final-1');}
 if(innerWidth<700)document.querySelector('.review details').open=false;
 reduced.addEventListener('change',()=>{if(reduced.matches){state.paused=true;pauseLabel();}});pauseLabel();setTarget(0);
 const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)document.querySelectorAll('.section-nav a').forEach(a=>a.classList.toggle('active',a.hash==='#'+entry.target.id));});},{rootMargin:'-10% 0px -65% 0px'});document.querySelectorAll('.panel').forEach(el=>observer.observe(el));
