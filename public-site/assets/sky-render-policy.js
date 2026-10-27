@@ -1,10 +1,11 @@
 // Gate expensive scene work; elapsed time belongs to rendered frames, not RAF ticks.
 export function createRenderPolicy(fps=60){
- let lastFrame,nextFrame,wasBlocked=true,lastKey='',idle=false;
- const interval=1000/fps;
+ let lastFrame,nextFrame,wasBlocked=true,lastKey='',idle=false,currentFPS=fps;
  return {
-  frame(now,{blocked=false,moving=true,settled=false,key='',force=false}={}){
+  frame(now,{blocked=false,moving=true,settled=false,key='',force=false,frameFPS=fps}={}){
    if(blocked){wasBlocked=true;return null;}
+   const requested=frameFPS===120?120:fps,interval=1000/requested;
+   if(requested!==currentFPS){currentFPS=requested;nextFrame=lastFrame===undefined?undefined:lastFrame+interval;}
    const changed=key!==lastKey;
    if(wasBlocked){wasBlocked=false;lastFrame=nextFrame=undefined;idle=false;}
    if(!moving&&settled&&idle&&!changed&&!force)return null;
@@ -19,4 +20,9 @@ export function createRenderPolicy(fps=60){
   },
   invalidate(){idle=false;lastKey='';lastFrame=nextFrame=undefined;}
  };
+}
+
+// Raise only the desktop theme-transition ceiling, never the settled scene budget.
+export function themeFrameRate({width,reduced=false,startup=false,progress=1,target,goal}){
+ return width>800&&!reduced&&!startup&&(progress<1||target!==goal)?120:60;
 }

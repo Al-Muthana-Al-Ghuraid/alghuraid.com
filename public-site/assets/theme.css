@@ -5,7 +5,7 @@ html[data-theme=night]{--color-page:#101622;--color-surface:#192334;--color-rais
 html,html .content-study{
  --paper:var(--color-surface);--ink:var(--color-text);--muted:var(--color-muted);--line:var(--color-line);--accent:var(--color-accent);
  --control-bg:var(--color-raised);--control-ink:var(--color-text);--control-border:var(--color-line-strong);
- --opening-paper:var(--color-surface);--opening-boot-paper:var(--color-surface);--opening-ink:var(--color-text);--opening-line:var(--color-line-strong);--opening-accent:var(--color-accent);--opening-node:var(--color-soft);
+ --opening-paper:var(--color-surface);--opening-boot-paper:var(--color-surface);--opening-ink:var(--color-text);--opening-line:var(--color-muted);--opening-accent:var(--color-accent);--opening-node:var(--color-soft);
 }
 html body{color:var(--color-text)}
 html :is(.panel,.quick-overview,.architecture-viewer,.mobile-architecture){background:var(--color-surface);color:var(--color-text);border-color:var(--color-line)}
@@ -22,7 +22,7 @@ html .readable-project:hover .animated-project-cover{outline-color:var(--color-a
 html :is(.project-page-link,.program-page-link,.text-link,.detail-page header a,.detail-return a){color:var(--color-text);border-color:var(--color-line)}
 html :is(.primary-action,.overview-actions a,.mobile-map-open){background:var(--color-accent-strong);color:var(--color-on-accent);border-color:var(--color-accent-strong)}
 html :is(.skill-inline-choice[aria-pressed=true],.mesh-skill[aria-pressed=true]){background:var(--color-accent);color:var(--color-on-accent);border-color:var(--color-accent)}
-html .skill-inline-choice.is-related{background:var(--color-accent-soft);color:var(--color-text);border-color:var(--color-accent)}
+html .skill-inline-choice.is-related{background:color-mix(in srgb,var(--color-accent) 25%,var(--color-raised));color:var(--color-text);border-color:var(--color-accent)}
 html :is(.skill-group-art,.plus){color:var(--color-accent)}
 html .skill-group-art :is(.art-packet,.art-data){fill:var(--color-accent)}
 html .skill-group-art .art-task{fill:var(--color-accent-soft);stroke:var(--color-accent)}
@@ -32,17 +32,24 @@ html #skills .skill-group-art svg{color:var(--color-accent);stroke:var(--color-a
 html #skills .skill-group-art svg :is(path,rect,circle,ellipse,line,polyline,polygon){fill:none;stroke:var(--color-accent)}
 html #skills .skill-group-art :is(.art-packet,.art-data,.packet-stream){fill:var(--color-accent);stroke:none}
 html #skills .skill-group-art .art-task{fill:var(--color-accent-soft);stroke:var(--color-accent)}
-html #skills .skill-tag-icon{color:var(--color-accent);transition:color 1200ms ease}
+html #skills .skill-tag-icon{color:var(--color-accent);transition:color 160ms ease}
 html #skills .skill-inline-choice[aria-pressed=true] .skill-tag-icon{color:var(--color-on-accent)}
-html #skills .skill-inline-choice{box-shadow:none}
-html #skills .skill-inline-choice.is-related{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--color-accent) 20%,transparent)}
+html #skills .skill-inline-choice{box-shadow:none;transition-duration:160ms;transition-property:background-color,color,border-color,box-shadow}
+html #skills.skill-theme-changing :is(.skill-inline-choice,.skill-tag-icon){transition-duration:1200ms}
+html #skills .skill-inline-choice.is-related{box-shadow:inset 0 0 0 1px var(--color-accent)}
 html #skills .skill-inline-choice[aria-pressed=true]{box-shadow:0 3px 10px color-mix(in srgb,var(--color-accent) 18%,transparent)}
 html .professional-focus{color:var(--color-hero-accent)}
 html .wordmark span{color:var(--color-hero-accent)}
 html .opening-grid{background:radial-gradient(ellipse at 50% 8%,color-mix(in srgb,var(--color-accent) 12%,transparent),transparent 66%)}
 html :is(.opening-stamp,.opening-mark){border-color:var(--color-line)}
 html .opening-beacon{color:var(--color-accent)}
+/* Preserve the accepted opening details: transparent ring bases need painted arcs. */
+html .opening-orbit,html .opening-loading-segments{border-top-color:currentColor;border-bottom-color:currentColor}
+html .opening-loading-inner{border-left-color:currentColor;border-right-color:currentColor}
+html .opening-packet{background:currentColor}
 html :is(.program-cover,.mobile-architecture-cover,.animated-project-cover){background:var(--color-soft);color:var(--color-text);border-color:var(--color-line)}
+/* Frame architecture as its own drawing surface within the surrounding card. */
+html :is(.animated-project-cover,.detail-page .diagram-scroll){background:var(--color-page);border-color:var(--color-line-strong);box-shadow:inset 0 2px var(--color-accent),0 4px 14px #05081012}
 html :is(.program-cover .cover-subject,.program-cover .cover-hours,.mobile-architecture-cover strong){color:var(--color-text)}
 html .program-cover:after{border-color:var(--color-line-strong)}
 html .mobile-map-stage{border-color:var(--color-line)}
@@ -71,13 +78,13 @@ html .chalk-under{stroke:var(--color-text)}
 html :is(.chalk-core,.chalk-web){stroke:var(--color-accent)}
 html .chalk-grain{stroke:var(--color-line-strong)}
 /* True SVG paints, not a filter over the diagram. Existing routing/motion stays. */
-html.architecture-diagram body{background:var(--color-soft);color:var(--color-text);transition:background-color 1200ms ease,color 1200ms ease}
-html.architecture-diagram .node rect{fill:var(--color-raised);stroke:var(--color-line-strong)}
+html.architecture-diagram body{background:var(--color-page);color:var(--color-text);transition:background-color 1200ms ease,color 1200ms ease}
+html.architecture-diagram .node rect{fill:var(--color-raised);stroke:var(--color-accent)}
 html.architecture-diagram :is(.node.ai rect,.node.accept rect){fill:var(--color-accent-soft);stroke:var(--color-accent)}
 html.architecture-diagram .node.reject rect{fill:var(--color-surface);stroke:var(--color-line-strong);stroke-dasharray:5 4}
 html.architecture-diagram text{fill:var(--color-text)}
 html.architecture-diagram :is(.sub,.branch,.note,.group-label){fill:var(--color-muted)}
-html.architecture-diagram .wire{stroke:var(--color-line-strong)}
+html.architecture-diagram .wire{stroke:var(--color-muted)}
 html.architecture-diagram .pulse{stroke:var(--color-accent)}
 html.architecture-diagram .pulse.bad{stroke:var(--color-muted)}
 html.architecture-diagram .group{fill:var(--color-surface);stroke:var(--color-line)}

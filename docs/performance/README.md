@@ -8,12 +8,13 @@ Use this guide when discussing visual options or optimization. Preserve dated fi
 - [Accepted optimization results, 26 October 2026](optimization-2026-10-26.md): exact-value conversion/background decoder,60fps policy, idle rendering, medium quality, deferred diagrams, request sharing and validation. Owner accepted the appearance and authorized publication on26October2026.
 - [Accepted detail-logo and phone-handoff addition, 26 October 2026](detail-logos-2026-10-26.md): per-page icon bytes, no homepage logo load, static rendering and phone word geometry. Owner authorized publication on26October2026.
 - [Accepted Slate & Cobalt identity, 27 October 2026](slate-cobalt-2026-10-27.md): shared component paints and diagram theme inheritance; no new continuous rendering, textures or animation loops. Owner authorized publication on27October2026.
+- [Accepted content and transition polish, 27 October 2026](content-polish-2026-10-27.md): temporary up-to120fps desktop theme-transition ceiling, workflow media replacement and interaction fixes. Owner accepted the local preview and authorized publication on27October2026.
 
 ## Components and tradeoffs
 
 | Component | Source | Cost and decision guidance |
 | --- | --- | --- |
-| Sky/cloud/atmosphere | `assets/sky.js`, `sky-atmosphere.js`, `sky-decode-worker.js`, `sky-render-policy.js`, `assets/takram/` | Main startup and continuous GPU cost. Medium quality and up-to60fps are accepted. Preserve atmosphere data precision. Paused/reduced-motion renders on change after settling. Worker failure retains a faster main-thread loader. |
+| Sky/cloud/atmosphere | `assets/sky.js`, `sky-atmosphere.js`, `sky-decode-worker.js`, `sky-render-policy.js`, `assets/takram/` | Main startup and continuous GPU cost. Medium quality and normal up-to60fps are accepted; desktop theme changes temporarily allow up-to120fps, returning to60 when settled. Phone/reduced-motion/startup retain60. Preserve atmosphere data precision. Paused/reduced-motion renders on change after settling. Worker failure retains a faster main-thread loader. |
 | Skyline | `assets/city.js`, day/night cutout PNGs | Second largest initial loading group. Both images support smooth theme blending and fixed silhouette. Existing PNG optimization preserves decoded pixels. Decode/canvas memory differs from compressed file size. |
 | Opening | Inline critical cover, `opening-shell.js`, `opening-prototype.css` | Small short-lived artwork/animation cost. Preserve at least2000ms of visible styled opening, first-paint cover, fieldbook/prism art and name handoff. Internal navigation skips it. |
 | Initial poster | `progressive-scene-shell.js`, `progressive-scene-prototype.js`, matching WebP | One early image reused by the reveal. Only the current theme/viewport poster loads initially. Scene readiness and the opening's minimum clock are separate concerns. |

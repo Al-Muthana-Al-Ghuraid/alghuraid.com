@@ -13,7 +13,7 @@ const localReview=['127.0.0.1','localhost','[::1]'].includes(location.hostname)&
   if(card){
    card.classList.add('mobile-preview-card');const body=card.querySelector('.work-copy'),heading=body.querySelector('h3');
    const original=body.querySelector('p:not(.project-domain)'),tags=body.querySelector('.tags'),cover=body.querySelector('.animated-project-cover');
-   const short=document.createElement('p');short.className='preview-card-summary';short.dataset.copyEn='Cloud-hosted job discovery with bilingual filtering, AI checks and Google Sheets tracking.';short.dataset.copyAr='اكتشاف الوظائف عبر السحابة مع فرز بالعربية والإنجليزية، وفحص بالذكاء الاصطناعي، وتتبع في Google Sheets.';
+   const short=document.createElement('p');short.className='preview-card-summary';short.dataset.copyEn='Cloud-hosted job discovery, contact research and application emails, tracked in Google Sheets.';short.dataset.copyAr='أتمتة سحابية للبحث عن الوظائف وجهات التواصل ورسائل التقديم، مع التتبع في Google Sheets.';
    heading.after(short);
    const highlights=document.createElement('div');highlights.className='tags preview-highlights';
    for(const tag of [...tags.children].slice(0,3))highlights.append(tag.cloneNode(true));short.after(highlights);

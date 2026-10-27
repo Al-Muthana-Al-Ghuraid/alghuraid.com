@@ -12,7 +12,7 @@ function preferences(){
   if(back)back.textContent=location.pathname.startsWith('/training/')?copy('← Back to programs','العودة إلى البرامج →'):copy('← Back to projects','العودة إلى المشاريع →');
  }
  
- document.querySelectorAll('figcaption').forEach(el=>{const pair={'Job Discovery / اكتشاف الوظائف':['Job Discovery','اكتشاف الوظائف'],'Lead Finder / البحث عن جهات التواصل':['Lead Finder','البحث عن جهات التواصل'],'Recruitment Email / البريد للتوظيف':['Recruitment Email','البريد للتوظيف']};const original=el.dataset.captionPair||el.textContent.trim();if(pair[original]){el.dataset.captionPair=original;el.textContent=copy(...pair[original]);}});
+ document.querySelectorAll('figcaption').forEach(el=>{const pair={'Job Discovery / اكتشاف الوظائف':['Job Discovery','اكتشاف الوظائف'],'Lead Finder / البحث عن جهات التواصل':['Lead Finder','البحث عن جهات التواصل'],'Job-application emails / رسائل التقديم على الوظائف':['Job-application emails','رسائل التقديم على الوظائف']};const original=el.dataset.captionPair||el.textContent.trim();if(pair[original]){el.dataset.captionPair=original;el.textContent=copy(...pair[original]);}});
 }
 new MutationObserver(preferences).observe(root,{attributes:true,attributeFilter:['lang','data-theme']});preferences();
 const blocks=[...document.querySelectorAll('.diagram-scroll')],covers=[...document.querySelectorAll('.animated-project-cover')],maps=[];
@@ -43,7 +43,7 @@ if(blocks.length||covers.length){
  renderMaps();new MutationObserver(renderMaps).observe(root,{attributes:true,attributeFilter:['lang']});
 }
 // Shared image/diagram viewer: centered controls, pointer pan and pinch zoom.
-const viewer=document.createElement('dialog');viewer.className='architecture-viewer';viewer.innerHTML='<div class="viewer-toolbar"><strong class="viewer-title" id="architecture-viewer-title"></strong><div class="viewer-controls" role="group"><button type="button" data-action="minus">−</button><output class="viewer-scale">100%</output><button type="button" data-action="plus">+</button><button type="button" data-action="fit" class="viewer-fit"></button><button type="button" data-action="close">×</button></div></div><p class="viewer-help"></p><div class="viewer-pan" dir="ltr"><div class="viewer-surface"></div></div>';
+const viewer=document.createElement('dialog');viewer.className='architecture-viewer';viewer.innerHTML='<div class="viewer-toolbar"><strong class="viewer-title" id="architecture-viewer-title"></strong><div class="viewer-controls" role="group"><button type="button" data-action="minus">−</button><output class="viewer-scale">100%</output><button type="button" data-action="plus">+</button><button type="button" data-action="fit" class="viewer-fit"></button><button type="button" data-action="close">×</button></div></div><div class="viewer-pan" dir="ltr"><div class="viewer-surface"></div></div>';
 document.body.append(viewer);viewer.setAttribute('aria-labelledby','architecture-viewer-title');let zoom=1,ratio=2,opener,lastMedia,gesture;
 const pan=viewer.querySelector('.viewer-pan'),surface=viewer.querySelector('.viewer-surface'),pointers=new Map();
 bindDialogHistory(viewer,()=>{if(lastMedia)showMedia(...lastMedia);});
@@ -56,7 +56,7 @@ function zoomAt(next,from={x:pan.clientWidth/2,y:pan.clientHeight/2},to=from){
 }
 function showMedia(src,diagram,title){
  lastMedia=[src,diagram,title];opener=document.activeElement;viewer.querySelector('.viewer-title').textContent=title?.split(' / ')[ar()?1:0]||title||copy('Project image','صورة المشروع');
- viewer.querySelector('.viewer-help').textContent=copy('Pinch to zoom. Drag to move.','قرّب بإصبعين للتكبير، واسحب للتحريك.');viewer.querySelector('.viewer-controls').setAttribute('aria-label',copy('Image controls','أدوات الصورة'));viewer.querySelector('.viewer-scale').setAttribute('aria-label',copy('Zoom level','مستوى التكبير'));
+ viewer.querySelector('.viewer-controls').setAttribute('aria-label',copy('Image controls','أدوات الصورة'));viewer.querySelector('.viewer-scale').setAttribute('aria-label',copy('Zoom level','مستوى التكبير'));
  for(const [action,en,arabic] of [['minus','Zoom out','تصغير'],['plus','Zoom in','تكبير'],['fit','Fit image','ملاءمة الصورة'],['close','Close viewer','إغلاق العارض']])viewer.querySelector('[data-action="'+action+'"]').setAttribute('aria-label',copy(en,arabic));
  viewer.querySelector('.viewer-fit').textContent=copy('Fit','ملاءمة');surface.replaceChildren();zoom=1;ratio=2;pointers.clear();gesture=null;
  const media=document.createElement(diagram?'iframe':'img');media.setAttribute(diagram?'title':'alt',title||copy('Architecture','البنية'));if(!diagram){media.draggable=false;media.addEventListener('load',()=>{if(surface.firstElementChild!==media)return;if(media.naturalWidth&&media.naturalHeight)ratio=media.naturalWidth/media.naturalHeight;zoom=1;paintMedia();pan.scrollTo(0,0);},{once:true});}
@@ -72,7 +72,7 @@ pan.addEventListener('wheel',event=>{if(!event.ctrlKey&&!event.metaKey)return;ev
 addEventListener('resize',()=>{if(viewer.open)paintMedia();});
 viewer.addEventListener('close',()=>{surface.replaceChildren();pointers.clear();gesture=null;opener?.focus();});
 document.querySelectorAll('.diagram-tools a').forEach(a=>a.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();showMedia(a.href,true,a.closest('.diagram-scroll')?.querySelector('iframe')?.title||copy('Full architecture','البنية الكاملة'));}));
-document.querySelectorAll('main figure img').forEach(img=>{img.tabIndex=0;img.setAttribute('role','button');const label=()=>{img.setAttribute('aria-label',copy('Enlarge image: ','تكبير الصورة: ')+(img.alt||''));img.closest('figure')?.setAttribute('data-enlarge',copy('Tap image to enlarge ↗','اضغط على الصورة للتكبير ↗'));};label();new MutationObserver(label).observe(root,{attributes:true,attributeFilter:['lang']});const open=()=>showMedia(img.src,false,img.alt);img.addEventListener('click',open);img.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});});
+document.querySelectorAll('main figure img').forEach(img=>{img.tabIndex=0;img.setAttribute('role','button');const label=()=>{img.setAttribute('aria-label',copy('Enlarge image: ','تكبير الصورة: ')+(img.alt||''));img.closest('figure')?.setAttribute('data-enlarge','');};label();new MutationObserver(label).observe(root,{attributes:true,attributeFilter:['lang']});const open=()=>showMedia(img.src,false,img.alt);img.addEventListener('click',open);img.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});});
 
 if(document.body.classList.contains('detail-page')){
  const back=document.querySelector('#back')||document.querySelector('header>a');

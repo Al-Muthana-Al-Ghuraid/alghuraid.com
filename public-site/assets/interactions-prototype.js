@@ -83,8 +83,10 @@ if(document.querySelector('#language-toggle') && new URLSearchParams(location.se
    const incoming=textElements();
    // Fade starts during flight and finishes with the arrival/rebound, on the same timeline.
    const frames=[{opacity:0,offset:0},{opacity:0,offset:.22},{opacity:.25,offset:.48},{opacity:.85,offset:.78},{opacity:1,offset:1}];
-   const entering=fade([...incoming,...shadow,...headerLabels],frames,{duration:mobile?900:1120,easing:'linear'});
-   await Promise.all([entering,slide(controls)]);
+   const entering=fade([...incoming,...headerLabels],frames,{duration:mobile?900:1120,easing:'linear'});
+   // The scene shade has no word-flight hold: reveal continuously after direction flips.
+   const shadeEntering=fade(shadow,[{opacity:0},{opacity:1}],{duration:mobile?900:1120,easing:'cubic-bezier(.25,.1,.25,1)'});
+   await Promise.all([entering,shadeEntering,slide(controls)]);
   }finally{
    controls.forEach(({original,style})=>{original.getAnimations().forEach(a=>a.cancel());style===null?original.removeAttribute('style'):original.setAttribute('style',style);});controls=[];
    if(actionRow)actionRow.style.minHeight=priorRowHeight||'';

@@ -6,9 +6,22 @@ if(section){
  const catalog=await catalogReady;
  const keys=['Microsoft Azure','Oracle Cloud','Terraform','Docker','Linux','Key Vault','GitHub Actions','Cloudflare Zero Trust','Python','JavaScript','React','FastAPI','Django','Streamlit','JWT','Bootstrap','SQL','PostgreSQL','Cosmos DB','SQLAlchemy','RAG','OpenAI API','n8n','Project planning','Risk registers','Stakeholders','Team coordination','Scrum','Kanban','Communication'];
  const stacks=[['Microsoft Azure','Terraform','Docker','Linux','Key Vault','GitHub Actions','Python','FastAPI','Streamlit','PostgreSQL','Cosmos DB','RAG'],['Python','JavaScript','React','FastAPI','JWT','Bootstrap','SQLAlchemy','SQL','Team coordination'],['Python','Django','Bootstrap','SQL'],['Oracle Cloud','Docker','Linux','Cloudflare Zero Trust','OpenAI API','n8n']];
- const preferred={Python:['Django','FastAPI','SQLAlchemy','React','Streamlit'],'Microsoft Azure':['Terraform','Docker','Key Vault','GitHub Actions','Linux']};
+ // Curated relationships: management concepts plus the documented TrackFlow delivery/risk work.
+ const preferred={
+  Python:['Django','FastAPI','SQLAlchemy','React','Streamlit'],
+  'Microsoft Azure':['Terraform','Docker','Key Vault','GitHub Actions','Linux'],
+  'Project planning':['Team coordination','Stakeholders','Risk registers','Communication','Scrum','React','FastAPI'],
+  'Risk registers':['Project planning','Stakeholders','Communication','React','FastAPI','SQLAlchemy'],
+  Stakeholders:['Communication','Project planning','Team coordination'],
+  'Team coordination':['Project planning','Communication','Scrum','Kanban','React','FastAPI'],
+  Scrum:['Project planning','Team coordination','Communication','Kanban'],
+  Kanban:['Project planning','Team coordination','Scrum'],
+  Communication:['Stakeholders','Team coordination','Project planning','Scrum'],
+  React:['Python','JavaScript','FastAPI','JWT','Bootstrap','Team coordination','Risk registers'],
+  FastAPI:['Python','React','JWT','SQLAlchemy','Team coordination','Project planning','Risk registers'],
+  SQLAlchemy:['Python','FastAPI','React','SQL','Risk registers']
+ };
  const cards=[...section.querySelectorAll('.readable-skills article')],buttons=[];let selected=null;
- const hint=document.createElement('p');hint.className='skill-motion-hint';section.querySelector('h2').after(hint);
  const icons=[
  '<path d="M18 31 C7 29 9 13 21 14 C26 2 44 5 47 17 C60 15 63 31 50 32"/><rect x="16" y="38" width="38" height="21" rx="4"/><path d="M21 44 H42 M21 51 H42"/><circle class="art-packet" cx="49" cy="45" r="2"/><path class="art-signal" d="M35 33 V38"/>',
  '<rect x="7" y="10" width="57" height="45" rx="5"/><path d="M7 21 H64"/><path class="art-bracket art-bracket-left" d="M25 30 L19 37 L25 44"/><path class="art-bracket art-bracket-right" d="M45 30 L51 37 L45 44"/><path class="art-typing" d="M14 16 H20 M25 16 H31 M36 16 H42"/><path class="art-code" d="M39 28 L32 47"/>',
@@ -18,8 +31,10 @@ if(section){
  function play(card){card.classList.remove('skill-art-playing');requestAnimationFrame(()=>{card.classList.add('skill-art-playing');setTimeout(()=>card.classList.remove('skill-art-playing'),1600);});}
  cards.forEach((card,i)=>{const art=document.createElement('div');art.className='skill-group-art';art.setAttribute('aria-hidden','true');art.innerHTML='<svg viewBox="0 0 72 72">'+icons[i]+'</svg>';card.prepend(art);card.addEventListener('pointerenter',()=>play(card));card.addEventListener('focusin',()=>play(card));});
  section.querySelectorAll('.readable-skills .tags span').forEach((span,i)=>{const b=document.createElement('button');b.type='button';b.className='skill-inline-choice';b.dataset.skill=keys[i];b.textContent=span.textContent;b.addEventListener('click',()=>{selected=selected===keys[i]?null:keys[i];update();});span.replaceWith(b);buttons.push(b);});
- function update(){const ar=document.documentElement.lang==='ar';let related=selected?[...new Set(stacks.filter(s=>s.includes(selected)).flat())].filter(k=>k!==selected):[];if(preferred[selected])related=preferred[selected];if(selected&&keys.indexOf(selected)>=23)related=keys.slice(23).filter(k=>k!==selected);related=related.slice(0,7);buttons.forEach(b=>{const label=document.createElement('span');label.className='skill-tag-label';label.textContent=ar?(catalog[b.dataset.skill]||b.dataset.skill):b.dataset.skill;b.replaceChildren(skillIcon(b.dataset.skill),label);b.classList.toggle('is-related',related.includes(b.dataset.skill));b.setAttribute('aria-pressed',String(selected===b.dataset.skill));});hint.textContent=ar?'اختر مهارة لإبراز الأدوات المرتبطة بها. اخترها مرة أخرى لإلغاء التحديد.':'Select a skill to highlight related tools. Select it again to clear.';}
- new MutationObserver(update).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});update();
+ document.addEventListener('click',event=>{if(selected&&!event.target.closest('.skill-inline-choice')){selected=null;update();}},true);
+ function update(){const ar=document.documentElement.lang==='ar';let related=selected?[...new Set(stacks.filter(s=>s.includes(selected)).flat())].filter(k=>k!==selected):[];if(preferred[selected])related=preferred[selected];related=related.slice(0,7);buttons.forEach(b=>{const label=document.createElement('span');label.className='skill-tag-label';label.textContent=ar?(catalog[b.dataset.skill]||b.dataset.skill):(b.dataset.skill==='Stakeholders'?'Stakeholder engagement':b.dataset.skill);b.replaceChildren(skillIcon(b.dataset.skill),label);b.classList.toggle('is-related',related.includes(b.dataset.skill));b.setAttribute('aria-pressed',String(selected===b.dataset.skill));});}
+ let themeTimer;
+ new MutationObserver(records=>{if(records.some(r=>r.attributeName==='data-theme')){clearTimeout(themeTimer);section.classList.add('skill-theme-changing');themeTimer=setTimeout(()=>section.classList.remove('skill-theme-changing'),1200);}if(records.some(r=>r.attributeName==='lang'))update();}).observe(document.documentElement,{attributes:true,attributeFilter:['lang','data-theme']});update();
  const observer=new IntersectionObserver(entries=>entries.forEach(e=>{e.target.classList.toggle('skill-art-visible',e.isIntersecting);}),{threshold:.35});cards.forEach(c=>observer.observe(c));
 }
 // Draw the actual cover diagrams, rather than adding another decorative layer.
