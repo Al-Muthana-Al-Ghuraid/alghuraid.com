@@ -96,8 +96,3 @@ html.architecture-diagram :is(rect,path,text,polygon){transition:fill 1200ms eas
 
 html :is(#language-toggle,#time,.top-cv,.social-link,.quick-overview-trigger){background:var(--color-raised);color:var(--color-text);border-color:var(--color-line-strong);box-shadow:0 3px 14px #071b301c}
 html .detail-page :is(header>a,#back,#lang,#language){background:var(--color-raised);color:var(--color-text);border-color:var(--color-line-strong)}
-
-/* Feedback batch: clearer education hierarchy and readable headline tags. */
-html .about-readable .education>span{display:block;width:fit-content;max-width:100%;font-size:13px;font-weight:700;line-height:1.5;letter-spacing:.09em;color:var(--color-accent-strong);background:var(--color-accent-soft);border-inline-start:3px solid var(--color-accent);border-radius:4px;padding:5px 10px;margin-bottom:12px;opacity:1}
-html[lang=ar] .about-readable .education>span{letter-spacing:0}
-html :is(.readable-project,.boot-card) .tags>span{font-weight:600;font-size:13px;line-height:1.45;border:1px solid color-mix(in srgb,var(--color-accent) 48%,var(--color-line-strong));border-radius:7px;background:color-mix(in srgb,var(--color-accent) 10%,var(--color-raised));color:var(--color-text);padding:6px 10px}

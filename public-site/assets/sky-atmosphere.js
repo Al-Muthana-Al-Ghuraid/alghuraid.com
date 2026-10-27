@@ -17,7 +17,7 @@ export function halfToFloat(data) {
 export function decodeAtmosphereInWorker(float32) {
  return new Promise((resolve,reject)=>{
   let worker;
-  try { worker=new Worker(new URL('./sky-decode-worker.js?v=release-20261027-feedback-batch-2',import.meta.url),{type:'module'}); }
+  try { worker=new Worker(new URL('./sky-decode-worker.js?v=release-20261027-content-polish',import.meta.url),{type:'module'}); }
   catch(error){ reject(error);return; }
   const finish=(error,result)=>{clearTimeout(timeout);worker.terminate();error?reject(error):resolve(result);};
   const timeout=setTimeout(()=>finish(new Error('Atmosphere decoder timed out')),15000);

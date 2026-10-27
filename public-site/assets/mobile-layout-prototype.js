@@ -4,7 +4,7 @@ const localReview=['127.0.0.1','localhost','[::1]'].includes(location.hostname)&
 {
  const compact=!localReview||params.get('mobile-preview')==='compact';
  root.classList.add('mobile-layout-review');root.dataset.mobilePreview=compact?'compact':'current';
- const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href='/assets/mobile-layout-prototype.css?v=release-20261027-feedback-batch';document.head.append(sheet);
+ const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href='/assets/mobile-layout-prototype.css?v=release-20261027-slate-cobalt';document.head.append(sheet);
  const ar=()=>root.lang==='ar',copy=(en,arabic)=>ar()?arabic:en;
  function linkPreferences(){if(!localReview)return;document.querySelectorAll('a.project-page-link,a.program-page-link,a.related,.detail-return a').forEach(a=>{const u=new URL(a.href);if(u.origin!==location.origin)return;u.searchParams.set('mobile-preview',compact?'compact':'current');a.href=u.pathname+u.search+u.hash;});}
  linkPreferences();
