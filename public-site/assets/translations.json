@@ -31,7 +31,7 @@
   "1,000+ applications, 10+ interviews, 20+ assessments, and 2+ hours saved per day.": "1,000 طلب توظيف فأكثر، و10 مقابلات فأكثر، و20 اختبار تقييم فأكثر، وتوفير ساعتين أو أكثر يوميًا.",
   "Oracle Cloud": "Oracle Cloud",
   "Docker Compose": "Docker Compose",
-  "Cloudflare Zero Trust": "Cloudflare Zero Trust",
+  "Cloudflare Zero Trust": "Cloudflare",
   "n8n": "n8n",
   "Apify": "Apify",
   "OpenAI API": "OpenAI API",
@@ -196,5 +196,6 @@
   "About": "نبذة عني",
   "Credentials": "الشهادات المهنية",
   "Training": "البرامج التدريبية",
-  "Portfolio sections": "أقسام الموقع"
+  "Portfolio sections": "أقسام الموقع",
+  "Cloudflare": "Cloudflare"
 }

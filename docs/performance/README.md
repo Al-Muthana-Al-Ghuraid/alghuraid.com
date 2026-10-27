@@ -9,6 +9,7 @@ Use this guide when discussing visual options or optimization. Preserve dated fi
 - [Accepted detail-logo and phone-handoff addition, 26 October 2026](detail-logos-2026-10-26.md): per-page icon bytes, no homepage logo load, static rendering and phone word geometry. Owner authorized publication on26October2026.
 - [Accepted Slate & Cobalt identity, 27 October 2026](slate-cobalt-2026-10-27.md): shared component paints and diagram theme inheritance; no new continuous rendering, textures or animation loops. Owner authorized publication on27October2026.
 - [Accepted content and transition polish, 27 October 2026](content-polish-2026-10-27.md): temporary up-to120fps desktop theme-transition ceiling, workflow media replacement and interaction fixes. Owner accepted the local preview and authorized publication on27October2026.
+- [Typography and tag feedback batch, 27 October 2026](typography-tags-2026-10-27.md): coordinated self-hosted English/Arabic fonts, clearer Education hierarchy and tags, simplified labels. Owner authorized local testing followed by publication without another review gate.
 
 ## Components and tradeoffs
 
@@ -24,6 +25,7 @@ Use this guide when discussing visual options or optimization. Preserve dated fi
 | Project media/viewer | Project/program HTML, `mobile-comfort-prototype.js`, `media-viewer-geometry.js` | Screenshots load as needed. Preserve pinch/pan/Fit, centered controls and dialog Back/focus behavior. Direct detail pages use a static background rather than another live sky. |
 | Detail technology logos | `assets/detail-tech-stack.css`, `assets/tech-logos/` | Static local SVGs:0.4–26.3KB per detail plus1.4KB shared CSS, no homepage logo requests or animation loop. Keep fixed dimensions and native colors. See dated addition for exact bytes and limits. |
 | Ordinary controls/cards | Shared styles and interaction modules | Mainly interaction-time layout/paint. Prioritize verified jank; avoid removing inexpensive design details in response to sky costs. |
+| Typography | `assets/typography.css`, `assets/fonts/` | Self-hosted IBM Plex Sans Latin 45,712B and four IBM Plex Sans Arabic weight subsets 178,112B combined; 223,824B total available WOFF2 bodies. Only faces needed for displayed text load. Retires external DM Sans/Manrope CSS import; preserves font-ready opening/name/hero measurement. No added render loop. See dated typography reference. |
 
 ## Language and theme defaults
 
