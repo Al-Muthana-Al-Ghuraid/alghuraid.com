@@ -1,10 +1,6 @@
-// Preserve the label node while language animations are using it.
 export function renderThemeControl(button,language,night){
- if(!button)return;
- let label=button.querySelector('.header-control-label');
- if(!label){label=document.createElement('span');label.className='header-control-label';button.replaceChildren(label);}
- const text=language==='ar'?(night?'☀ الوضع النهاري':'☾ الوضع الليلي'):(night?'☀ Light mode':'☾ Dark mode');
- if(label.textContent!==text)label.textContent=text;
- button.removeAttribute('aria-pressed');
- button.setAttribute('aria-label',language==='ar'?(night?'التبديل إلى الوضع النهاري':'التبديل إلى الوضع الليلي'):(night?'Switch to light mode':'Switch to dark mode'));
+ if(!button)return;let label=button.querySelector('.header-control-label');if(!label){label=document.createElement('span');label.className='header-control-label';button.replaceChildren(label);}
+ let mark=button.querySelector('.theme-control-icon');if(!mark){mark=document.createElementNS('http://www.w3.org/2000/svg','svg');mark.setAttribute('class','theme-control-icon ui-line-icon');mark.setAttribute('width','18');mark.setAttribute('height','18');mark.setAttribute('viewBox','0 0 24 24');mark.setAttribute('aria-hidden','true');mark.setAttribute('fill','none');mark.setAttribute('stroke','currentColor');mark.setAttribute('stroke-width','1.8');mark.setAttribute('stroke-linecap','round');mark.setAttribute('stroke-linejoin','round');button.prepend(mark);}
+ mark.innerHTML=night?'<circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/>':'<path fill="currentColor" d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z"/>';
+ const text=language==='ar'?(night?'الوضع النهاري':'الوضع الليلي'):(night?'Light mode':'Dark mode');if(label.textContent!==text)label.textContent=text;button.removeAttribute('aria-pressed');button.setAttribute('aria-label',language==='ar'?(night?'التبديل إلى الوضع النهاري':'التبديل إلى الوضع الليلي'):(night?'Switch to light mode':'Switch to dark mode'));
 }

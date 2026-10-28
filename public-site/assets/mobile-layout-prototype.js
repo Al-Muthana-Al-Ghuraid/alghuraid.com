@@ -9,16 +9,6 @@ const localReview=['127.0.0.1','localhost','[::1]'].includes(location.hostname)&
  function linkPreferences(){if(!localReview)return;document.querySelectorAll('a.project-page-link,a.program-page-link,a.related,.detail-return a').forEach(a=>{const u=new URL(a.href);if(u.origin!==location.origin)return;u.searchParams.set('mobile-preview',compact?'compact':'current');a.href=u.pathname+u.search+u.hash;});}
  linkPreferences();
  if(compact&&matchMedia('(max-width:800px)').matches){
-  const card=document.querySelector('.project-n8n');
-  if(card){
-   card.classList.add('mobile-preview-card');const body=card.querySelector('.work-copy'),heading=body.querySelector('h3');
-   const original=body.querySelector('p:not(.project-domain)'),tags=body.querySelector('.tags'),cover=body.querySelector('.animated-project-cover');
-   const short=document.createElement('p');short.className='preview-card-summary';short.dataset.copyEn='Cloud-hosted job discovery, contact research and application emails, tracked in Google Sheets.';short.dataset.copyAr='أتمتة سحابية للبحث عن الوظائف وجهات التواصل ورسائل التقديم، مع التتبع في Google Sheets.';
-   heading.after(short);
-   const highlights=document.createElement('div');highlights.className='tags preview-highlights';
-   for(const tag of [...tags.children].slice(0,3))highlights.append(tag.cloneNode(true));short.after(highlights);
-   const more=document.createElement('details');more.className='preview-card-more';const summary=document.createElement('summary');summary.dataset.copyEn='Overview and architecture';summary.dataset.copyAr='نظرة عامة على المشروع والبنية';more.append(summary,original,tags,cover);body.querySelector('.project-page-link').before(more);
-  }
   const header=document.querySelector('.detail-page main header');
   if(header){
    const back=header.querySelector(':scope>a'),cv=header.querySelector('.top-cv'),theme=header.querySelector('#time'),language=header.querySelector('#lang,#language');

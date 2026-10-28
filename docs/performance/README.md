@@ -4,6 +4,8 @@ Use this guide when discussing visual options or optimization. Preserve dated fi
 
 ## Evidence
 
+- [Accepted navigation and clock A, 28 October 2026](navigation-controls-2026-10-28.md): reviewed glass bar, static minute clock, SVG controls, mobile/card/Back refinements and synchronized theme paints; costs and diagnostic limits recorded.
+
 - [Original analysis, 26 October 2026](baseline-2026-10-26.md): pinned public97121cc, component weights, renderer startup, quality/paused/frozen comparisons and limitations.
 - [Accepted optimization results, 26 October 2026](optimization-2026-10-26.md): exact-value conversion/background decoder,60fps policy, idle rendering, medium quality, deferred diagrams, request sharing and validation. Owner accepted the appearance and authorized publication on26October2026.
 - [Accepted detail-logo and phone-handoff addition, 26 October 2026](detail-logos-2026-10-26.md): per-page icon bytes, no homepage logo load, static rendering and phone word geometry. Owner authorized publication on26October2026.
